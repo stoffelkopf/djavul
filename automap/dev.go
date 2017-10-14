@@ -11,3 +11,9 @@ func Explore() {
 		}
 	}
 }
+
+// Toggle toggles the automap.
+func Toggle() {
+	fmt.Println("dev: automap.Toggle")
+	*Enabled = !*Enabled
+}
