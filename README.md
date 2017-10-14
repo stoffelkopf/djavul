@@ -129,6 +129,52 @@ index 3bbd269..9b4e3d6 100644
    addr_41A7DE:          db      0x74, 0x0D
 ```
 
+Invoke `aaaaaaa.Init` and `aaaaaaa.OnKeyPress` from `WinMain` (i.e. `0x408B4A`) and `diablo_on_key_press` (i.e. `0x409B5C`); e.g.
+
+```diff
+diff --git a/_text.asm b/_text.asm
+index 9b4e3d6..5e302d0 100644
+--- a/_text.asm
++++ b/_text.asm
+@@ -12183,8 +12183,10 @@ sub_408B4A:
+   addr_408B53:          db      0x53                                            ; PUSH EBX
+   addr_408B54:          db      0x56                                            ; PUSH ESI
+   addr_408B55:          db      0x8B, 0x75, 0x08                                ; MOV ESI, [EBP+0x8]
+-  addr_408B58:          db      0x8B, 0xCE                                      ; MOV ECX, ESI
+-  addr_408B5A:          db      0xE8, 0x95, 0x02, 0x00, 0x00                    ; CALL .+661
++  call DWORD [ia_InitAAAAAAAAAAAAAAAA]
++times (0x408B5F - _text_vstart) - ($ - $$) nop
++;  addr_408B58:          db      0x8B, 0xCE                                      ; MOV ECX, ESI
++;  addr_408B5A:          db      0xE8, 0x95, 0x02, 0x00, 0x00                    ; CALL .+661
+   addr_408B5F:          db      0x89, 0x35, 0xEC, 0x56, 0x52, 0x00              ; MOV [+0x5256ec], ESI
+   addr_408B65:          db      0xE8, 0x1B, 0x9D, 0x04, 0x00                    ; CALL .+302363
+   addr_408B6A:          db      0x85, 0xC0                                      ; TEST EAX, EAX
+@@ -12847,7 +12849,8 @@ sub_409131:
+   addr_4091DD:          db      0xE9, 0xC8, 0x01, 0x00, 0x00                    ; JMP .+456
+ ; block_4091E2
+   addr_4091E2:          db      0x8B, 0x4D, 0x10                                ; MOV ECX, [EBP+0x10]
+-  addr_4091E5:          db      0xE8, 0x72, 0x09, 0x00, 0x00                    ; CALL .+2418
++;  addr_4091E5:          db      0xE8, 0x72, 0x09, 0x00, 0x00                    ; CALL .+2418
++  call diablo_on_key_press_W
+   addr_4091EA:          db      0xE9, 0xBB, 0x01, 0x00, 0x00                    ; JMP .+443
+ ; block_4091EF
+   addr_4091EF:          db      0x8B, 0x45, 0x14                                ; MOV EAX, [EBP+0x14]
+@@ -44839,6 +44842,13 @@ times (0x41A7D7 - _text_vstart) - ($ - $$) nop
+
+ ; code cave from 0x41A84C
+
++diablo_on_key_press_W:
++  push ecx
++  call DWORD [ia_OnKeyPressAAA]
++  pop ecx
++  call sub_409B5C
++  ret
++
+ ; code cave from 0x41A8B9
+
+ times (0x41AA2C - _text_vstart) - ($ - $$) db 0xCC
+```
+
 ### Building shared libraries
 
 Install cross compiler for Windows.
