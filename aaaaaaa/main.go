@@ -1,7 +1,11 @@
 package main
 
 import "C"
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/sanctuary/djavul/automap"
+)
 
 //export InitAAAAAAAAAAAAAAAA
 func InitAAAAAAAAAAAAAAAA() {
@@ -18,6 +22,11 @@ func Cccccccccccccccccccccccccc() int {
 func OnKeyPressAAA(key int) {
 	// Called from on_key_press.
 	fmt.Println("key press:", key)
+	switch key {
+	case 'X':
+		// eXplore
+		automap.Explore()
+	}
 }
 
 func main() {}
