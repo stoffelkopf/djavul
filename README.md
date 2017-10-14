@@ -6,93 +6,127 @@ Experimenting with C-shared libraries in Go.
 
 Convert `diablo.exe` version 1.09b to NASM using [bin2asm](https://godoc.org/github.com/decomp/exp/cmd/bin2asm) and [dump_imports](https://godoc.org/github.com/decomp/exp/cmd/dump_imports).
 
-Edit the import data in `_rdata.asm` to include the new DLL files; e.g.
+Edit the import data in `_rdata.asm` to include the new DLL files. To keep addresses fixed, replace `shell32.dll` with `aaaaaaa.dll`; e.g.
 
 ```diff
 diff --git a/_rdata.asm b/_rdata.asm
-index 96ed9bf..22e69df 100644
+index 96ed9bf..059bb03 100644
 --- a/_rdata.asm
 +++ b/_rdata.asm
-@@ -553,6 +553,13 @@ iat_version:
-                         dd      imp_VerQueryValueA - IMAGE_BASE
+@@ -319,15 +319,15 @@ iat_kernel32:
+                         dd      imp_GetTimeZoneInformation - IMAGE_BASE
                          dd      0x00000000
- 
-+; --- [ foo.dll ] --------------------------------------------------------------
+
+-; --- [ shell32.dll ] ---------------------------------------------------------
+-
+-iat_shell32:
+-  ia_ShellExecuteA:
+-                        dd      imp_ShellExecuteA - IMAGE_BASE
+-  ia_SHGetSpecialFolderLocation:
+-                        dd      imp_SHGetSpecialFolderLocation - IMAGE_BASE
+-  ia_SHGetPathFromIDListA:
+-                        dd      imp_SHGetPathFromIDListA - IMAGE_BASE
++; --- [ aaaaaaa.dll ] ---------------------------------------------------------
 +
-+iat_foo:
-+  ia_Foo:
-+                        dd      imp_Foo - IMAGE_BASE
-+                        dd      0x00000000
-+
-    iat_size             equ     $ - iat
- 
- ; === [/ Import Address Tables (IATs) ] ========================================
-@@ -32554,6 +32561,12 @@ import_table:
-                         dd      szVersion_dll - IMAGE_BASE
-                         dd      iat_version - IMAGE_BASE      ; pIAT_first_trunk
- 
-+                        dd      int_foo - IMAGE_BASE      ; pINT_first_trunk
-+                        dd      0x00000000                         ; TimeDateStamp
-+                        dd      0x00000000                         ; pForwardChain
-+                        dd      szFoo_dll - IMAGE_BASE
-+                        dd      iat_foo - IMAGE_BASE      ; pIAT_first_trunk
-+
-    times 5              dd      0x00000000
- 
-    import_table_size    equ     $ - import_table
-@@ -32859,6 +32872,12 @@ int_version:
-                         dd      imp_VerQueryValueA - IMAGE_BASE
++iat_aaaaaaa:
++  ia_Bbbbbbbbbbbbb:
++                        dd      imp_Bbbbbbbbbbbbb - IMAGE_BASE
++  ia_Cccccccccccccccccccccccccc:
++                        dd      imp_Cccccccccccccccccccccccccc - IMAGE_BASE
++  ia_Dddddddddddddddddddd:
++                        dd      imp_Dddddddddddddddddddd - IMAGE_BASE
                          dd      0x00000000
- 
-+; --- [ foo.dll ] ---------------------------------------------------------
-+
-+int_foo:
-+                        dd      imp_Foo - IMAGE_BASE
-+                        dd      0x00000000
-+
- ; === [/ Import Name Tables (INTs) ] ===========================================
- 
-    int_size             equ     $ - int
-@@ -33868,6 +33887,17 @@ szVersion_dll:
-                         db      'VERSION.dll', 0x00 ; 0x0008232E
+
+ ; --- [ storm.dll ] ---------------------------------------------------------
+@@ -32542,11 +32542,11 @@ import_table:
+                         dd      szAdvapi32_dll - IMAGE_BASE
+                         dd      iat_advapi32 - IMAGE_BASE      ; pIAT_first_trunk
+
+-                        dd      int_shell32 - IMAGE_BASE      ; pINT_first_trunk
++                        dd      int_aaaaaaa - IMAGE_BASE      ; pINT_first_trunk
+                         dd      0x00000000                         ; TimeDateStamp
+                         dd      0x00000000                         ; pForwardChain
+-                        dd      szShell32_dll - IMAGE_BASE
+-                        dd      iat_shell32 - IMAGE_BASE      ; pIAT_first_trunk
++                        dd      szAaaaaaa_dll - IMAGE_BASE
++                        dd      iat_aaaaaaa - IMAGE_BASE      ; pIAT_first_trunk
+
+                         dd      int_version - IMAGE_BASE      ; pINT_first_trunk
+                         dd      0x00000000                         ; TimeDateStamp
+@@ -32732,12 +32732,12 @@ int_kernel32:
+                         dd      imp_GetTimeZoneInformation - IMAGE_BASE
+                         dd      0x00000000
+
+-; --- [ shell32.dll ] ---------------------------------------------------------
++; --- [ aaaaaaa.dll ] ---------------------------------------------------------
+
+-int_shell32:
+-                        dd      imp_ShellExecuteA - IMAGE_BASE
+-                        dd      imp_SHGetSpecialFolderLocation - IMAGE_BASE
+-                        dd      imp_SHGetPathFromIDListA - IMAGE_BASE
++int_aaaaaaa:
++                        dd      imp_Bbbbbbbbbbbbb - IMAGE_BASE
++                        dd      imp_Cccccccccccccccccccccccccc - IMAGE_BASE
++                        dd      imp_Dddddddddddddddddddd - IMAGE_BASE
+                         dd      0x00000000
+
+ ; --- [ storm.dll ] ---------------------------------------------------------
+@@ -33826,25 +33826,25 @@ szAdvapi32_dll:
+                         db      'ADVAPI32.dll', 0x00 ; 0x0008228C
                          align 2, db 0x00
- 
-+; --- [ foo.dll ] --------------------------------------------------------------
-+
-+imp_Foo:
+
+-; --- [ SHELL32.dll ] ---------------------------------------------------------
++; --- [ aaaaaaa.dll ] ---------------------------------------------------------
+
+-imp_SHGetPathFromIDListA:
+-                        dw      0x0063
+-                        db      'SHGetPathFromIDListA', 0x00 ; 0x0008229A
++imp_Dddddddddddddddddddd:
 +                        dw      0x0000
-+                        db      'Foo', 0x00
-+                        align 2, db 0x00
-+
-+szFoo_dll:
-+                        db      'foo.dll', 0x00
-+                        align 2, db 0x00
-+
- ; === [/ dll and function names ] ==============================================
- 
-    _rdata_vsize         equ     $ - $$
++                        db      'Dddddddddddddddddddd', 0x00 ; 0x0008229A
+                         align 2, db 0x00
+
+-imp_SHGetSpecialFolderLocation:
+-                        dw      0x0066
+-                        db      'SHGetSpecialFolderLocation', 0x00 ; 0x000822B2
++imp_Cccccccccccccccccccccccccc:
++                        dw      0x0001
++                        db      'Cccccccccccccccccccccccccc', 0x00 ; 0x000822B2
+                         align 2, db 0x00
+
+-imp_ShellExecuteA:
+-                        dw      0x008C
+-                        db      'ShellExecuteA', 0x00 ; 0x000822D0
++imp_Bbbbbbbbbbbbb:
++                        dw      0x0002
++                        db      'Bbbbbbbbbbbbb', 0x00 ; 0x000822D0
+                         align 2, db 0x00
+
+-szShell32_dll:
+-                        db      'SHELL32.dll', 0x00 ; 0x000822E0
++szAaaaaaa_dll:
++                        db      'aaaaaaa.dll', 0x00 ; 0x000822E0
+                         align 2, db 0x00
+
+ ; --- [ VERSION.dll ] ---------------------------------------------------------
 ```
 
-Edit the assembly in `_text.asm` to call the new functions; e.g.
+Edit the assembly in `_text.asm` to remove the call to `init_run_office_from_start_menu` (i.e. `0x41A84C`); e.g.
 
 ```diff
 diff --git a/_text.asm b/_text.asm
-index da8ac48..c3e2a57 100644
+index 3bbd269..9b4e3d6 100644
 --- a/_text.asm
 +++ b/_text.asm
-@@ -12183,8 +12183,10 @@ sub_408B4A:
-   addr_408B53:          db      0x53                                            ; PUSH EBX
-   addr_408B54:          db      0x56                                            ; PUSH ESI
-   addr_408B55:          db      0x8B, 0x75, 0x08                                ; MOV ESI, [EBP+0x8]
--  addr_408B58:          db      0x8B, 0xCE                                      ; MOV ECX, ESI
--  addr_408B5A:          db      0xE8, 0x95, 0x02, 0x00, 0x00                    ; CALL .+661
-+  call DWORD [ia_Foo]
-+times (0x408B5F - _text_vstart) - ($ - $$) db 0x90
-+  ;addr_408B58:          db      0x8B, 0xCE                                      ; MOV ECX, ESI
-+  ;addr_408B5A:          db      0xE8, 0x95, 0x02, 0x00, 0x00                    ; CALL .+661
-   addr_408B5F:          db      0x89, 0x35, 0xEC, 0x56, 0x52, 0x00              ; MOV [+0x5256ec], ESI
-   addr_408B65:          db      0xE8, 0x1B, 0x9D, 0x04, 0x00                    ; CALL .+302363
-   addr_408B6A:          db      0x85, 0xC0                                      ; TEST EAX, EAX
+@@ -44795,7 +44795,7 @@ sub_41A7C3:
+   addr_41A7C6:          db      0xE8, 0x57, 0xF5, 0x02, 0x00                    ; CALL .+193879
+   addr_41A7CB:          db      0x32, 0xC9                                      ; XOR CL, CL
+   addr_41A7CD:          db      0xE8, 0x5A, 0x02, 0x00, 0x00                    ; CALL .+602
+-  addr_41A7D2:          db      0xE8, 0x75, 0x00, 0x00, 0x00                    ; CALL .+117
++times (0x41A7D7 - _text_vstart) - ($ - $$) nop
+   addr_41A7D7:          db      0xA1, 0x94, 0x4B, 0x63, 0x00                    ; MOV EAX, [+0x634b94]
+   addr_41A7DC:          db      0x85, 0xC0                                      ; TEST EAX, EAX
+   addr_41A7DE:          db      0x74, 0x0D
 ```
 
 ### Building shared libraries
