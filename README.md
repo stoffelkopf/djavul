@@ -140,7 +140,7 @@ pacman -Sy gcc-multilib mingw-w64-gcc
 Build shared library.
 
 ```bash
-GOOS=windows GOARCH=386 CGO_ENABLED=1 CC=i686-w64-mingw32-gcc go build -buildmode=c-shared -o foo.dll import/path/to/foo
+GOOS=windows GOARCH=386 CGO_ENABLED=1 CC=i686-w64-mingw32-gcc go build -buildmode=c-shared -o aaaaaaa.dll github.com/sanctuary/djavul/aaaaaaa
 ```
 
 ## Public domain
