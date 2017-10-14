@@ -3,8 +3,9 @@ package main
 import "C"
 import "fmt"
 
-//export Dddddddddddddddddddd
-func Dddddddddddddddddddd() {
+//export InitAAAAAAAAAAAAAAAA
+func InitAAAAAAAAAAAAAAAA() {
+	// Called from WinMain.
 	fmt.Println("hello from Go :)")
 }
 
@@ -13,8 +14,9 @@ func Cccccccccccccccccccccccccc() int {
 	return 42
 }
 
-//export Bbbbbbbbbbbbb
-func Bbbbbbbbbbbbb(key int) {
+//export OnKeyPressAAA
+func OnKeyPressAAA(key int) {
+	// Called from on_key_press.
 	fmt.Println("key press:", key)
 }
 
