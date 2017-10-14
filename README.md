@@ -29,12 +29,12 @@ index 96ed9bf..059bb03 100644
 +; --- [ aaaaaaa.dll ] ---------------------------------------------------------
 +
 +iat_aaaaaaa:
-+  ia_Bbbbbbbbbbbbb:
-+                        dd      imp_Bbbbbbbbbbbbb - IMAGE_BASE
++  ia_OnKeyPressAAA:
++                        dd      imp_OnKeyPressAAA - IMAGE_BASE
 +  ia_Cccccccccccccccccccccccccc:
 +                        dd      imp_Cccccccccccccccccccccccccc - IMAGE_BASE
-+  ia_Dddddddddddddddddddd:
-+                        dd      imp_Dddddddddddddddddddd - IMAGE_BASE
++  ia_InitAAAAAAAAAAAAAAAA:
++                        dd      imp_InitAAAAAAAAAAAAAAAA - IMAGE_BASE
                          dd      0x00000000
 
  ; --- [ storm.dll ] ---------------------------------------------------------
@@ -65,9 +65,9 @@ index 96ed9bf..059bb03 100644
 -                        dd      imp_SHGetSpecialFolderLocation - IMAGE_BASE
 -                        dd      imp_SHGetPathFromIDListA - IMAGE_BASE
 +int_aaaaaaa:
-+                        dd      imp_Bbbbbbbbbbbbb - IMAGE_BASE
++                        dd      imp_OnKeyPressAAA - IMAGE_BASE
 +                        dd      imp_Cccccccccccccccccccccccccc - IMAGE_BASE
-+                        dd      imp_Dddddddddddddddddddd - IMAGE_BASE
++                        dd      imp_InitAAAAAAAAAAAAAAAA - IMAGE_BASE
                          dd      0x00000000
 
  ; --- [ storm.dll ] ---------------------------------------------------------
@@ -81,9 +81,9 @@ index 96ed9bf..059bb03 100644
 -imp_SHGetPathFromIDListA:
 -                        dw      0x0063
 -                        db      'SHGetPathFromIDListA', 0x00 ; 0x0008229A
-+imp_Dddddddddddddddddddd:
++imp_InitAAAAAAAAAAAAAAAA:
 +                        dw      0x0000
-+                        db      'Dddddddddddddddddddd', 0x00 ; 0x0008229A
++                        db      'InitAAAAAAAAAAAAAAAA', 0x00 ; 0x0008229A
                          align 2, db 0x00
 
 -imp_SHGetSpecialFolderLocation:
@@ -97,9 +97,9 @@ index 96ed9bf..059bb03 100644
 -imp_ShellExecuteA:
 -                        dw      0x008C
 -                        db      'ShellExecuteA', 0x00 ; 0x000822D0
-+imp_Bbbbbbbbbbbbb:
++imp_OnKeyPressAAA:
 +                        dw      0x0002
-+                        db      'Bbbbbbbbbbbbb', 0x00 ; 0x000822D0
++                        db      'OnKeyPressAAA', 0x00 ; 0x000822D0
                          align 2, db 0x00
 
 -szShell32_dll:
