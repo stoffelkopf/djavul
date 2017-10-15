@@ -1,6 +1,7 @@
 package main
 
 import "C"
+
 import (
 	"fmt"
 
@@ -9,25 +10,28 @@ import (
 	"github.com/sanctuary/djavul/capture"
 )
 
-//export InitAAAAAAAAAAAAAAAA
-func InitAAAAAAAAAAAAAAAA() {
+//export Init_AAAAAAAAAAAAAAA
+func Init_AAAAAAAAAAAAAAA() {
 	// Called from WinMain.
 	fmt.Println("hello from Go :)")
 }
 
-//export Cccccccccccccccccccccccccc
-func Cccccccccccccccccccccccccc() int {
-	return 42
-}
-
-//export OnKeyPressAAA
-func OnKeyPressAAA(key int) {
-	// Called from on_key_press.
+//export OnKeyPress_AA
+func OnKeyPress_AA(key int) {
+	// Called from diablo_on_key_press.
 	fmt.Println("key press:", key)
 	switch key {
 	case 'X':
 		// eXplore
 		automap.Explore()
+	}
+}
+
+//export OnKeyRelease_AAAAAAAAAAAAA
+func OnKeyRelease_AAAAAAAAAAAAA(key int) {
+	// Called from diablo_on_key_release.
+	fmt.Println("key release:", key)
+	switch key {
 	case w32.VK_APPS, w32.VK_SNAPSHOT:
 		// Capture screenshot.
 		capture.Screenshot()
