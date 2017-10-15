@@ -4,7 +4,9 @@ import "C"
 import (
 	"fmt"
 
+	"github.com/AllenDang/w32"
 	"github.com/sanctuary/djavul/automap"
+	"github.com/sanctuary/djavul/capture"
 )
 
 //export InitAAAAAAAAAAAAAAAA
@@ -26,6 +28,9 @@ func OnKeyPressAAA(key int) {
 	case 'X':
 		// eXplore
 		automap.Explore()
+	case w32.VK_APPS, w32.VK_SNAPSHOT:
+		// Capture screenshot.
+		capture.Screenshot()
 	}
 }
 
