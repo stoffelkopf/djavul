@@ -2,24 +2,27 @@ package main
 
 import "C"
 
-//export imp_B1_BBBBBBBB
-func imp_B1_BBBBBBBB() {
+import "fmt"
+
+//export B1_BBBBBBBB
+func B1_BBBBBBBB() {
+	fmt.Println("hello from lib2")
 }
 
-//export imp_B2_BBBBBBBBBBB
-func imp_B2_BBBBBBBBBBB() {
+//export B2_BBBBBBBBBBB
+func B2_BBBBBBBBBBB() {
 }
 
-//export imp_B3_BBBBBBBBBBBBB
-func imp_B3_BBBBBBBBBBBBB() {
+//export B3_BBBBBBBBBBBBB
+func B3_BBBBBBBBBBBBB() {
 }
 
-//export imp_B4_BBBBBBBBBB
-func imp_B4_BBBBBBBBBB() {
+//export B4_BBBBBBBBBB
+func B4_BBBBBBBBBB() {
 }
 
-//export imp_B5_BBBBBBBBB
-func imp_B5_BBBBBBBBB() {
+//export B5_BBBBBBBBB
+func B5_BBBBBBBBB() {
 }
 
 func main() {}
