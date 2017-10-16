@@ -10,14 +10,14 @@ import (
 	"github.com/sanctuary/djavul/capture"
 )
 
-//export Init_AAAAAAAAAAAAAAA
-func Init_AAAAAAAAAAAAAAA() {
+//export Init
+func Init() {
 	// Called from WinMain.
-	fmt.Println("hello from Go :)")
+	fmt.Println("init: hook.dll")
 }
 
-//export OnKeyPress_AA
-func OnKeyPress_AA(key int) {
+//export OnKeyPress
+func OnKeyPress(key int) {
 	// Called from diablo_on_key_press.
 	fmt.Println("key press:", key)
 	switch key {
@@ -27,8 +27,8 @@ func OnKeyPress_AA(key int) {
 	}
 }
 
-//export OnKeyRelease_AAAAAAAAAAAAA
-func OnKeyRelease_AAAAAAAAAAAAA(key int) {
+//export OnKeyRelease
+func OnKeyRelease(key int) {
 	// Called from diablo_on_key_release.
 	fmt.Println("key release:", key)
 	switch key {

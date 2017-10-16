@@ -1,7 +1,7 @@
-all: hook_aa.dll bbbbbbbb.dll
+all: hook.dll lib2.dll
 
-hook_aa.dll:
-	GOOS=windows GOARCH=386 CGO_ENABLED=1 CC=i686-w64-mingw32-gcc go build -buildmode=c-shared -o hook_aa.dll github.com/sanctuary/djavul/dlls/hook_aa
+hook.dll:
+	GOOS=windows GOARCH=386 CGO_ENABLED=1 CC=i686-w64-mingw32-gcc go build -buildmode=c-shared -o hook.dll github.com/sanctuary/djavul/dlls/hook
 
-bbbbbbbb.dll:
-	GOOS=windows GOARCH=386 CGO_ENABLED=1 CC=i686-w64-mingw32-gcc go build -buildmode=c-shared -o bbbbbbbb.dll github.com/sanctuary/djavul/dlls/bbbbbbbb
+lib2.dll:
+	GOOS=windows GOARCH=386 CGO_ENABLED=1 CC=i686-w64-mingw32-gcc go build -buildmode=c-shared -o lib2.dll github.com/sanctuary/djavul/dlls/lib2
