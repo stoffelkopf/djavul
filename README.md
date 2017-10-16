@@ -4,6 +4,8 @@ Experimenting with C-shared libraries in Go.
 
 ## Installation
 
+**Note**, this mod requires an original installation of Diablo 1. None of the Diablo 1 game assets are provided by this project.
+
 Convert `diablo.exe` version 1.09b to NASM using [bin2asm](https://godoc.org/github.com/decomp/exp/cmd/bin2asm) and [dump_imports](https://godoc.org/github.com/decomp/exp/cmd/dump_imports).
 
 Edit the import data in `_rdata.asm` to include the new DLL files. To keep addresses fixed, replace `shell32.dll` with `aaaaaaa.dll`; e.g.
