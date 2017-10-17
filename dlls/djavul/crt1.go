@@ -16,7 +16,9 @@ package main
 import "C"
 
 import (
+	"flag"
 	"fmt"
+	"strings"
 
 	"github.com/AllenDang/w32"
 	"github.com/sanctuary/djavul/diablo"
@@ -27,8 +29,10 @@ func Start() {
 	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
 	inst := w32.GetModuleHandle("")
-	// TODO: Parse arguments from command line.
-	args := ""
+	// Parse arguments from command line.
+	flag.Parse()
+	args := strings.Join(flag.Args(), " ")
+	fmt.Println("args:", args)
 	show := w32.SW_SHOWDEFAULT
 	diablo.WinMain(inst, 0, args, show)
 }
