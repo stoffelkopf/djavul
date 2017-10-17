@@ -13,7 +13,7 @@ import (
 //export Init
 func Init() {
 	// Called from WinMain.
-	fmt.Println("init: hook.dll")
+	fmt.Println("init: djavul.dll")
 }
 
 //export OnKeyPress
@@ -37,5 +37,3 @@ func OnKeyRelease(key int) {
 		capture.Screenshot()
 	}
 }
-
-func main() {}

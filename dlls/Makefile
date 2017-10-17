@@ -1,10 +1,7 @@
-all: hook.dll lib2.dll crt0.dll
-
-hook.dll:
-	make -C hook
-
-lib2.dll:
-	make -C lib2
+all: crt0.dll djavul.dll
 
 crt0.dll:
 	make -C crt0
+
+djavul.dll:
+	make -C djavul
