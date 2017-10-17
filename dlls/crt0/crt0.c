@@ -28,6 +28,7 @@ __declspec(dllexport) void crt0_start(void) {
 	while (*szCmdLine && *szCmdLine <= ' ') {
 		++szCmdLine;
 	}
+	printf("szCmdLine: `%s`\n", szCmdLine);
 	int status;
 	status = djavul_WinMain(hInstance, NULL, szCmdLine, SW_SHOWDEFAULT);
 	exit(status);

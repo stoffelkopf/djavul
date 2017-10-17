@@ -16,7 +16,7 @@ package main
 import "C"
 
 import (
-	"os"
+	"fmt"
 
 	"github.com/AllenDang/w32"
 	"github.com/sanctuary/djavul/diablo"
@@ -24,15 +24,16 @@ import (
 
 //export Start
 func Start() {
+	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
 	inst := w32.GetModuleHandle("")
 	// TODO: Parse arguments from command line.
 	args := ""
 	show := w32.SW_SHOWDEFAULT
-	status := diablo.WinMain(inst, 0, args, show)
-	os.Exit(status)
+	diablo.WinMain(inst, 0, args, show)
 }
 
+// cinit invokes cpp initialiation functions.
 func cinit() {
 	C.djavul_cinit()
 }

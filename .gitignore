@@ -1,4 +1,5 @@
 *.exe
 *.dll
 *.h
+*.a
 _dump_
