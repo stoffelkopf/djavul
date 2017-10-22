@@ -325,8 +325,8 @@ func InitShadows() {
 // PSX sig: int DRLG_PlaceMiniSet__FPCUciiiiiii(unsigned char *miniset, int tmin, int tmax, int cx, int cy, int setview, int noquad, int ldir)
 //
 // ref: 0x40B881
-func PlaceMiniset(miniset unsafe.Pointer, tmin, tmax, cx, cy int, set_view bool, noquad, ldir int) int {
-	return int(C.drlg_l1_place_miniset((*C.uint8_t)(miniset), C.int(tmin), C.int(tmax), C.int(cx), C.int(cy), bool32(set_view), C.int(noquad), C.int(ldir)))
+func PlaceMiniset(miniset unsafe.Pointer, tmin, tmax, cx, cy int, setView bool, noquad, ldir int) int {
+	return int(C.drlg_l1_place_miniset((*C.uint8_t)(miniset), C.int(tmin), C.int(tmax), C.int(cx), C.int(cy), bool32(setView), C.int(noquad), C.int(ldir)))
 }
 
 // Reset resets the tile ID and the dungeon flag maps.
@@ -365,8 +365,8 @@ func GenerateFirstRoom() {
 // PSX sig: void L5drawRoom__Fiiii(int x, int y, int w, int h)
 //
 // ref: 0x40BD66
-func AddRoom(xx_start, yy_start, xx_count, yy_count int) {
-	C.drlg_l1_add_room(C.int(xx_start), C.int(yy_start), C.int(xx_count), C.int(yy_count))
+func AddRoom(xxStart, yyStart, xxCount, yyCount int) {
+	C.drlg_l1_add_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount))
 }
 
 // GenerateRoom generates a room of the given dimensions at the spcified
@@ -376,8 +376,8 @@ func AddRoom(xx_start, yy_start, xx_count, yy_count int) {
 // PSX sig: void L5roomGen__Fiiiii(int x, int y, int w, int h, int dir)
 //
 // ref: 0x40BD9D
-func GenerateRoom(xx_start, yy_start, xx_count, yy_count, dir int) {
-	C.drlg_l1_generate_room(C.int(xx_start), C.int(yy_start), C.int(xx_count), C.int(yy_count), C.int(dir))
+func GenerateRoom(xxStart, yyStart, xxCount, yyCount, dir int) {
+	C.drlg_l1_generate_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount), C.int(dir))
 }
 
 // IsAreaEmpty reports whether the given area is empty.
@@ -386,8 +386,8 @@ func GenerateRoom(xx_start, yy_start, xx_count, yy_count, dir int) {
 // PSX sig: unsigned char L5checkRoom__Fiiii(int x, int y, int width, int height)
 //
 // ref: 0x40BFA4
-func IsAreaEmpty(xx_start, yy_start, xx_count, yy_count int) bool {
-	return C.drlg_l1_is_area_empty(C.int(xx_start), C.int(yy_start), C.int(xx_count), C.int(yy_count)) == 1
+func IsAreaEmpty(xxStart, yyStart, xxCount, yyCount int) bool {
+	return C.drlg_l1_is_area_empty(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount)) == 1
 }
 
 // GetArea returns the number of walls on the map.
@@ -461,8 +461,8 @@ func GetVertWallSpace(xx, yy int) int {
 // PSX sig: void L5HorizWall__Fiici(int i, int j, char p, int dx)
 //
 // ref: 0x40C35B
-func AddHorizWall(xx, yy int, tile_id TileID, xx_count int) {
-	C.drlg_l1_add_horiz_wall(C.int(xx), C.int(yy), C.l1_tile_id(tile_id), C.int(xx_count))
+func AddHorizWall(xx, yy int, tileID TileID, xxCount int) {
+	C.drlg_l1_add_horiz_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileID), C.int(xxCount))
 }
 
 // AddVertWall adds a vertical wall based on the given tile ID.
@@ -471,8 +471,8 @@ func AddHorizWall(xx, yy int, tile_id TileID, xx_count int) {
 // PSX sig: void L5VertWall__Fiici(int i, int j, char p, int dy)
 //
 // ref: 0x40C449
-func AddVertWall(xx int, yy int, tile_id TileID, yy_count int) {
-	C.drlg_l1_add_vert_wall(C.int(xx), C.int(yy), C.l1_tile_id(tile_id), C.int(yy_count))
+func AddVertWall(xx int, yy int, tileID TileID, yyCount int) {
+	C.drlg_l1_add_vert_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileID), C.int(yyCount))
 }
 
 // FixTiles fixes tile IDs of wall edges.
@@ -512,8 +512,8 @@ func GenerateChambers() {
 // PSX sig: void DRLG_L5GChamber__Fiiiiii(int sx, int sy, int topflag, int bottomflag, int leftflag, int rightflag)
 //
 // ref: 0x40CD86
-func GenerateChamber(xx_start, yy_start int, top_right, bottom_left, top_left, bottom_right bool) {
-	C.drlg_l1_generate_chamber(C.int(xx_start), C.int(yy_start), bool32(top_right), bool32(bottom_left), bool32(top_left), bool32(bottom_right))
+func GenerateChamber(xxStart, yyStart int, topRight, bottomLeft, topLeft, bottomRight bool) {
+	C.drlg_l1_generate_chamber(C.int(xxStart), C.int(yyStart), bool32(topRight), bool32(bottomLeft), bool32(topLeft), bool32(bottomRight))
 }
 
 // GenerateHall generates a hall of columns and arches.
@@ -522,8 +522,8 @@ func GenerateChamber(xx_start, yy_start int, top_right, bottom_left, top_left, b
 // PSX sig: void DRLG_L5GHall__Fiiii(int x1, int y1, int x2, int y2)
 //
 // ref: 0x40CEC7
-func GenerateHall(xx_start, yy_start, xx_end, yy_end int) {
-	C.drlg_l1_generate_hall(C.int(xx_start), C.int(yy_start), C.int(xx_end), C.int(yy_end))
+func GenerateHall(xxStart, yyStart, xxEnd, yyEnd int) {
+	C.drlg_l1_generate_hall(C.int(xxStart), C.int(yyStart), C.int(xxEnd), C.int(yyEnd))
 }
 
 // InitQuestDun initializes tile IDs based on the loaded quest dungeon file.
