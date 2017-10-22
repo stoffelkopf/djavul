@@ -9,7 +9,6 @@ package main
 //       if (f == NULL) {
 //          break;
 //       }
-//       printf("cinit: %p\n", f);
 //       f();
 //    }
 // }
@@ -18,6 +17,7 @@ import "C"
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -28,10 +28,12 @@ import (
 //export Start
 func Start() {
 	fmt.Println("djavul.Start: entry point in Go")
-	dumpL1Maps()
+	cinit()
+	if err := drlgCheck(); err != nil {
+		log.Fatalf("%+v", err)
+	}
 	os.Exit(0)
 	return
-	cinit()
 	inst := w32.GetModuleHandle("")
 	// Parse arguments from command line.
 	flag.Parse()
