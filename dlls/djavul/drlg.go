@@ -70,16 +70,29 @@ func drlgCheck() error {
 	diablo.LoadLevelGraphics()
 	seed := uint32(0)
 	l1.CreateDungeon(seed, 0)
+	if err := check(*gendung.TileIDMap, "ff9be30983ee653ee2b3f33030091b8db3bd5a70"); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := check(*gendung.PieceIDMap, "d39b0f73a718b65081a8edc6ee363746c347edf8"); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := check(*gendung.ArchNumMap, "cac60d2dd8c83e1e1d135e8ad9b83c536d8d02a2"); err != nil {
+		return errors.WithStack(err)
+	}
+	fmt.Println("PASS")
+	return nil
+}
+
+// check validates the data against the given SHA1 hashsum.
+func check(data interface{}, want string) error {
 	buf := &bytes.Buffer{}
-	if err := binary.Write(buf, binary.LittleEndian, *gendung.TileIDMap); err != nil {
+	if err := binary.Write(buf, binary.LittleEndian, data); err != nil {
 		return errors.WithStack(err)
 	}
 	sum := sha1.Sum(buf.Bytes())
 	got := fmt.Sprintf("%040x", sum[:])
-	want := "ff9be30983ee653ee2b3f33030091b8db3bd5a70"
 	if got != want {
 		return errors.Errorf("SHA1 hash mismatch for seed 0; expected %q, got %q", want, got)
 	}
-	fmt.Println("PASS")
 	return nil
 }
