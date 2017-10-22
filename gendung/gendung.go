@@ -1,2 +1,2 @@
-// Package gendung implements dungeon generation functions.
+// Package gendung implements dungeon generation utility functions.
 package gendung
