@@ -18,6 +18,7 @@ import "C"
 import (
 	"flag"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/AllenDang/w32"
@@ -27,6 +28,9 @@ import (
 //export Start
 func Start() {
 	fmt.Println("djavul.Start: entry point in Go")
+	dumpL1Maps()
+	os.Exit(0)
+	return
 	cinit()
 	inst := w32.GetModuleHandle("")
 	// Parse arguments from command line.
