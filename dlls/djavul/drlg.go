@@ -22,7 +22,7 @@ func dumpL1Maps() {
 	*gendung.DLvl = 1
 	*gendung.DType = gendung.Cathedral
 	diablo.LoadLevelGraphics()
-	for seed := uint32(0); seed <= 0xFF; seed++ {
+	for seed := int32(0); seed <= 0xFF; seed++ {
 		l1.CreateDungeon(seed, 0)
 		if err := dumpL1Map(seed); err != nil {
 			log.Fatalf("+%v", err)
@@ -32,7 +32,7 @@ func dumpL1Maps() {
 
 // dumpL1Map stores the tile ID, dungeon piece ID and arch num maps for the
 // given seed of the procedurally generated Cathedral dungeon.
-func dumpL1Map(seed uint32) error {
+func dumpL1Map(seed int32) error {
 	path := fmt.Sprintf("l1_tiles_%08X.bin", seed)
 	if err := dumpData(path, *gendung.TileIDMap); err != nil {
 		return errors.WithStack(err)
@@ -68,7 +68,7 @@ func drlgCheck() error {
 	*gendung.DLvl = 1
 	*gendung.DType = gendung.Cathedral
 	diablo.LoadLevelGraphics()
-	seed := uint32(123)
+	seed := int32(123)
 	l1.CreateDungeon(seed, 0)
 	if err := check(*gendung.TileIDMap, "tiles", "12a0410904ebf2507b6b7017f0ae191ae476686b"); err != nil {
 		return errors.WithStack(err)

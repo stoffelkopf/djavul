@@ -195,7 +195,12 @@ package l1
 // }
 import "C"
 
-import "unsafe"
+import (
+	"unsafe"
+
+	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/gendung"
+)
 
 // ResetMaps resets the dungeon flag, player, NPC, dead, object, item, missile
 // and arch maps.
@@ -265,8 +270,16 @@ func PreloadDun(dunPath *int8, viewX, viewY int32) {
 // PSX sig: void CreateL5Dungeon__FUii(unsigned int rseed, int entry)
 //
 // ref: 0x40B229
-func CreateDungeon(seed uint32, entry int32) {
-	C.drlg_l1_create_dungeon(C.uint32_t(seed), C.int(entry))
+func CreateDungeon(seed, entry int32) {
+	engine.SetSeed(seed)
+	gendung.InitTransparency() // TODO: add test case
+	gendung.InitSetPiece()     // TODO: add test case
+	LoadQuestDun()             // TODO: add test case
+	GenerateDungeon(entry)
+	InitPieceIDMap()
+	FreeQuestDun() // NOTE: not tested; only used for cleanup
+	InitArches()
+	gendung.MarkSetPiece() // TODO: add test case
 }
 
 // LoadQuestLun loads tile IDs from the dungeon file of the active quest level.
