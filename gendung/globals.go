@@ -2,7 +2,11 @@
 
 package gendung
 
-import "unsafe"
+import (
+	"unsafe"
+
+	"github.com/sanctuary/formats/level/til"
+)
 
 // Global variables.
 var (
@@ -16,7 +20,12 @@ var (
 	// PieceIDMap contains the piece IDs of each tile on the map.
 	//
 	// ref: 0x5A5BD8
-	PieceIDMap = (*[112][112]uint32)(unsafe.Pointer(uintptr(0x5A5BD8)))
+	PieceIDMap = (*[112][112]int32)(unsafe.Pointer(uintptr(0x5A5BD8)))
+	// TileDefs specifies the tile definitions of the active dungeon type; (e.g.
+	// levels/l1data/l1.til).
+	//
+	// ref: 0x5B70DC
+	TileDefs = (**til.Tile)(unsafe.Pointer(uintptr(0x5B70DC)))
 	// DType specifies the active dungeon type of the current game.
 	//
 	//
