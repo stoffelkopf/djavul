@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/kr/pretty"
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/diablo"
 	"github.com/sanctuary/djavul/gendung"
@@ -71,12 +72,51 @@ func drlgCheck() error {
 	seed := int32(123)
 	l1.CreateDungeon(seed, 0)
 	if err := check(*gendung.TileIDMap, "tiles", "12a0410904ebf2507b6b7017f0ae191ae476686b"); err != nil {
+		path := fmt.Sprintf("l1_tiles_%08X.bin", seed)
+		f, err := os.Open(path)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		defer f.Close()
+		var tiles [40][40]uint8
+		if err := binary.Read(f, binary.LittleEndian, &tiles); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("want:", tiles)
+
 		return errors.WithStack(err)
 	}
 	if err := check(*gendung.PieceIDMap, "pieces", "e15a7afb7505cb01b0b3d1befce5b8d4833ae1c6"); err != nil {
+		path := fmt.Sprintf("l1_pieces_%08X.bin", seed)
+		f, err := os.Open(path)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		defer f.Close()
+		var pieces [112][112]int32
+		if err := binary.Read(f, binary.LittleEndian, &pieces); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("want:", pieces)
+
 		return errors.WithStack(err)
 	}
 	if err := check(*gendung.ArchNumMap, "arches", "5438e3d7761025a2ee6f7fec155c840fc289f5dd"); err != nil {
+		path := fmt.Sprintf("l1_arches_%08X.bin", seed)
+		f, err := os.Open(path)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		defer f.Close()
+		var arches [112][112]int8
+		if err := binary.Read(f, binary.LittleEndian, &arches); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("want:", arches)
+
 		return errors.WithStack(err)
 	}
 	fmt.Println("PASS")
