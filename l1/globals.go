@@ -6,7 +6,8 @@ import "unsafe"
 
 // Global variables.
 var (
-	// Stair1 is a 4x4 miniset of tile IDs representing a staircase.
+	// MinisetStairUp1 is a 4x4 miniset of tile IDs representing a staircase
+	// going up.
 	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
@@ -26,9 +27,10 @@ var (
 	//    }
 	//
 	// ref: 0x479EC8
-	Stair1 = (*[34]uint8)(unsafe.Pointer(uintptr(0x479EC8)))
+	MinisetStairUp1 = (*[34]uint8)(unsafe.Pointer(uintptr(0x479EC8)))
 
-	// Stair2 is a 4x4 miniset of tile IDs representing a staircase.
+	// MinisetStairUp2 is a 4x4 miniset of tile IDs representing a staircase
+	// going up.
 	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
@@ -48,9 +50,10 @@ var (
 	//    }
 	//
 	// ref: 0x479EEC
-	Stair2 = (*[34]uint8)(unsafe.Pointer(uintptr(0x479EEC)))
+	MinisetStairUp2 = (*[34]uint8)(unsafe.Pointer(uintptr(0x479EEC)))
 
-	// Stair3 is a 4x3 miniset of tile IDs representing a staircase.
+	// MinisetStairDown is a 4x3 miniset of tile IDs representing a staircase
+	// going down.
 	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
@@ -70,9 +73,10 @@ var (
 	//    }
 	//
 	// ref: 0x479F10
-	Stair3 = (*[26]uint8)(unsafe.Pointer(uintptr(0x479F10)))
+	MinisetStairDown = (*[26]uint8)(unsafe.Pointer(uintptr(0x479F10)))
 
-	// Candlestick is a 2x2 miniset of tile IDs representing a candlestick.
+	// MinisetCandlestick is a 2x2 miniset of tile IDs representing a
+	// candlestick.
 	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
@@ -92,10 +96,10 @@ var (
 	//    }
 	//
 	// ref: 0x479F2C
-	Candlestick = (*[10]uint8)(unsafe.Pointer(uintptr(0x479F2C)))
+	MinisetCandlestick = (*[10]uint8)(unsafe.Pointer(uintptr(0x479F2C)))
 
-	// StairPoison is a 6x6 miniset of tile IDs representing a staircase down to
-	// the Poisoned Water Supply.
+	// MinisetStairDownPoison is a 6x6 miniset of tile IDs representing a
+	// staircase going down to the Poisoned Water Supply.
 	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
@@ -115,7 +119,7 @@ var (
 	//    }
 	//
 	// ref: 0x479F38
-	StairPoison = (*[74]uint8)(unsafe.Pointer(uintptr(0x479F38)))
+	MinisetStairDownPoison = (*[74]uint8)(unsafe.Pointer(uintptr(0x479F38)))
 
 	// FlagMap contains flags used for dungeon generation of the Cathedral.
 	//

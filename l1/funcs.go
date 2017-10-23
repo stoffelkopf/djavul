@@ -355,7 +355,8 @@ func FreeQuestDun() {
 //
 // ref: 0x40B306
 func GenerateDungeon(entry int32) {
-	C.drlg_l1_generate_dungeon()
+	generateDungeon(entry)
+	//C.drlg_l1_generate_dungeon()
 }
 
 // PlaceDoor places a door at the given coordinate.
