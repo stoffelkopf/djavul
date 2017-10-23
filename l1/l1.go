@@ -240,6 +240,61 @@ func generateDungeon(entry int32) {
 	quests.InitQuestArea(*gendung.SetXx, *gendung.SetYy) // TODO: add test case
 }
 
+// placeDoor places a door at the given coordinate.
+//
+// PSX ref: 0x8013BCB0
+// PSX sig: void DRLG_PlaceDoor__Fii(int x, int y)
+//
+// ref: 0x40B56F
+func placeDoor(xx, yy int) {
+	if FlagMap[xx][yy]&FlagDone != 0 {
+		FlagMap[xx][yy] = FlagDone
+		return
+	}
+
+	flag := FlagMap[xx][yy] &^ FlagDone
+	tileID := TileID(gendung.TileIDMap[xx][yy])
+	if flag == FlagFavourSe || flag == FlagFavourSw {
+		if xx != 1 {
+			switch tileID {
+			case WallSw:
+				gendung.TileIDMap[xx][yy] = uint8(DoorSw)
+			case WallEndSw:
+				gendung.TileIDMap[xx][yy] = uint8(DoorEndSw)
+			case WallSwArchSe:
+				gendung.TileIDMap[xx][yy] = uint8(DoorSwArchSe)
+			}
+		}
+		if yy != 1 {
+			switch tileID {
+			case WallSe:
+				gendung.TileIDMap[xx][yy] = uint8(DoorSe)
+			case WallEndSe:
+				gendung.TileIDMap[xx][yy] = uint8(DoorEndSe)
+			case ArchSwWallSe:
+				gendung.TileIDMap[xx][yy] = uint8(ArchSwDoorSe)
+			}
+		}
+	}
+	if tileID == WallSwWallSe {
+		switch flag {
+		case FlagFavourSe:
+			if yy != 1 {
+				gendung.TileIDMap[xx][yy] = uint8(WallSwDoorSe)
+			}
+		case FlagFavourSw:
+			if xx != 1 {
+				gendung.TileIDMap[xx][yy] = uint8(DoorSwWallSe)
+			}
+		case FlagFavourSe | FlagFavourSw:
+			if xx != 1 && yy != 1 {
+				gendung.TileIDMap[xx][yy] = uint8(DoorSwDoorSe)
+			}
+		}
+	}
+	FlagMap[xx][yy] = FlagDone
+}
+
 // ### [ Helper functions ] ####################################################
 
 // getTiles returns the tileset of the active dungeon type.

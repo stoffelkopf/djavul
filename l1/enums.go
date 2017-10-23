@@ -687,3 +687,13 @@ const (
 	ArchIDSwDoor    ArchID = 7
 	ArchIDSeDoor    ArchID = 8
 )
+
+// Flag represents a set of flags used for dungeon generation of the Cathedral.
+type Flag uint8
+
+// Flags used for dungeon generation.
+const (
+	FlagFavourSe Flag = 0x01
+	FlagFavourSw Flag = 0x02
+	FlagDone     Flag = 0x80
+)

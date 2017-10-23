@@ -327,7 +327,11 @@ func GenerateDungeon(entry int32) {
 //
 // ref: 0x40B56F
 func PlaceDoor(xx, yy int) {
-	C.drlg_l1_place_door(C.int(xx), C.int(yy))
+	if useGo {
+		placeDoor(xx, yy)
+	} else {
+		C.drlg_l1_place_door(C.int(xx), C.int(yy))
+	}
 }
 
 // InitShadows initializes arch and bar shadows.

@@ -127,5 +127,5 @@ var (
 	// PSX def: unsigned char* mydflags
 	//
 	// ref: 0x527064
-	FlagMap = (*[40][40]uint8)(unsafe.Pointer(uintptr(0x527064)))
+	FlagMap = (*[40][40]Flag)(unsafe.Pointer(uintptr(0x527064)))
 )
