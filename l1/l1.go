@@ -2,11 +2,97 @@
 package l1
 
 import (
+	"reflect"
 	"unsafe"
 
+	"github.com/pkg/errors"
+	"github.com/sanctuary/djavul/engine"
 	"github.com/sanctuary/djavul/gendung"
 	"github.com/sanctuary/djavul/quests"
+	"github.com/sanctuary/formats/level/til"
 )
+
+// initPieceIDMap initializes the dungeon piece ID map.
+//
+// PSX ref: 0x8013CBA8
+// PSX sig: void DRLG_L1Pass3__Fv()
+//
+// ref: 0x40AFB3
+func initPieceIDMap() {
+	// Initialize the entire dungeon piece ID map with dirt.
+	tiles := getTiles()
+	tile := tiles[Dirt-1]
+	for x := 0; x < 112-1; x += 2 {
+		for y := 0; y < 112-1; y += 2 {
+			gendung.PieceIDMap[x][y] = int32(tile.Top) + 1
+			gendung.PieceIDMap[x+1][y] = int32(tile.Right) + 1
+			gendung.PieceIDMap[x][y+1] = int32(tile.Left) + 1
+			gendung.PieceIDMap[x+1][y+1] = int32(tile.Bottom) + 1
+		}
+	}
+	// Initialize the visible tiles of the dungeon piece ID map based on the tile
+	// ID map. The visible tiles are located at (16, 16) <= coordinate < (96,
+	// 96).
+	x := 16
+	for xx := 0; xx < 40; xx++ {
+		y := 16
+		for yy := 0; yy < 40; yy++ {
+			tileID := (*gendung.TileIDMap)[xx][yy]
+			if tileID == 0 {
+				panic(errors.Errorf("uninitialized tile ID at (%d, %d)", xx, yy))
+			}
+			tile := tiles[tileID-1]
+			gendung.PieceIDMap[x][y] = int32(tile.Top) + 1
+			gendung.PieceIDMap[x+1][y] = int32(tile.Right) + 1
+			gendung.PieceIDMap[x][y+1] = int32(tile.Left) + 1
+			gendung.PieceIDMap[x+1][y+1] = int32(tile.Bottom) + 1
+			y += 2
+		}
+		x += 2
+	}
+}
+
+// initArches initializes arches.
+//
+// PSX ref: 0x8013CF5C
+// PSX sig: void DRLG_InitL1Vals__Fv()
+//
+// ref: 0x40B0A5
+func initArches() {
+	for x := 0; x < 112; x++ {
+		for y := 0; y < 112; y++ {
+			switch DPieceID(gendung.PieceIDMap[x][y]) {
+			case ArchSwArchSe_left, ArchSwDoorSe_left, BloodArchSw_left, ArchSwShadowArchSeLeft_left, ArchSwWallSe3_left, EnteranceSw1_left:
+				gendung.ArchNumMap[x][y] = int8(ArchIDSw)
+			case ArchSwArchSe_right, BrokenArchSe_right, ArchSeShadowArchSwRight_right, ArchSeShadowBarSwRight_right, WallSw3ArchSe_right, EnteranceSe1_right:
+				gendung.ArchNumMap[x][y] = int8(ArchIDSe)
+			case BrokenArchSw1_left:
+				gendung.ArchNumMap[x][y] = int8(ArchIDSwBroken2)
+			case BrokenArchSw2_left:
+				gendung.ArchNumMap[x][y] = int8(ArchIDSw2)
+			}
+		}
+	}
+}
+
+// createDungeon creates a random cathedral dungeon based on the given seed and
+// level entry.
+//
+// PSX ref: 0x80140E64
+// PSX sig: void CreateL5Dungeon__FUii(unsigned int rseed, int entry)
+//
+// ref: 0x40B229
+func createDungeon(seed, entry int32) {
+	engine.SetSeed(seed)
+	gendung.InitTransparency() // TODO: add test case
+	gendung.InitSetPiece()     // TODO: add test case
+	LoadQuestDun()             // TODO: add test case
+	GenerateDungeon(entry)
+	InitPieceIDMap()
+	FreeQuestDun() // NOTE: not tested; only used for cleanup
+	InitArches()
+	gendung.MarkSetPiece() // TODO: add test case
+}
 
 // generateDungeon generates a cathedral dungeon based on the given level entry.
 //
@@ -152,4 +238,30 @@ func generateDungeon(entry int32) {
 
 	// Initialize quest area.
 	quests.InitQuestArea(*gendung.SetXx, *gendung.SetYy)
+}
+
+// ### [ Helper functions ] ####################################################
+
+// getTiles returns the tileset of the active dungeon type.
+func getTiles() []til.Tile {
+	// The tileset of town contains 342 tiles, l1 206, l2 160, l3 156, and l4
+	// 137.
+	var n int
+	switch *gendung.DType {
+	case gendung.Tristram:
+		n = 342
+	case gendung.Cathedral:
+		n = 206
+	case gendung.Catacombs:
+		n = 160
+	case gendung.Caves:
+		n = 156
+	case gendung.Hell:
+		n = 137
+	default:
+		panic(errors.Errorf("invalid dungeon type %d", *gendung.DType))
+	}
+	data := (uintptr)(unsafe.Pointer(*gendung.TileDefs))
+	sh := &reflect.SliceHeader{Data: data, Len: n, Cap: n}
+	return *(*[]til.Tile)(unsafe.Pointer(sh))
 }
