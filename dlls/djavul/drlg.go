@@ -73,9 +73,9 @@ func drlgCheck() error {
 	l1.CreateDungeon(seed, 0)
 	if err := check(*gendung.TileIDMap, "tiles", "12a0410904ebf2507b6b7017f0ae191ae476686b"); err != nil {
 		path := fmt.Sprintf("l1_tiles_%08X.bin", seed)
-		f, err := os.Open(path)
-		if err != nil {
-			return errors.WithStack(err)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
 		}
 		defer f.Close()
 		var tiles [40][40]uint8
@@ -89,9 +89,9 @@ func drlgCheck() error {
 	}
 	if err := check(*gendung.PieceIDMap, "pieces", "e15a7afb7505cb01b0b3d1befce5b8d4833ae1c6"); err != nil {
 		path := fmt.Sprintf("l1_pieces_%08X.bin", seed)
-		f, err := os.Open(path)
-		if err != nil {
-			return errors.WithStack(err)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
 		}
 		defer f.Close()
 		var pieces [112][112]int32
