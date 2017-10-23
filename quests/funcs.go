@@ -8,9 +8,14 @@ package quests
 // 	bool32_t (__fastcall *f)(quest_id) = (void *)0x451831;
 // 	return f(quest_num);
 // }
+//
+// static void __fastcall quests_init_quest_area(int xx, int yy) {
+//    void (__fastcall *f)(int, int) = (void *)0x451F20;
+//    f(xx, yy);
+// }
 import "C"
 
-// quests_is_active reports whether the given quest is active.
+// IsActive reports whether the given quest is active.
 //
 // NOTE: quest_num and quest_id are equivalent, as indicated by this function.
 //
@@ -20,4 +25,14 @@ import "C"
 // ref: 0x451831
 func IsActive(questNum QuestID) bool {
 	return C.quests_is_active(C.quest_id(questNum)) == 1
+}
+
+// InitQuestArea initializes the given quest area.
+//
+// PSX ref: 0x8015F334
+// PSX def: void DRLG_CheckQuests__Fii(int x, int y)
+//
+// ref: 0x451F20
+func InitQuestArea(xx, yy int32) {
+	C.quests_init_quest_area(C.int(xx), C.int(yy))
 }
