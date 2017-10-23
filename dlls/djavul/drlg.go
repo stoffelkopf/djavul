@@ -105,9 +105,9 @@ func drlgCheck() error {
 	}
 	if err := check(*gendung.ArchNumMap, "arches", "5438e3d7761025a2ee6f7fec155c840fc289f5dd"); err != nil {
 		path := fmt.Sprintf("l1_arches_%08X.bin", seed)
-		f, err := os.Open(path)
-		if err != nil {
-			return errors.WithStack(err)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
 		}
 		defer f.Close()
 		var arches [112][112]int8

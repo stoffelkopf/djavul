@@ -5,210 +5,685 @@ type TileID uint8
 
 // Tile IDs.
 const (
-	WallSw TileID = iota + 1
-	WallSe
-	ArchNeArchNw
-	WallSwWallSe
-	ArchSwArchSe
-	WallEndSw
-	WallEndSe
-	ArchEndSw
-	ArchEndSe
-	WallSwArchSe
-	ArchSw
-	ArchSe
-	Floor
-	ArchSwWallSe
-	Column
-	ArchEndNe
-	ArchEndNw
-	DirtWallSw
-	DirtWallSe
-	DirtWallNeWallNw
-	DirtWallSwWallSe
-	Dirt
-	DirtWallEndSw
-	DirtWallEndSe
-	DoorSw
-	DoorSe
-	WallSwBarSe
-	DoorSwDoorSe
-	BarSwBarSe
-	DoorEndSw
-	DoorEndSe
-	BarEndSw
-	BarEndSe
-	DoorSwBarSe
-	BarSw
-	BarSe
-	BarSwWallSe
-	BarSwArchSe
-	BarSwDoorSe
-	DoorSwArchSe
-	DoorSwWallSe
-	ArchSwDoorSe
-	WallSwDoorSe
-	ArchSwBarSe
-	CircleMarking1
-	CircleMarking2
-	CircleMarking3
-	CircleMarking4
-	CircleMarking5
-	CircleMarking6
-	CircleMarking7
-	CircleMarking8
-	CircleMarking9
-	CircleMarking10
-	CircleMarking11
-	CircleMarking12
-	StairA1
-	StairA2
-	StairA3
-	StairA4
-	StairA5
-	StairA6
-	StairB1
-	StairB2
-	StairB3
-	StairB4
-	StairB5
-	StairB6
-	Tomb1
-	Tomb2
-	Tomb3
-	Tomb4
-	Tomb5
-	Tomb6
-	Tomb7
-	Tomb8
-	Tomb9
-	Tomb10
-	WallSw2
-	WallSe2
-	WallNeWallNw
-	WallSwWallSe2
-	WallSw3
-	WallEndSw2
-	WallEndSe2
-	WallEndNe
-	WallEndNw
-	WallSe3
-	TapestryWallSw1
-	TapestryWallSw2
-	TapestryWallSe1
-	TapestryWallSe2
-	WallSw4
-	TombWallSw
-	TombWallSe
-	WallSe4
-	BloodWallSe1
-	BloodWallSe2
-	BloodWallSe3
-	BloodWallSw1
-	BloodWallSw2
-	BloodArchSw
-	BloodDoorSw
-	BloodFloor1
-	BloodFloor2
-	BloodFloor3
-	CrossWallSw
-	CrossWallSe
-	NicheWallSw
-	NicheWallSe
-	StatueWallSw
-	StatueWallSe
-	TorchWallSw
-	TorchWallSe
-	BrokenWallSe1
-	BrokenWallSe2
-	BrokenWallSe3
-	BrokenArchSe
-	BrokenEnteranceSe1
-	BrokenEnteranceSe2
-	BrokenArchSw1
-	BrokenWallSw1
-	BrokenArchSw2
-	BrokenWallSw2
-	BrokenFloor1
-	BrokenEnteranceSw1
-	BrokenEnteranceSw2
-	Candlestick1
-	Candlestick2
-	Candlestick3
-	Sarcophagus1
-	Sarcophagus2
-	BrokenFloor2
-	BrokenFloor3
-	BrokenFloor4
-	BrokenFloor5
-	BrokenFloor6
-	BrokenFloor7
-	FloorShadowArchSwRight
-	FloorShadowArchSeLeft
-	FloorShadowBarSwRight
-	FloorShadowShaftRight
-	FloorShadowArchSeLeftShaftBottom
-	FloorShadowShaftBottom1
-	FloorShadowColumnBottom
-	WallSwShadowArchSeLeft
-	ArchSwShadowArchSeLeft
-	WallSeShadowArchSwRight
-	ArchSeShadowArchSwRight
-	FloorShadowArchSeLeftArchSwRight
-	FloorShadowShaftBottomArchSwRight
-	FloorShadowShaftBottom2
-	ArchSeShadowBarSwRight
-	WallSeShadowBarSwRight
-	WallSw3ShadowArchSeLeft
-	WallSe3ShadowArchSwRight
-	WallSe3ShadowBarSwRight
-	WallSwWallSe3
-	ArchSwWallSe3
-	WallSw3WallSe
-	WallSw3ArchSe
-	Floor2
-	Floor3
-	DoorSwWallSe3
-	WallSw3DoorSe
-	BloodWallSw3
-	BloodWallSw4
-	BloodWallSwWallSe
-	BloodWallSe4
-	BloodWallSe5
-	BloodFloor4
-	BloodFloor5
-	BloodFloor6
-	BloodFloor7
-	OpenDoorSw
-	OpenDoorSe
-	OpenDoorSwOpenDoorSe
-	OpenDoorEndSw
-	OpenDoorEndSe
-	OpenDoorSwBarSe
-	BarSwOpenDoorSe
-	OpenDoorSwArchSe
-	OpenDoorSwWallSe
-	ArchSwOpenDoorSe
-	WallSwOpenDoorSe
-	OpenBloodDoorSw
-	OpenDoorSwWallSe3
-	WallSw3OpenDoorSe
-	OpenDoorSwDoorSe
-	DoorSwOpenDoorSe
-	WallSw5
-	WallSe5
-	EnteranceSw1
-	EnteranceSe1
-	DirtFloorShadow
-	DirtFloorShadowArchSwRight
-	EnteranceSw2
-	EnteranceSe2
-	DirtWallSwDirt
-	DirtWallSeDirt
-	DirtWallNeWallNwDirt
-	DirtWallSwWallSeDirt
-	DirtDirt
-	DirtWallEndSwDirt
-	DirtWallEndSeDirt
-	BrokenEnteranceSe3
+	WallSw                            TileID = 1
+	WallSe                            TileID = 2
+	ArchNeArchNw                      TileID = 3
+	WallSwWallSe                      TileID = 4
+	ArchSwArchSe                      TileID = 5
+	WallEndSw                         TileID = 6
+	WallEndSe                         TileID = 7
+	ArchEndSw                         TileID = 8
+	ArchEndSe                         TileID = 9
+	WallSwArchSe                      TileID = 10
+	ArchSw                            TileID = 11
+	ArchSe                            TileID = 12
+	Floor                             TileID = 13
+	ArchSwWallSe                      TileID = 14
+	Column                            TileID = 15
+	ArchEndNe                         TileID = 16
+	ArchEndNw                         TileID = 17
+	DirtWallSw                        TileID = 18
+	DirtWallSe                        TileID = 19
+	DirtWallNeWallNw                  TileID = 20
+	DirtWallSwWallSe                  TileID = 21
+	Dirt                              TileID = 22
+	DirtWallEndSw                     TileID = 23
+	DirtWallEndSe                     TileID = 24
+	DoorSw                            TileID = 25
+	DoorSe                            TileID = 26
+	WallSwBarSe                       TileID = 27
+	DoorSwDoorSe                      TileID = 28
+	BarSwBarSe                        TileID = 29
+	DoorEndSw                         TileID = 30
+	DoorEndSe                         TileID = 31
+	BarEndSw                          TileID = 32
+	BarEndSe                          TileID = 33
+	DoorSwBarSe                       TileID = 34
+	BarSw                             TileID = 35
+	BarSe                             TileID = 36
+	BarSwWallSe                       TileID = 37
+	BarSwArchSe                       TileID = 38
+	BarSwDoorSe                       TileID = 39
+	DoorSwArchSe                      TileID = 40
+	DoorSwWallSe                      TileID = 41
+	ArchSwDoorSe                      TileID = 42
+	WallSwDoorSe                      TileID = 43
+	ArchSwBarSe                       TileID = 44
+	CircleMarking1                    TileID = 45
+	CircleMarking2                    TileID = 46
+	CircleMarking3                    TileID = 47
+	CircleMarking4                    TileID = 48
+	CircleMarking5                    TileID = 49
+	CircleMarking6                    TileID = 50
+	CircleMarking7                    TileID = 51
+	CircleMarking8                    TileID = 52
+	CircleMarking9                    TileID = 53
+	CircleMarking10                   TileID = 54
+	CircleMarking11                   TileID = 55
+	CircleMarking12                   TileID = 56
+	StairA1                           TileID = 57
+	StairA2                           TileID = 58
+	StairA3                           TileID = 59
+	StairA4                           TileID = 60
+	StairA5                           TileID = 61
+	StairA6                           TileID = 62
+	StairB1                           TileID = 63
+	StairB2                           TileID = 64
+	StairB3                           TileID = 65
+	StairB4                           TileID = 66
+	StairB5                           TileID = 67
+	StairB6                           TileID = 68
+	Tomb1                             TileID = 69
+	Tomb2                             TileID = 70
+	Tomb3                             TileID = 71
+	Tomb4                             TileID = 72
+	Tomb5                             TileID = 73
+	Tomb6                             TileID = 74
+	Tomb7                             TileID = 75
+	Tomb8                             TileID = 76
+	Tomb9                             TileID = 77
+	Tomb10                            TileID = 78
+	WallSw2                           TileID = 79
+	WallSe2                           TileID = 80
+	WallNeWallNw                      TileID = 81
+	WallSwWallSe2                     TileID = 82
+	WallSw3                           TileID = 83
+	WallEndSw2                        TileID = 84
+	WallEndSe2                        TileID = 85
+	WallEndNe                         TileID = 86
+	WallEndNw                         TileID = 87
+	WallSe3                           TileID = 88
+	TapestryWallSw1                   TileID = 89
+	TapestryWallSw2                   TileID = 90
+	TapestryWallSe1                   TileID = 91
+	TapestryWallSe2                   TileID = 92
+	WallSw4                           TileID = 93
+	TombWallSw                        TileID = 94
+	TombWallSe                        TileID = 95
+	WallSe4                           TileID = 96
+	BloodWallSe1                      TileID = 97
+	BloodWallSe2                      TileID = 98
+	BloodWallSe3                      TileID = 99
+	BloodWallSw1                      TileID = 100
+	BloodWallSw2                      TileID = 101
+	BloodArchSw                       TileID = 102
+	BloodDoorSw                       TileID = 103
+	BloodFloor1                       TileID = 104
+	BloodFloor2                       TileID = 105
+	BloodFloor3                       TileID = 106
+	CrossWallSw                       TileID = 107
+	CrossWallSe                       TileID = 108
+	NicheWallSw                       TileID = 109
+	NicheWallSe                       TileID = 110
+	StatueWallSw                      TileID = 111
+	StatueWallSe                      TileID = 112
+	TorchWallSw                       TileID = 113
+	TorchWallSe                       TileID = 114
+	BrokenWallSe1                     TileID = 115
+	BrokenWallSe2                     TileID = 116
+	BrokenWallSe3                     TileID = 117
+	BrokenArchSe                      TileID = 118
+	BrokenEnteranceSe1                TileID = 119
+	BrokenEnteranceSe2                TileID = 120
+	BrokenArchSw1                     TileID = 121
+	BrokenWallSw1                     TileID = 122
+	BrokenArchSw2                     TileID = 123
+	BrokenWallSw2                     TileID = 124
+	BrokenFloor1                      TileID = 125
+	BrokenEnteranceSw1                TileID = 126
+	BrokenEnteranceSw2                TileID = 127
+	Candlestick1                      TileID = 128
+	Candlestick2                      TileID = 129
+	Candlestick3                      TileID = 130
+	Sarcophagus1                      TileID = 131
+	Sarcophagus2                      TileID = 132
+	BrokenFloor2                      TileID = 133
+	BrokenFloor3                      TileID = 134
+	BrokenFloor4                      TileID = 135
+	BrokenFloor5                      TileID = 136
+	BrokenFloor6                      TileID = 137
+	BrokenFloor7                      TileID = 138
+	FloorShadowArchSwRight            TileID = 139
+	FloorShadowArchSeLeft             TileID = 140
+	FloorShadowBarSwRight             TileID = 141
+	FloorShadowShaftRight             TileID = 142
+	FloorShadowArchSeLeftShaftBottom  TileID = 143
+	FloorShadowShaftBottom1           TileID = 144
+	FloorShadowColumnBottom           TileID = 145
+	WallSwShadowArchSeLeft            TileID = 146
+	ArchSwShadowArchSeLeft            TileID = 147
+	WallSeShadowArchSwRight           TileID = 148
+	ArchSeShadowArchSwRight           TileID = 149
+	FloorShadowArchSeLeftArchSwRight  TileID = 150
+	FloorShadowShaftBottomArchSwRight TileID = 151
+	FloorShadowShaftBottom2           TileID = 152
+	ArchSeShadowBarSwRight            TileID = 153
+	WallSeShadowBarSwRight            TileID = 154
+	WallSw3ShadowArchSeLeft           TileID = 155
+	WallSe3ShadowArchSwRight          TileID = 156
+	WallSe3ShadowBarSwRight           TileID = 157
+	WallSwWallSe3                     TileID = 158
+	ArchSwWallSe3                     TileID = 159
+	WallSw3WallSe                     TileID = 160
+	WallSw3ArchSe                     TileID = 161
+	Floor2                            TileID = 162
+	Floor3                            TileID = 163
+	DoorSwWallSe3                     TileID = 164
+	WallSw3DoorSe                     TileID = 165
+	BloodWallSw3                      TileID = 166
+	BloodWallSw4                      TileID = 167
+	BloodWallSwWallSe                 TileID = 168
+	BloodWallSe4                      TileID = 169
+	BloodWallSe5                      TileID = 170
+	BloodFloor4                       TileID = 171
+	BloodFloor5                       TileID = 172
+	BloodFloor6                       TileID = 173
+	BloodFloor7                       TileID = 174
+	OpenDoorSw                        TileID = 175
+	OpenDoorSe                        TileID = 176
+	OpenDoorSwOpenDoorSe              TileID = 177
+	OpenDoorEndSw                     TileID = 178
+	OpenDoorEndSe                     TileID = 179
+	OpenDoorSwBarSe                   TileID = 180
+	BarSwOpenDoorSe                   TileID = 181
+	OpenDoorSwArchSe                  TileID = 182
+	OpenDoorSwWallSe                  TileID = 183
+	ArchSwOpenDoorSe                  TileID = 184
+	WallSwOpenDoorSe                  TileID = 185
+	OpenBloodDoorSw                   TileID = 186
+	OpenDoorSwWallSe3                 TileID = 187
+	WallSw3OpenDoorSe                 TileID = 188
+	OpenDoorSwDoorSe                  TileID = 189
+	DoorSwOpenDoorSe                  TileID = 190
+	WallSw5                           TileID = 191
+	WallSe5                           TileID = 192
+	EnteranceSw1                      TileID = 193
+	EnteranceSe1                      TileID = 194
+	DirtFloorShadow                   TileID = 195
+	DirtFloorShadowArchSwRight        TileID = 196
+	EnteranceSw2                      TileID = 197
+	EnteranceSe2                      TileID = 198
+	DirtWallSwDirt                    TileID = 199
+	DirtWallSeDirt                    TileID = 200
+	DirtWallNeWallNwDirt              TileID = 201
+	DirtWallSwWallSeDirt              TileID = 202
+	DirtDirt                          TileID = 203
+	DirtWallEndSwDirt                 TileID = 204
+	DirtWallEndSeDirt                 TileID = 205
+	BrokenEnteranceSe3                TileID = 206
+)
+
+// DPieceID specifies the graphics of a dungeon piece.
+type DPieceID int32
+
+// Dungeon piece IDs.
+const (
+	WallSw_top                              DPieceID = 1
+	WallSw_right                            DPieceID = 2
+	WallSw_left                             DPieceID = 3
+	WallSw_bottom                           DPieceID = 4
+	WallSe_top                              DPieceID = 5
+	WallSe_right                            DPieceID = 6
+	WallSe_left                             DPieceID = 7
+	ArchNeArchNw_top                        DPieceID = 8
+	WallSwWallSe_top                        DPieceID = 9
+	ArchSwArchSe_top                        DPieceID = 10
+	ArchSwArchSe_right                      DPieceID = 11
+	ArchSwArchSe_left                       DPieceID = 12
+	WallEndSw_top                           DPieceID = 13
+	WallEndSe_top                           DPieceID = 14
+	WallEndSe_right                         DPieceID = 15
+	ArchEndSw_top                           DPieceID = 16
+	ArchEndSe_top                           DPieceID = 17
+	ArchEndSe_left                          DPieceID = 18
+	ArchEndSe_bottom                        DPieceID = 19
+	WallSwArchSe_top                        DPieceID = 20
+	ArchSw_top                              DPieceID = 21
+	ArchSe_top                              DPieceID = 22
+	Floor_top                               DPieceID = 23
+	ArchSwWallSe_top                        DPieceID = 24
+	Column_top                              DPieceID = 25
+	Column_right                            DPieceID = 26
+	Column_left                             DPieceID = 27
+	ArchEndNe_top                           DPieceID = 28
+	ArchEndNw_top                           DPieceID = 29
+	DirtWallSw_top                          DPieceID = 30
+	DirtWallSw_right                        DPieceID = 31
+	DirtWallSw_left                         DPieceID = 32
+	DirtWallSw_bottom                       DPieceID = 33
+	DirtWallSe_top                          DPieceID = 34
+	DirtWallSe_right                        DPieceID = 35
+	DirtWallSe_left                         DPieceID = 36
+	DirtWallNeWallNw_top                    DPieceID = 37
+	DirtWallSwWallSe_top                    DPieceID = 38
+	DirtWallSwWallSe_left                   DPieceID = 39
+	Dirt_top                                DPieceID = 40
+	DirtWallEndSw_top                       DPieceID = 41
+	DirtWallEndSe_top                       DPieceID = 42
+	DoorSw_top                              DPieceID = 43
+	DoorSw_left                             DPieceID = 44
+	DoorSe_top                              DPieceID = 45
+	DoorSe_right                            DPieceID = 46
+	WallSwBarSe_top                         DPieceID = 47
+	WallSwBarSe_right                       DPieceID = 48
+	WallSwBarSe_left                        DPieceID = 49
+	DoorSwDoorSe_top                        DPieceID = 50
+	DoorSwDoorSe_left                       DPieceID = 51
+	BarSwBarSe_top                          DPieceID = 52
+	BarSwBarSe_left                         DPieceID = 53
+	DoorEndSw_top                           DPieceID = 54
+	DoorEndSe_top                           DPieceID = 55
+	DoorEndSe_right                         DPieceID = 56
+	BarEndSw_top                            DPieceID = 57
+	BarEndSw_left                           DPieceID = 58
+	BarEndSe_top                            DPieceID = 59
+	BarEndSe_right                          DPieceID = 60
+	DoorSwBarSe_top                         DPieceID = 61
+	BarSw_top                               DPieceID = 62
+	BarSw_left                              DPieceID = 63
+	BarSe_top                               DPieceID = 64
+	BarSwWallSe_top                         DPieceID = 65
+	BarSwArchSe_top                         DPieceID = 66
+	BarSwDoorSe_top                         DPieceID = 67
+	DoorSwArchSe_top                        DPieceID = 68
+	DoorSwWallSe_top                        DPieceID = 69
+	ArchSwDoorSe_top                        DPieceID = 70
+	ArchSwDoorSe_left                       DPieceID = 71
+	WallSwDoorSe_top                        DPieceID = 72
+	ArchSwBarSe_top                         DPieceID = 73
+	CircleMarking1_left                     DPieceID = 74
+	CircleMarking1_bottom                   DPieceID = 75
+	CircleMarking2_left                     DPieceID = 76
+	CircleMarking2_bottom                   DPieceID = 77
+	CircleMarking3_right                    DPieceID = 78
+	CircleMarking3_bottom                   DPieceID = 79
+	CircleMarking4_top                      DPieceID = 80
+	CircleMarking4_right                    DPieceID = 81
+	CircleMarking4_left                     DPieceID = 82
+	CircleMarking4_bottom                   DPieceID = 83
+	CircleMarking5_top                      DPieceID = 84
+	CircleMarking5_right                    DPieceID = 85
+	CircleMarking5_left                     DPieceID = 86
+	CircleMarking5_bottom                   DPieceID = 87
+	CircleMarking6_top                      DPieceID = 88
+	CircleMarking6_left                     DPieceID = 89
+	CircleMarking7_right                    DPieceID = 90
+	CircleMarking7_bottom                   DPieceID = 91
+	CircleMarking8_top                      DPieceID = 92
+	CircleMarking8_right                    DPieceID = 93
+	CircleMarking8_left                     DPieceID = 94
+	CircleMarking8_bottom                   DPieceID = 95
+	CircleMarking9_top                      DPieceID = 96
+	CircleMarking9_right                    DPieceID = 97
+	CircleMarking9_left                     DPieceID = 98
+	CircleMarking9_bottom                   DPieceID = 99
+	CircleMarking10_top                     DPieceID = 100
+	CircleMarking10_left                    DPieceID = 101
+	CircleMarking11_top                     DPieceID = 102
+	CircleMarking11_right                   DPieceID = 103
+	CircleMarking12_top                     DPieceID = 104
+	CircleMarking12_right                   DPieceID = 105
+	StairA1_top                             DPieceID = 106
+	StairA1_right                           DPieceID = 107
+	StairA1_left                            DPieceID = 108
+	StairA1_bottom                          DPieceID = 109
+	StairA2_top                             DPieceID = 110
+	StairA2_right                           DPieceID = 111
+	StairA2_left                            DPieceID = 112
+	StairA2_bottom                          DPieceID = 113
+	StairA3_top                             DPieceID = 114
+	StairA3_right                           DPieceID = 115
+	StairA3_left                            DPieceID = 116
+	StairA3_bottom                          DPieceID = 117
+	StairA4_top                             DPieceID = 118
+	StairA4_right                           DPieceID = 119
+	StairA4_left                            DPieceID = 120
+	StairA4_bottom                          DPieceID = 121
+	StairA5_top                             DPieceID = 122
+	StairA5_right                           DPieceID = 123
+	StairA6_top                             DPieceID = 124
+	StairA6_left                            DPieceID = 125
+	StairA6_bottom                          DPieceID = 126
+	StairB1_right                           DPieceID = 127
+	StairB1_bottom                          DPieceID = 128
+	StairB2_top                             DPieceID = 129
+	StairB2_right                           DPieceID = 130
+	StairB2_left                            DPieceID = 131
+	StairB2_bottom                          DPieceID = 132
+	StairB3_top                             DPieceID = 133
+	StairB3_right                           DPieceID = 134
+	StairB3_left                            DPieceID = 135
+	StairB3_bottom                          DPieceID = 136
+	StairB4_top                             DPieceID = 137
+	StairB4_right                           DPieceID = 138
+	StairB4_left                            DPieceID = 139
+	StairB4_bottom                          DPieceID = 140
+	StairB5_top                             DPieceID = 141
+	StairB5_right                           DPieceID = 142
+	StairB6_top                             DPieceID = 143
+	Tomb1_top                               DPieceID = 144
+	Tomb1_left                              DPieceID = 145
+	Tomb2_top                               DPieceID = 146
+	Tomb2_left                              DPieceID = 147
+	Tomb3_top                               DPieceID = 148
+	Tomb3_right                             DPieceID = 149
+	Tomb3_left                              DPieceID = 150
+	Tomb3_bottom                            DPieceID = 151
+	Tomb4_top                               DPieceID = 152
+	Tomb4_right                             DPieceID = 153
+	Tomb4_left                              DPieceID = 154
+	Tomb4_bottom                            DPieceID = 155
+	Tomb5_bottom                            DPieceID = 156
+	Tomb6_left                              DPieceID = 157
+	Tomb6_bottom                            DPieceID = 158
+	Tomb7_left                              DPieceID = 159
+	Tomb8_top                               DPieceID = 160
+	Tomb8_bottom                            DPieceID = 161
+	Tomb9_right                             DPieceID = 162
+	Tomb10_top                              DPieceID = 163
+	Tomb10_right                            DPieceID = 164
+	Tomb10_left                             DPieceID = 165
+	Tomb10_bottom                           DPieceID = 166
+	WallSw2_top                             DPieceID = 167
+	WallSw2_left                            DPieceID = 168
+	WallSe2_top                             DPieceID = 169
+	WallSe2_right                           DPieceID = 170
+	WallNeWallNw_top                        DPieceID = 171
+	WallSwWallSe2_top                       DPieceID = 172
+	WallSwWallSe2_right                     DPieceID = 173
+	WallSwWallSe2_left                      DPieceID = 174
+	WallSw3_left                            DPieceID = 175
+	WallEndSw2_top                          DPieceID = 176
+	WallEndSw2_left                         DPieceID = 177
+	WallEndSe2_top                          DPieceID = 178
+	WallEndNe_top                           DPieceID = 179
+	WallEndNw_top                           DPieceID = 180
+	WallSe3_right                           DPieceID = 181
+	TapestryWallSw1_top                     DPieceID = 182
+	TapestryWallSw1_left                    DPieceID = 183
+	TapestryWallSw2_top                     DPieceID = 184
+	TapestryWallSw2_left                    DPieceID = 185
+	TapestryWallSe1_top                     DPieceID = 186
+	TapestryWallSe1_right                   DPieceID = 187
+	TapestryWallSe2_top                     DPieceID = 188
+	TapestryWallSe2_right                   DPieceID = 189
+	WallSw4_top                             DPieceID = 190
+	WallSw4_left                            DPieceID = 191
+	TombWallSw_top                          DPieceID = 192
+	TombWallSw_left                         DPieceID = 193
+	TombWallSe_top                          DPieceID = 194
+	TombWallSe_right                        DPieceID = 195
+	WallSe4_top                             DPieceID = 196
+	BloodWallSe1_top                        DPieceID = 197
+	BloodWallSe1_right                      DPieceID = 198
+	BloodWallSe1_left                       DPieceID = 199
+	BloodWallSe1_bottom                     DPieceID = 200
+	BloodWallSe2_top                        DPieceID = 201
+	BloodWallSe2_right                      DPieceID = 202
+	BloodWallSe3_top                        DPieceID = 203
+	BloodWallSe3_right                      DPieceID = 204
+	BloodWallSw1_top                        DPieceID = 205
+	BloodWallSw1_left                       DPieceID = 206
+	BloodWallSw2_top                        DPieceID = 207
+	BloodWallSw2_left                       DPieceID = 208
+	BloodArchSw_top                         DPieceID = 209
+	BloodArchSw_right                       DPieceID = 210
+	BloodArchSw_left                        DPieceID = 211
+	BloodDoorSw_top                         DPieceID = 212
+	BloodDoorSw_right                       DPieceID = 213
+	BloodDoorSw_left                        DPieceID = 214
+	BloodDoorSw_bottom                      DPieceID = 215
+	BloodFloor1_top                         DPieceID = 216
+	BloodFloor1_right                       DPieceID = 217
+	BloodFloor1_left                        DPieceID = 218
+	BloodFloor1_bottom                      DPieceID = 219
+	BloodFloor2_top                         DPieceID = 220
+	BloodFloor2_right                       DPieceID = 221
+	BloodFloor2_left                        DPieceID = 222
+	BloodFloor2_bottom                      DPieceID = 223
+	BloodFloor3_top                         DPieceID = 224
+	BloodFloor3_right                       DPieceID = 225
+	BloodFloor3_left                        DPieceID = 226
+	CrossWallSw_top                         DPieceID = 227
+	CrossWallSw_left                        DPieceID = 228
+	CrossWallSe_top                         DPieceID = 229
+	CrossWallSe_right                       DPieceID = 230
+	NicheWallSw_top                         DPieceID = 231
+	NicheWallSw_left                        DPieceID = 232
+	NicheWallSe_top                         DPieceID = 233
+	NicheWallSe_right                       DPieceID = 234
+	StatueWallSw_top                        DPieceID = 235
+	StatueWallSw_left                       DPieceID = 236
+	StatueWallSe_top                        DPieceID = 237
+	StatueWallSe_right                      DPieceID = 238
+	TorchWallSw_top                         DPieceID = 239
+	TorchWallSw_left                        DPieceID = 240
+	TorchWallSe_top                         DPieceID = 241
+	TorchWallSe_right                       DPieceID = 242
+	BrokenWallSe1_top                       DPieceID = 243
+	BrokenWallSe1_right                     DPieceID = 244
+	BrokenWallSe2_top                       DPieceID = 245
+	BrokenWallSe2_right                     DPieceID = 246
+	BrokenWallSe3_top                       DPieceID = 247
+	BrokenArchSe_top                        DPieceID = 248
+	BrokenArchSe_right                      DPieceID = 249
+	BrokenEnteranceSe1_top                  DPieceID = 250
+	BrokenEnteranceSe1_right                DPieceID = 251
+	BrokenEnteranceSe2_top                  DPieceID = 252
+	BrokenEnteranceSe2_right                DPieceID = 253
+	BrokenArchSw1_top                       DPieceID = 254
+	BrokenArchSw1_left                      DPieceID = 255
+	BrokenWallSw1_top                       DPieceID = 256
+	BrokenWallSw1_left                      DPieceID = 257
+	BrokenArchSw2_top                       DPieceID = 258
+	BrokenArchSw2_left                      DPieceID = 259
+	BrokenWallSw2_top                       DPieceID = 260
+	BrokenWallSw2_left                      DPieceID = 261
+	BrokenFloor1_top                        DPieceID = 262
+	BrokenFloor1_right                      DPieceID = 263
+	BrokenFloor1_left                       DPieceID = 264
+	BrokenFloor1_bottom                     DPieceID = 265
+	BrokenEnteranceSw1_top                  DPieceID = 266
+	BrokenEnteranceSw1_left                 DPieceID = 267
+	BrokenEnteranceSw2_top                  DPieceID = 268
+	BrokenEnteranceSw2_left                 DPieceID = 269
+	Candlestick1_top                        DPieceID = 270
+	Candlestick1_right                      DPieceID = 271
+	Candlestick1_left                       DPieceID = 272
+	Candlestick2_left                       DPieceID = 273
+	Candlestick2_bottom                     DPieceID = 274
+	Candlestick3_top                        DPieceID = 275
+	Candlestick3_right                      DPieceID = 276
+	Candlestick3_bottom                     DPieceID = 277
+	Sarcophagus1_top                        DPieceID = 278
+	Sarcophagus1_right                      DPieceID = 279
+	Sarcophagus1_left                       DPieceID = 280
+	Sarcophagus2_bottom                     DPieceID = 281
+	BrokenFloor2_top                        DPieceID = 282
+	BrokenFloor2_right                      DPieceID = 283
+	BrokenFloor3_top                        DPieceID = 284
+	BrokenFloor3_right                      DPieceID = 285
+	BrokenFloor4_top                        DPieceID = 286
+	BrokenFloor4_right                      DPieceID = 287
+	BrokenFloor4_left                       DPieceID = 288
+	BrokenFloor4_bottom                     DPieceID = 289
+	BrokenFloor5_right                      DPieceID = 290
+	BrokenFloor5_left                       DPieceID = 291
+	BrokenFloor5_bottom                     DPieceID = 292
+	BrokenFloor6_top                        DPieceID = 293
+	BrokenFloor6_left                       DPieceID = 294
+	BrokenFloor6_bottom                     DPieceID = 295
+	FloorShadowArchSwRight_top              DPieceID = 296
+	FloorShadowArchSwRight_right            DPieceID = 297
+	FloorShadowArchSwRight_left             DPieceID = 298
+	FloorShadowArchSwRight_bottom           DPieceID = 299
+	FloorShadowArchSeLeft_top               DPieceID = 300
+	FloorShadowArchSeLeft_left              DPieceID = 301
+	FloorShadowArchSeLeft_bottom            DPieceID = 302
+	FloorShadowBarSwRight_top               DPieceID = 303
+	FloorShadowBarSwRight_right             DPieceID = 304
+	FloorShadowBarSwRight_left              DPieceID = 305
+	FloorShadowBarSwRight_bottom            DPieceID = 306
+	FloorShadowShaftRight_top               DPieceID = 307
+	FloorShadowShaftRight_right             DPieceID = 308
+	FloorShadowArchSeLeftShaftBottom_top    DPieceID = 309
+	FloorShadowArchSeLeftShaftBottom_left   DPieceID = 310
+	FloorShadowArchSeLeftShaftBottom_bottom DPieceID = 311
+	FloorShadowShaftBottom1_top             DPieceID = 312
+	FloorShadowShaftBottom1_left            DPieceID = 313
+	FloorShadowShaftBottom1_bottom          DPieceID = 314
+	FloorShadowColumnBottom_top             DPieceID = 315
+	FloorShadowColumnBottom_right           DPieceID = 316
+	FloorShadowColumnBottom_left            DPieceID = 317
+	FloorShadowColumnBottom_bottom          DPieceID = 318
+	WallSwShadowArchSeLeft_top              DPieceID = 319
+	WallSwShadowArchSeLeft_left             DPieceID = 320
+	ArchSwShadowArchSeLeft_left             DPieceID = 321
+	WallSeShadowArchSwRight_top             DPieceID = 322
+	WallSeShadowArchSwRight_right           DPieceID = 323
+	ArchSeShadowArchSwRight_top             DPieceID = 324
+	ArchSeShadowArchSwRight_right           DPieceID = 325
+	FloorShadowArchSeLeftArchSwRight_top    DPieceID = 326
+	FloorShadowShaftBottomArchSwRight_top   DPieceID = 327
+	FloorShadowShaftBottomArchSwRight_left  DPieceID = 328
+	FloorShadowShaftBottom2_top             DPieceID = 329
+	FloorShadowShaftBottom2_bottom          DPieceID = 330
+	ArchSeShadowBarSwRight_right            DPieceID = 331
+	ArchSeShadowBarSwRight_bottom           DPieceID = 332
+	WallSeShadowBarSwRight_right            DPieceID = 333
+	WallSw3ShadowArchSeLeft_top             DPieceID = 334
+	WallSw3ShadowArchSeLeft_left            DPieceID = 335
+	WallSe3ShadowArchSwRight_top            DPieceID = 336
+	WallSe3ShadowArchSwRight_right          DPieceID = 337
+	WallSe3ShadowBarSwRight_right           DPieceID = 338
+	WallSwWallSe3_top                       DPieceID = 339
+	ArchSwWallSe3_top                       DPieceID = 340
+	ArchSwWallSe3_left                      DPieceID = 341
+	WallSw3WallSe_top                       DPieceID = 342
+	WallSw3ArchSe_top                       DPieceID = 343
+	WallSw3ArchSe_right                     DPieceID = 344
+	WallSw3ArchSe_left                      DPieceID = 345
+	Floor2_top                              DPieceID = 346
+	Floor2_right                            DPieceID = 347
+	Floor2_left                             DPieceID = 348
+	Floor2_bottom                           DPieceID = 349
+	Floor3_top                              DPieceID = 350
+	Floor3_right                            DPieceID = 351
+	Floor3_left                             DPieceID = 352
+	Floor3_bottom                           DPieceID = 353
+	DoorSwWallSe3_top                       DPieceID = 354
+	WallSw3DoorSe_top                       DPieceID = 355
+	BloodWallSw3_top                        DPieceID = 356
+	BloodWallSw3_right                      DPieceID = 357
+	BloodWallSw3_left                       DPieceID = 358
+	BloodWallSw3_bottom                     DPieceID = 359
+	BloodWallSw4_top                        DPieceID = 360
+	BloodWallSw4_right                      DPieceID = 361
+	BloodWallSw4_left                       DPieceID = 362
+	BloodWallSw4_bottom                     DPieceID = 363
+	BloodWallSwWallSe_top                   DPieceID = 364
+	BloodWallSwWallSe_right                 DPieceID = 365
+	BloodWallSwWallSe_left                  DPieceID = 366
+	BloodWallSwWallSe_bottom                DPieceID = 367
+	BloodWallSe4_top                        DPieceID = 368
+	BloodWallSe4_right                      DPieceID = 369
+	BloodWallSe4_left                       DPieceID = 370
+	BloodWallSe4_bottom                     DPieceID = 371
+	BloodWallSe5_top                        DPieceID = 372
+	BloodWallSe5_right                      DPieceID = 373
+	BloodWallSe5_left                       DPieceID = 374
+	BloodWallSe5_bottom                     DPieceID = 375
+	BloodFloor4_top                         DPieceID = 376
+	BloodFloor4_right                       DPieceID = 377
+	BloodFloor4_left                        DPieceID = 378
+	BloodFloor4_bottom                      DPieceID = 379
+	BloodFloor5_top                         DPieceID = 380
+	BloodFloor5_right                       DPieceID = 381
+	BloodFloor5_left                        DPieceID = 382
+	BloodFloor5_bottom                      DPieceID = 383
+	BloodFloor6_top                         DPieceID = 384
+	BloodFloor6_right                       DPieceID = 385
+	BloodFloor6_left                        DPieceID = 386
+	BloodFloor6_bottom                      DPieceID = 387
+	BloodFloor7_top                         DPieceID = 388
+	BloodFloor7_right                       DPieceID = 389
+	BloodFloor7_left                        DPieceID = 390
+	BloodFloor7_bottom                      DPieceID = 391
+	OpenDoorSw_top                          DPieceID = 392
+	OpenDoorSw_left                         DPieceID = 393
+	OpenDoorSe_top                          DPieceID = 394
+	OpenDoorSe_right                        DPieceID = 395
+	OpenDoorSwOpenDoorSe_top                DPieceID = 396
+	OpenDoorEndSw_top                       DPieceID = 397
+	OpenDoorEndSe_top                       DPieceID = 398
+	OpenDoorSwBarSe_top                     DPieceID = 399
+	BarSwOpenDoorSe_top                     DPieceID = 400
+	OpenDoorSwArchSe_top                    DPieceID = 401
+	OpenDoorSwArchSe_right                  DPieceID = 402
+	OpenDoorSwWallSe_top                    DPieceID = 403
+	ArchSwOpenDoorSe_top                    DPieceID = 404
+	ArchSwOpenDoorSe_left                   DPieceID = 405
+	WallSwOpenDoorSe_top                    DPieceID = 406
+	OpenBloodDoorSw_top                     DPieceID = 407
+	OpenBloodDoorSw_left                    DPieceID = 408
+	OpenDoorSwWallSe3_top                   DPieceID = 409
+	WallSw3OpenDoorSe_top                   DPieceID = 410
+	OpenDoorSwDoorSe_top                    DPieceID = 411
+	DoorSwOpenDoorSe_top                    DPieceID = 412
+	WallSw5_top                             DPieceID = 413
+	WallSw5_left                            DPieceID = 414
+	WallSe5_top                             DPieceID = 415
+	WallSe5_right                           DPieceID = 416
+	EnteranceSw1_top                        DPieceID = 417
+	EnteranceSw1_left                       DPieceID = 418
+	EnteranceSw1_bottom                     DPieceID = 419
+	EnteranceSe1_top                        DPieceID = 420
+	EnteranceSe1_right                      DPieceID = 421
+	DirtFloorShadow_top                     DPieceID = 422
+	DirtFloorShadow_right                   DPieceID = 423
+	DirtFloorShadow_left                    DPieceID = 424
+	DirtFloorShadow_bottom                  DPieceID = 425
+	DirtFloorShadowArchSwRight_top          DPieceID = 426
+	DirtFloorShadowArchSwRight_right        DPieceID = 427
+	DirtFloorShadowArchSwRight_left         DPieceID = 428
+	EnteranceSw2_top                        DPieceID = 429
+	EnteranceSw2_right                      DPieceID = 430
+	EnteranceSw2_left                       DPieceID = 431
+	EnteranceSw2_bottom                     DPieceID = 432
+	EnteranceSe2_top                        DPieceID = 433
+	EnteranceSe2_right                      DPieceID = 434
+	EnteranceSe2_left                       DPieceID = 435
+	EnteranceSe2_bottom                     DPieceID = 436
+	DirtWallSwDirt_top                      DPieceID = 437
+	DirtWallSwDirt_right                    DPieceID = 438
+	DirtWallSwDirt_left                     DPieceID = 439
+	DirtWallSwDirt_bottom                   DPieceID = 440
+	DirtWallSeDirt_top                      DPieceID = 441
+	DirtWallSeDirt_right                    DPieceID = 442
+	DirtWallSeDirt_left                     DPieceID = 443
+	DirtWallNeWallNwDirt_top                DPieceID = 444
+	DirtWallSwWallSeDirt_top                DPieceID = 445
+	DirtWallSwWallSeDirt_left               DPieceID = 446
+	DirtDirt_top                            DPieceID = 447
+	DirtWallEndSwDirt_top                   DPieceID = 448
+	DirtWallEndSeDirt_top                   DPieceID = 449
+	BrokenEnteranceSe3_top                  DPieceID = 450
+	BrokenEnteranceSe3_right                DPieceID = 451
+	BrokenEnteranceSe3_left                 DPieceID = 452
+	BrokenEnteranceSe3_bottom               DPieceID = 453
+)
+
+// ArchID specifies the graphics of an arch.
+type ArchID uint8
+
+// Arch IDs.
+const (
+	ArchIDSw        ArchID = 1
+	ArchIDSe        ArchID = 2
+	ArchIDSeBroken  ArchID = 3
+	ArchIDSwBroken2 ArchID = 4
+	ArchIDSw2       ArchID = 5
+	ArchIDSwBroken  ArchID = 6
+	ArchIDSwDoor    ArchID = 7
+	ArchIDSeDoor    ArchID = 8
 )

@@ -254,7 +254,6 @@ func InitPieceIDMap() {
 			gendung.PieceIDMap[x+1][y+1] = int32(tile.Bottom) + 1
 		}
 	}
-
 	// Initialize the visible tiles of the dungeon piece ID map based on the tile
 	// ID map. The visible tiles are located at (16, 16) <= coordinate < (96,
 	// 96).
@@ -284,7 +283,20 @@ func InitPieceIDMap() {
 //
 // ref: 0x40B0A5
 func InitArches() {
-	C.drlg_l1_init_arches()
+	for x := 0; x < 112; x++ {
+		for y := 0; y < 112; y++ {
+			switch DPieceID(gendung.PieceIDMap[x][y]) {
+			case ArchSwArchSe_left, ArchSwDoorSe_left, BloodArchSw_left, ArchSwShadowArchSeLeft_left, ArchSwWallSe3_left, EnteranceSw1_left:
+				gendung.ArchNumMap[x][y] = int8(ArchIDSw)
+			case ArchSwArchSe_right, BrokenArchSe_right, ArchSeShadowArchSwRight_right, ArchSeShadowBarSwRight_right, WallSw3ArchSe_right, EnteranceSe1_right:
+				gendung.ArchNumMap[x][y] = int8(ArchIDSe)
+			case BrokenArchSw1_left:
+				gendung.ArchNumMap[x][y] = int8(ArchIDSwBroken2)
+			case BrokenArchSw2_left:
+				gendung.ArchNumMap[x][y] = int8(ArchIDSw2)
+			}
+		}
+	}
 }
 
 // PreloadDun loads tile IDs from the given dungeon file.
