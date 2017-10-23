@@ -112,7 +112,7 @@ func generateDungeon(entry int32) {
 		minArea = 761
 	}
 	for {
-		gendung.InitTransparency()
+		gendung.InitTransparency() // TODO: add test case
 
 		// Regenerate rooms until the minimum number of walls are present on the
 		// map.
@@ -131,7 +131,7 @@ func generateDungeon(entry int32) {
 		FixTiles()
 		AddWall()
 		ClearFlags()
-		FloorTransparency()
+		FloorTransparency() // TODO: add test case
 
 		// Place staircases.
 		done := true
@@ -197,8 +197,8 @@ func generateDungeon(entry int32) {
 		xx := 0
 		for x := 16; x < 96; x += 2 {
 			if TileID(gendung.TileIDMap[xx][yy]) == StairB2 {
-				gendung.CopyTransparency(x, y+1, x, y)
-				gendung.CopyTransparency(x+1, y+1, x+1, y)
+				gendung.CopyTransparency(x, y+1, x, y)     // TODO: add test case
+				gendung.CopyTransparency(x+1, y+1, x+1, y) // TODO: add test case
 			}
 			xx++
 		}
@@ -206,9 +206,9 @@ func generateDungeon(entry int32) {
 	}
 
 	// Fix transparency, dirt and corners.
-	FixTransparency()
+	FixTransparency() // TODO: add test case
 	FixDirt()
-	FixCorners()
+	FixCorners() // TODO: add test case
 
 	// Place doors.
 	for yy := 0; yy < 40; yy++ {
@@ -234,10 +234,10 @@ func generateDungeon(entry int32) {
 
 	// Reset the dungeon flag, player, NPC, dead, object, item, missile and arch
 	// maps.
-	ResetMaps()
+	ResetMaps() // TODO: add test case
 
 	// Initialize quest area.
-	quests.InitQuestArea(*gendung.SetXx, *gendung.SetYy)
+	quests.InitQuestArea(*gendung.SetXx, *gendung.SetYy) // TODO: add test case
 }
 
 // ### [ Helper functions ] ####################################################
