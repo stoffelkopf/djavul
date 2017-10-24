@@ -309,6 +309,20 @@ func reset() {
 	}
 }
 
+// clearFlags clears the dungeon generation flags 0x40.
+//
+// PSX ref: 0x8013D37C
+// PSX sig: void L5ClearFlags__Fv()
+//
+// ref: 0x40BB18
+func clearFlags() {
+	for xx := 0; xx < 40; xx++ {
+		for yy := 0; yy < 40; yy++ {
+			FlagMap[xx][yy] &^= Flag40
+		}
+	}
+}
+
 // ### [ Helper functions ] ####################################################
 
 // getTiles returns the tileset of the active dungeon type.

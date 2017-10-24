@@ -695,5 +695,6 @@ type Flag uint8
 const (
 	FlagFavourSe Flag = 0x01
 	FlagFavourSw Flag = 0x02
+	Flag40       Flag = 0x40
 	FlagDone     Flag = 0x80
 )

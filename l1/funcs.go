@@ -375,7 +375,11 @@ func Reset() {
 //
 // ref: 0x40BB18
 func ClearFlags() {
-	C.drlg_l1_clear_flags()
+	if useGo {
+		clearFlags()
+	} else {
+		C.drlg_l1_clear_flags()
+	}
 }
 
 // GenerateFirstRoom generates the first room of the dungeon.
