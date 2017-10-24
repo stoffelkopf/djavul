@@ -104,7 +104,7 @@ package l1
 // 	return f();
 // }
 //
-// static void drlg_l1_init_dmap() {
+// static void drlg_l1_init_tile_bit_map() {
 // 	void (*f)() = (void *)0x40C02A;
 // 	f();
 // }
@@ -441,17 +441,15 @@ func GetArea() int {
 	return int(C.drlg_l1_get_area())
 }
 
-// InitDmap initializes a dungeon tile ID map of twice the size of the dungeon,
-// repeating each tile in blocks of 4.
-//
-// NOTE: The dmap (double map) seems to be unused.
+// InitTileBitMap initializes a tile ID map of twice the size, repeating each
+// tile in blocks of 4.
 //
 // PSX ref: 0x8013DBFC
 // PSX sig: void L5makeDungeon__Fv()
 //
 // ref: 0x40C02A
-func InitDmap() {
-	C.drlg_l1_init_dmap()
+func InitTileBitMap() {
+	C.drlg_l1_init_tile_bit_map()
 }
 
 // GeneratePattern replaces tile ID patterns based on a lookup table.
@@ -461,7 +459,11 @@ func InitDmap() {
 //
 // ref: 0x40C06E
 func GeneratePattern() {
-	C.drlg_l1_generate_pattern()
+	if useGo {
+		generatePattern()
+	} else {
+		C.drlg_l1_generate_pattern()
+	}
 }
 
 // AddWall adds wall, arch or bar tile IDs.

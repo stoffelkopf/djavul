@@ -151,7 +151,7 @@ func generateDungeon(entry int32) {
 		}
 
 		// Generate chambers and add tile ID patterns.
-		InitDmap()
+		InitTileBitMap()
 		GeneratePattern()
 		GenerateChambers()
 		FixTiles()
@@ -408,6 +408,40 @@ func clearFlags() {
 		for yy := 0; yy < 40; yy++ {
 			FlagMap[xx][yy] &^= Flag40
 		}
+	}
+}
+
+// generatePattern replaces tile ID patterns based on a lookup table.
+//
+// PSX ref: 0x8013DC88
+// PSX sig: void L5makeDmt__Fv()
+//
+// ref: 0x40C06E
+func generatePattern() {
+	// Fill the entire tile ID map with dirt.
+	for xx := 0; xx < 40; xx++ {
+		for yy := 0; yy < 40; yy++ {
+			gendung.TileIDMap[xx][yy] = uint8(Dirt)
+		}
+	}
+
+	// Fill the tile ID map based on pattern matching of 2x2 areas. Basically
+	// each cell in the tile bit map either contains a SW wall or it doesn't.
+	// This property allows us to create a bitfield of the various patterns
+	// representable by nearby tiles. The total number of patterns is 16, so we
+	// use a simple lookup table for the result.
+	x := 1
+	for xx := 0; xx < 40-1; xx++ {
+		y := 1
+		for yy := 0; yy < 40-1; yy++ {
+			pattern := uint8(TileBitMap[x+1][y+1])
+			pattern = 2*pattern + uint8(TileBitMap[x][y+1])
+			pattern = 2*pattern + uint8(TileBitMap[x+1][y])
+			pattern = 2*pattern + uint8(TileBitMap[x][y])
+			gendung.TileIDMap[xx][yy] = uint8(PatternLookup[pattern])
+			y += 2
+		}
+		x += 2
 	}
 }
 

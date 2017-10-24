@@ -131,6 +131,24 @@ var (
 	// ref: 0x479F38
 	MinisetStairDownPoison = (*[74]uint8)(unsafe.Pointer(uintptr(0x479F38)))
 
+	// PatternLookup is a lookup table for the 16 possible patterns of a 2x2
+	// area, where each cell either contains a SW door or it doesn't.
+	//
+	// PSX ref: 0x80139C58
+	// PSX def: unsigned char L5ConvTbl[16]
+	//
+	// ref: 0x484778
+	PatternLookup = (*[16]TileID)(unsafe.Pointer(uintptr(0x484778)))
+
+	// TileBitMap represents a tile ID map of twice the size, repeating each tile
+	// of the original map in blocks of 4.
+	//
+	// PSX ref: 0x8013A3B0
+	// PSX def: unsigned char L5dungeon[80][80]
+	//
+	// ref: 0x525764
+	TileBitMap = (*[80][80]TileID)(unsafe.Pointer(uintptr(0x525764)))
+
 	// FlagMap contains flags used for dungeon generation of the Cathedral.
 	//
 	// PSX ref: 0x8011C0D8
