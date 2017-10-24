@@ -25,6 +25,9 @@ import "C"
 
 import "unsafe"
 
+// useGo specifies whether to use the Go implementation.
+const useGo = true
+
 // SetSeed sets the global seed to x.
 //
 // PSX ref: 0x8003DACC
@@ -32,7 +35,11 @@ import "unsafe"
 //
 // ref: 0x417518
 func SetSeed(x int32) {
-	C.engine_set_seed(C.int32_t(x))
+	if useGo {
+		setSeed(x)
+	} else {
+		C.engine_set_seed(C.int32_t(x))
+	}
 }
 
 // Rand returns a non-negative pseudo-random integer in [0, 2^31), using the
@@ -44,7 +51,11 @@ func SetSeed(x int32) {
 //
 // ref: 0x41752C
 func Rand() int32 {
-	return int32(C.engine_rand())
+	if useGo {
+		return rand()
+	} else {
+		return int32(C.engine_rand())
+	}
 }
 
 // RandCap returns a capped non-negative pseudo-random integer in [0, max),
@@ -56,7 +67,11 @@ func Rand() int32 {
 //
 // ref: 0x41754B
 func RandCap(unused, max int32) int32 {
-	return int32(C.engine_rand_cap(C.int(unused), C.int32_t(max)))
+	if useGo {
+		return randCap(max)
+	} else {
+		return int32(C.engine_rand_cap(C.int(unused), C.int32_t(max)))
+	}
 }
 
 // MemLoadFile returns the contents of the given file.
