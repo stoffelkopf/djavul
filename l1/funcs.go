@@ -230,7 +230,11 @@ func LoadDun(dunPath unsafe.Pointer, viewX, viewY int32) {
 //
 // ref: 0x40AF65
 func RandomizeStoneFloor() {
-	C.drlg_l1_randomize_stone_floor()
+	if useGo {
+		randomizeStoneFloor()
+	} else {
+		C.drlg_l1_randomize_stone_floor()
+	}
 }
 
 // InitPieceIDMap initializes the dungeon piece ID map.

@@ -12,6 +12,32 @@ import (
 	"github.com/sanctuary/formats/level/til"
 )
 
+// randomizeStoneFloor randomizes floor tiles.
+//
+// PSX ref: 0x8013CAC4
+// PSX sig: void DRLG_L1Floor__Fv()
+//
+// ref: 0x40AF65
+func randomizeStoneFloor() {
+	for yy := 0; yy < 40; yy++ {
+		for xx := 0; xx < 40; xx++ {
+			if FlagMap[xx][yy] != 0 {
+				continue
+			}
+			if TileID(gendung.TileIDMap[xx][yy]) == Floor {
+				switch engine.RandCap(0, 3) {
+				case 0:
+					// Keep Floor tile.
+				case 1:
+					gendung.TileIDMap[xx][yy] = uint8(Floor2)
+				case 2:
+					gendung.TileIDMap[xx][yy] = uint8(Floor3)
+				}
+			}
+		}
+	}
+}
+
 // initPieceIDMap initializes the dungeon piece ID map.
 //
 // PSX ref: 0x8013CBA8
