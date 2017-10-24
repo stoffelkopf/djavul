@@ -529,7 +529,11 @@ func AddVertWall(xx int, yy int, tileID TileID, yyCount int) {
 //
 // ref: 0x40C551
 func FixTiles() {
-	C.drlg_l1_fix_tiles()
+	if useGo {
+		fixTiles()
+	} else {
+		C.drlg_l1_fix_tiles()
+	}
 }
 
 // Decorate decorates the dungeon with tapestry tile IDs.

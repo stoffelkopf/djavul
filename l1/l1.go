@@ -468,6 +468,176 @@ func generatePattern() {
 	}
 }
 
+// fixTiles fixes tile IDs of wall edges.
+//
+// PSX ref: 0x8013EA28
+// PSX sig: void L5tileFix__Fv()
+//
+// ref: 0x40C551
+func fixTiles() {
+	for yy := 0; yy < 40; yy++ {
+		for xx := 0; xx < 40; xx++ {
+			switch TileID(gendung.TileIDMap[xx][yy]) {
+			case WallSw:
+				if TileID(gendung.TileIDMap[xx][yy+1]) == Dirt {
+					gendung.TileIDMap[xx][yy+1] = uint8(DirtWallEndSe)
+				}
+			case WallSe:
+				if TileID(gendung.TileIDMap[xx+1][yy]) == Dirt {
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallEndSw)
+				}
+			case WallEndSw:
+				if TileID(gendung.TileIDMap[xx+1][yy]) == Dirt {
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallEndSe)
+				}
+			case Floor:
+				switch TileID(gendung.TileIDMap[xx+1][yy]) {
+				case WallSe:
+					gendung.TileIDMap[xx+1][yy] = uint8(WallEndSe)
+				case Dirt:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallSw)
+				}
+				switch TileID(gendung.TileIDMap[xx][yy+1]) {
+				case WallSw:
+					gendung.TileIDMap[xx][yy+1] = uint8(WallEndSw)
+				case Dirt:
+					gendung.TileIDMap[xx][yy+1] = uint8(DirtWallSe)
+				}
+			}
+		}
+	}
+
+	for yy := 0; yy < 40; yy++ {
+		for xx := 0; xx < 40; xx++ {
+			switch TileID(gendung.TileIDMap[xx][yy]) {
+			case WallSw:
+				switch TileID(gendung.TileIDMap[xx][yy+1]) {
+				case WallSe:
+					gendung.TileIDMap[xx][yy+1] = uint8(WallEndSe)
+				case Floor:
+					gendung.TileIDMap[xx][yy+1] = uint8(ArchEndNe)
+				}
+			case WallSe:
+				switch TileID(gendung.TileIDMap[xx+1][yy]) {
+				case WallSw:
+					gendung.TileIDMap[xx+1][yy] = uint8(WallEndSw)
+				case Floor:
+					gendung.TileIDMap[xx+1][yy] = uint8(ArchEndNw)
+				case DirtWallSe:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallSwWallSe)
+				case DirtWallEndSe:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallSwWallSe)
+				}
+			case ArchNeArchNw:
+				if TileID(gendung.TileIDMap[xx+1][yy]) == Dirt {
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallEndSe)
+				}
+			case WallSwWallSe:
+				if TileID(gendung.TileIDMap[xx+1][yy]) == ArchEndNe {
+					gendung.TileIDMap[xx+1][yy] = uint8(ArchEndNw)
+				}
+			case WallEndSw:
+				switch TileID(gendung.TileIDMap[xx-1][yy]) {
+				case Dirt:
+					gendung.TileIDMap[xx-1][yy] = uint8(DirtWallEndSe)
+				case DirtWallEndSw:
+					gendung.TileIDMap[xx-1][yy] = uint8(DirtWallSwWallSe)
+				}
+				switch TileID(gendung.TileIDMap[xx][yy+1]) {
+				case WallSe:
+					gendung.TileIDMap[xx][yy+1] = uint8(WallEndSe)
+				case Floor:
+					gendung.TileIDMap[xx][yy+1] = uint8(ArchEndNe)
+				case DirtWallSw:
+					gendung.TileIDMap[xx][yy+1] = uint8(DirtWallSwWallSe)
+				case Dirt:
+					gendung.TileIDMap[xx][yy+1] = uint8(DirtWallEndSe)
+				}
+				if TileID(gendung.TileIDMap[xx][yy-1]) == Dirt {
+					// NOTE: The following value is always overwritten.
+					//gendung.TileIDMap[xx][yy-1] = uint8(WallEndSe)
+					gendung.TileIDMap[xx][yy-1] = uint8(DirtWallEndSe)
+				}
+			case WallEndSe:
+				switch TileID(gendung.TileIDMap[xx+1][yy]) {
+				case WallSw:
+					gendung.TileIDMap[xx+1][yy] = uint8(WallEndSw)
+				case Floor:
+					gendung.TileIDMap[xx+1][yy] = uint8(ArchEndNw)
+				case DirtWallSe:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallSwWallSe)
+				case Dirt:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallEndSw)
+				case DirtWallEndSe:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallSwWallSe)
+				}
+				if TileID(gendung.TileIDMap[xx][yy-1]) == DirtWallEndSe {
+					gendung.TileIDMap[xx][yy-1] = uint8(DirtWallSwWallSe)
+				}
+			case Floor:
+				switch TileID(gendung.TileIDMap[xx+1][yy]) {
+				case DirtWallSe:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallSwWallSe)
+				case Dirt:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallNeWallNw)
+				case DirtWallEndSe:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallSwWallSe)
+				}
+				if TileID(gendung.TileIDMap[xx][yy+1]) == ArchEndNe {
+					gendung.TileIDMap[xx][yy+1] = uint8(ArchEndNw)
+				}
+			case DirtWallSw:
+				if TileID(gendung.TileIDMap[xx][yy+1]) == WallSe {
+					gendung.TileIDMap[xx][yy+1] = uint8(WallEndSe)
+				}
+				if TileID(gendung.TileIDMap[xx][yy-1]) == DirtWallEndSe {
+					gendung.TileIDMap[xx][yy-1] = uint8(DirtWallSwWallSe)
+				}
+			case DirtWallSe:
+				switch TileID(gendung.TileIDMap[xx+1][yy]) {
+				case WallSw:
+					gendung.TileIDMap[xx+1][yy] = uint8(WallEndSw)
+				case Dirt:
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallNeWallNw)
+				}
+				if TileID(gendung.TileIDMap[xx-1][yy]) == DirtWallEndSw {
+					gendung.TileIDMap[xx-1][yy] = uint8(DirtWallSwWallSe)
+				}
+			case DirtWallSwWallSe:
+				if TileID(gendung.TileIDMap[xx+1][yy]) == WallSw {
+					gendung.TileIDMap[xx+1][yy] = uint8(WallEndSw)
+				}
+				if TileID(gendung.TileIDMap[xx][yy+1]) == WallSe {
+					gendung.TileIDMap[xx][yy+1] = uint8(WallEndSe)
+				}
+			case DirtWallEndSw:
+				if TileID(gendung.TileIDMap[xx-1][yy]) == Dirt {
+					gendung.TileIDMap[xx-1][yy] = uint8(DirtWallSe)
+				}
+			}
+		}
+	}
+
+	for yy := 0; yy < 40; yy++ {
+		for xx := 0; xx < 40; xx++ {
+			switch TileID(gendung.TileIDMap[xx][yy]) {
+			case WallSe:
+				if TileID(gendung.TileIDMap[xx+1][yy]) == DirtWallSe {
+					gendung.TileIDMap[xx+1][yy] = uint8(DirtWallSwWallSe)
+				}
+			case WallSwWallSe:
+				if TileID(gendung.TileIDMap[xx][yy+1]) == WallSe {
+					gendung.TileIDMap[xx][yy+1] = uint8(WallEndSe)
+				}
+			case DirtWallSw:
+				if TileID(gendung.TileIDMap[xx][yy+1]) == Dirt {
+					gendung.TileIDMap[xx][yy+1] = uint8(DirtWallNeWallNw)
+				}
+			}
+		}
+	}
+}
+
 // ### [ Helper functions ] ####################################################
 
 // getTiles returns the tileset of the active dungeon type.
