@@ -327,24 +327,25 @@ func placeDoor(xx, yy int) {
 //
 // ref: 0x40B699
 func initShadows() {
-	// Add shadows based on pre-defined lookup table.
+	// Add arch shadows based on pre-defined lookup table.
 	for yy := 1; yy < 40; yy++ {
 		for xx := 1; xx < 40; xx++ {
-			bottomBase := Base[gendung.TileIDMap[xx][yy]]
-			leftBase := Base[gendung.TileIDMap[xx-1][yy]]
-			rightBase := Base[gendung.TileIDMap[xx][yy-1]]
-			topBase := Base[gendung.TileIDMap[xx-1][yy-1]]
+			bottom := Base[gendung.TileIDMap[xx][yy]]
+			left := Base[gendung.TileIDMap[xx-1][yy]]
+			right := Base[gendung.TileIDMap[xx][yy-1]]
+			top := Base[gendung.TileIDMap[xx-1][yy-1]]
 			for _, shadow := range Shadows {
-				if shadow.BottomBase != bottomBase {
+				// The bottom base of a shadow is always set.
+				if shadow.BottomBase != bottom {
 					continue
 				}
-				if shadow.TopBase != 0 && shadow.TopBase != topBase {
+				if shadow.TopBase != 0 && shadow.TopBase != top {
 					continue
 				}
-				if shadow.RightBase != 0 && shadow.RightBase != rightBase {
+				if shadow.RightBase != 0 && shadow.RightBase != right {
 					continue
 				}
-				if shadow.LeftBase != 0 && shadow.LeftBase != leftBase {
+				if shadow.LeftBase != 0 && shadow.LeftBase != left {
 					continue
 				}
 				if shadow.Top != 0 && FlagMap[xx-1][yy-1] == 0 {
@@ -360,33 +361,21 @@ func initShadows() {
 		}
 	}
 
-	// Add shadows for bar tiles and arches.
+	// Add shadows for bar tiles.
 	for yy := 1; yy < 40; yy++ {
 		for xx := 1; xx < 40; xx++ {
 			if FlagMap[xx-1][yy] != 0 {
 				continue
 			}
-			switch TileID(gendung.TileIDMap[xx-1][yy]) {
-			case FloorShadowArchSwRight:
-				switch TileID(gendung.TileIDMap[xx][yy]) {
-				case BarSwBarSe, BarEndSw, BarSw, BarSwWallSe, BarSwArchSe, BarSwDoorSe:
+			switch TileID(gendung.TileIDMap[xx][yy]) {
+			case BarSwBarSe, BarEndSw, BarSw, BarSwWallSe, BarSwArchSe, BarSwDoorSe:
+				switch TileID(gendung.TileIDMap[xx-1][yy]) {
+				case FloorShadowArchSwRight:
 					gendung.TileIDMap[xx-1][yy] = uint8(FloorShadowBarSwRight)
-				default:
-					gendung.TileIDMap[xx-1][yy] = uint8(FloorShadowArchSwRight)
-				}
-			case ArchSeShadowArchSwRight:
-				switch TileID(gendung.TileIDMap[xx][yy]) {
-				case BarSwBarSe, BarEndSw, BarSw, BarSwWallSe, BarSwArchSe, BarSwDoorSe:
+				case ArchSeShadowArchSwRight:
 					gendung.TileIDMap[xx-1][yy] = uint8(ArchSeShadowBarSwRight)
-				default:
-					gendung.TileIDMap[xx-1][yy] = uint8(ArchSeShadowArchSwRight)
-				}
-			case WallSeShadowArchSwRight:
-				switch TileID(gendung.TileIDMap[xx][yy]) {
-				case BarSwBarSe, BarEndSw, BarSw, BarSwWallSe, BarSwArchSe, BarSwDoorSe:
+				case WallSeShadowArchSwRight:
 					gendung.TileIDMap[xx-1][yy] = uint8(WallSeShadowBarSwRight)
-				default:
-					gendung.TileIDMap[xx-1][yy] = uint8(WallSeShadowArchSwRight)
 				}
 			}
 		}
