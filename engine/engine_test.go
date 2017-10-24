@@ -837,7 +837,7 @@ func TestRand(t *testing.T) {
 	}
 
 	for _, g := range golden {
-		setSeed(g.seed)
+		engine.SetSeed(g.seed)
 		for _, want := range g.wants {
 			if got := engine.Rand(); got != want {
 				t.Errorf("random value mismatch for initial seed 0x%08X; expected 0x%08X, got 0x%08X.", g.seed, want, got)
