@@ -251,7 +251,6 @@ func placeDoor(xx, yy int) {
 		FlagMap[xx][yy] = FlagDone
 		return
 	}
-
 	flag := FlagMap[xx][yy] &^ FlagDone
 	tileID := TileID(gendung.TileIDMap[xx][yy])
 	if flag == FlagFavourSe || flag == FlagFavourSw {
@@ -293,6 +292,21 @@ func placeDoor(xx, yy int) {
 		}
 	}
 	FlagMap[xx][yy] = FlagDone
+}
+
+// reset resets the tile ID and the dungeon flag maps.
+//
+// PSX ref: 0x8013D2F8
+// PSX sig: void InitL5Dungeon__Fv()
+//
+// ref: 0x40BAF6
+func reset() {
+	for xx := 0; xx < 40; xx++ {
+		for yy := 0; yy < 40; yy++ {
+			gendung.TileIDMap[xx][yy] = 0
+			FlagMap[xx][yy] = 0
+		}
+	}
 }
 
 // ### [ Helper functions ] ####################################################

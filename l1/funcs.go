@@ -361,7 +361,11 @@ func PlaceMiniset(miniset unsafe.Pointer, tmin, tmax, cx, cy int, setView bool, 
 //
 // ref: 0x40BAF6
 func Reset() {
-	C.drlg_l1_reset()
+	if useGo {
+		reset()
+	} else {
+		C.drlg_l1_reset()
+	}
 }
 
 // ClearFlags clears the dungeon generation flags 0x40.
