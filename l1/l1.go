@@ -411,6 +411,29 @@ func clearFlags() {
 	}
 }
 
+// initTileBitMap initializes a tile ID map of twice the size, repeating each
+// tile in blocks of 4.
+//
+// PSX ref: 0x8013DBFC
+// PSX sig: void L5makeDungeon__Fv()
+//
+// ref: 0x40C02A
+func initTileBitMap() {
+	x := 0
+	for xx := 0; xx < 40; xx++ {
+		y := 0
+		for yy := 0; yy < 40; yy++ {
+			tileID := TileID(gendung.TileIDMap[xx][yy])
+			TileBitMap[x][y] = tileID
+			TileBitMap[x][y+1] = tileID
+			TileBitMap[x+1][y] = tileID
+			TileBitMap[x+1][y+1] = tileID
+			y += 2
+		}
+		x += 2
+	}
+}
+
 // generatePattern replaces tile ID patterns based on a lookup table.
 //
 // PSX ref: 0x8013DC88

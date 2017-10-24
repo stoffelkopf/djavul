@@ -449,7 +449,11 @@ func GetArea() int {
 //
 // ref: 0x40C02A
 func InitTileBitMap() {
-	C.drlg_l1_init_tile_bit_map()
+	if useGo {
+		initTileBitMap()
+	} else {
+		C.drlg_l1_init_tile_bit_map()
+	}
 }
 
 // GeneratePattern replaces tile ID patterns based on a lookup table.
