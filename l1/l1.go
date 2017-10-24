@@ -1,4 +1,4 @@
-// Package l1 implements dynamic random level generation of cathedral maps.
+// Package l1 implements dynamic random level generation of Cathedral maps.
 package l1
 
 import (
@@ -101,7 +101,7 @@ func initArches() {
 	}
 }
 
-// createDungeon creates a random cathedral dungeon based on the given seed and
+// createDungeon creates a random Cathedral dungeon based on the given seed and
 // level entry.
 //
 // PSX ref: 0x80140E64
@@ -120,7 +120,7 @@ func createDungeon(seed, entry int32) {
 	gendung.MarkSetPiece() // TODO: add test case
 }
 
-// generateDungeon generates a cathedral dungeon based on the given level entry.
+// generateDungeon generates a Cathedral dungeon based on the given level entry.
 //
 // PSX ref: 0x80140930
 // PSX sig: void DRLG_L5__Fi(int entry)
@@ -318,6 +318,79 @@ func placeDoor(xx, yy int) {
 		}
 	}
 	FlagMap[xx][yy] = FlagDone
+}
+
+// initShadows initializes arch and bar shadows.
+//
+// PSX ref: 0x8013C190
+// PSX sig: void DRLG_L1Shadows__Fv()
+//
+// ref: 0x40B699
+func initShadows() {
+	// Add shadows based on pre-defined lookup table.
+	for yy := 1; yy < 40; yy++ {
+		for xx := 1; xx < 40; xx++ {
+			bottomBase := Base[gendung.TileIDMap[xx][yy]]
+			leftBase := Base[gendung.TileIDMap[xx-1][yy]]
+			rightBase := Base[gendung.TileIDMap[xx][yy-1]]
+			topBase := Base[gendung.TileIDMap[xx-1][yy-1]]
+			for _, shadow := range Shadows {
+				if shadow.BottomBase != bottomBase {
+					continue
+				}
+				if shadow.TopBase != 0 && shadow.TopBase != topBase {
+					continue
+				}
+				if shadow.RightBase != 0 && shadow.RightBase != rightBase {
+					continue
+				}
+				if shadow.LeftBase != 0 && shadow.LeftBase != leftBase {
+					continue
+				}
+				if shadow.Top != 0 && FlagMap[xx-1][yy-1] == 0 {
+					gendung.TileIDMap[xx-1][yy-1] = uint8(shadow.Top)
+				}
+				if shadow.Right != 0 && FlagMap[xx][yy-1] == 0 {
+					gendung.TileIDMap[xx][yy-1] = uint8(shadow.Right)
+				}
+				if shadow.Left != 0 && FlagMap[xx-1][yy] == 0 {
+					gendung.TileIDMap[xx-1][yy] = uint8(shadow.Left)
+				}
+			}
+		}
+	}
+
+	// Add shadows for bar tiles and arches.
+	for yy := 1; yy < 40; yy++ {
+		for xx := 1; xx < 40; xx++ {
+			if FlagMap[xx-1][yy] != 0 {
+				continue
+			}
+			switch TileID(gendung.TileIDMap[xx-1][yy]) {
+			case FloorShadowArchSwRight:
+				switch TileID(gendung.TileIDMap[xx][yy]) {
+				case BarSwBarSe, BarEndSw, BarSw, BarSwWallSe, BarSwArchSe, BarSwDoorSe:
+					gendung.TileIDMap[xx-1][yy] = uint8(FloorShadowBarSwRight)
+				default:
+					gendung.TileIDMap[xx-1][yy] = uint8(FloorShadowArchSwRight)
+				}
+			case ArchSeShadowArchSwRight:
+				switch TileID(gendung.TileIDMap[xx][yy]) {
+				case BarSwBarSe, BarEndSw, BarSw, BarSwWallSe, BarSwArchSe, BarSwDoorSe:
+					gendung.TileIDMap[xx-1][yy] = uint8(ArchSeShadowBarSwRight)
+				default:
+					gendung.TileIDMap[xx-1][yy] = uint8(ArchSeShadowArchSwRight)
+				}
+			case WallSeShadowArchSwRight:
+				switch TileID(gendung.TileIDMap[xx][yy]) {
+				case BarSwBarSe, BarEndSw, BarSw, BarSwWallSe, BarSwArchSe, BarSwDoorSe:
+					gendung.TileIDMap[xx-1][yy] = uint8(WallSeShadowBarSwRight)
+				default:
+					gendung.TileIDMap[xx-1][yy] = uint8(WallSeShadowArchSwRight)
+				}
+			}
+		}
+	}
 }
 
 // reset resets the tile ID and the dungeon flag maps.

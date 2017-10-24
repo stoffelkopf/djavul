@@ -6,6 +6,16 @@ import "unsafe"
 
 // Global variables.
 var (
+	// Shadows contains shadows for 2x2 blocks of base tile IDs in the Cathedral.
+	//
+	// ref: 0x479C24
+	Shadows = (*[37]Shadow)(unsafe.Pointer(uintptr(0x479C24)))
+
+	// Base maps tile IDs to their corresponding base tile ID.
+	//
+	// ref: 0x479D28
+	Base = (*[207]TileID)(unsafe.Pointer(uintptr(0x479D28)))
+
 	// MinisetStairUp1 is a 4x4 miniset of tile IDs representing a staircase
 	// going up.
 	//
@@ -129,3 +139,28 @@ var (
 	// ref: 0x527064
 	FlagMap = (*[40][40]Flag)(unsafe.Pointer(uintptr(0x527064)))
 )
+
+// A Shadow contains the shadows for a 2x2 block of base tile IDs.
+//
+// PSX def:
+//
+//    typedef struct ShadowStruct {
+//       unsigned char strig;
+//       unsigned char s1;
+//       unsigned char s2;
+//       unsigned char s3;
+//       unsigned char nv1;
+//       unsigned char nv2;
+//       unsigned char nv3;
+//    } ShadowStruct;
+type Shadow struct {
+	// Shadow trigger base tile ID.
+	BottomBase TileID
+	TopBase    TileID
+	RightBase  TileID
+	LeftBase   TileID
+	// Replacement tile IDs.
+	Top   TileID
+	Right TileID
+	Left  TileID
+}

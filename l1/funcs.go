@@ -275,7 +275,7 @@ func PreloadDun(dunPath *int8, viewX, viewY int32) {
 	C.drlg_l1_preload_dun((*C.char)(unsafe.Pointer(dunPath)), C.int(viewX), C.int(viewY))
 }
 
-// CreateDungeon creates a random cathedral dungeon based on the given seed and
+// CreateDungeon creates a random Cathedral dungeon based on the given seed and
 // level entry.
 //
 // PSX ref: 0x80140E64
@@ -310,7 +310,7 @@ func FreeQuestDun() {
 	C.drlg_l1_free_quest_dun()
 }
 
-// GenerateDungeon generates a cathedral dungeon based on the given level entry.
+// GenerateDungeon generates a Cathedral dungeon based on the given level entry.
 //
 // PSX ref: 0x80140930
 // PSX sig: void DRLG_L5__Fi(int entry)
@@ -345,7 +345,11 @@ func PlaceDoor(xx, yy int) {
 //
 // ref: 0x40B699
 func InitShadows() {
-	C.drlg_l1_init_shadows()
+	if useGo {
+		initShadows()
+	} else {
+		C.drlg_l1_init_shadows()
+	}
 }
 
 // PlaceMiniset places the given miniset of tile IDs.
