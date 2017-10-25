@@ -547,7 +547,11 @@ func FixTiles() {
 //
 // ref: 0x40C8C0
 func Decorate() {
-	C.drlg_l1_decorate()
+	if useGo {
+		decorate()
+	} else {
+		C.drlg_l1_decorate()
+	}
 }
 
 // GenerateChambers generates chambers.

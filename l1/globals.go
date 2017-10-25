@@ -16,6 +16,11 @@ var (
 	// ref: 0x479D28
 	Base = (*[207]TileID)(unsafe.Pointer(uintptr(0x479D28)))
 
+	// Plain maps tile IDs to their corresponding undecorated tile ID.
+	//
+	// ref: 0x479DF8
+	Plain = (*[207]TileID)(unsafe.Pointer(uintptr(0x479DF8)))
+
 	// MinisetStairUp1 is a 4x4 miniset of tile IDs representing a staircase
 	// going up.
 	//

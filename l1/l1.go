@@ -656,6 +656,57 @@ func fixTiles() {
 	}
 }
 
+// decorate decorates the dungeon with tapestry tile IDs.
+//
+// PSX ref: 0x8013F2EC
+// PSX sig: void DRLG_L5Subs__Fv()
+//
+// ref: 0x40C8C0
+func decorate() {
+	for yy := 0; yy < 40; yy++ {
+		for xx := 0; xx < 40; xx++ {
+			if engine.RandCap(0, 4) != 0 {
+				continue
+			}
+			plain := Plain[gendung.TileIDMap[xx][yy]]
+			if plain == 0 {
+				continue
+			}
+			if FlagMap[xx][yy] != 0 {
+				continue
+			}
+			tileID := TileID(0xFF)
+			for i := engine.RandCap(0, 16); i >= 0; {
+				tileID++
+				if tileID == 207 {
+					tileID = 0
+				}
+				if plain == Plain[tileID] {
+					i--
+				}
+			}
+			switch tileID {
+			case TapestryWallSw1:
+				if Plain[gendung.TileIDMap[xx][yy-1]] == WallSw2 && FlagMap[xx][yy-1] == 0 {
+					gendung.TileIDMap[xx][yy] = uint8(TapestryWallSw1)
+					gendung.TileIDMap[xx][yy-1] = uint8(TapestryWallSw2)
+				} else {
+					gendung.TileIDMap[xx][yy] = uint8(WallSw2)
+				}
+			case TapestryWallSe1:
+				if Plain[gendung.TileIDMap[xx+1][yy]] == WallSe2 && FlagMap[xx+1][yy] == 0 {
+					gendung.TileIDMap[xx][yy] = uint8(TapestryWallSe1)
+					gendung.TileIDMap[xx+1][yy] = uint8(TapestryWallSe2)
+				} else {
+					gendung.TileIDMap[xx][yy] = uint8(WallSe2)
+				}
+			default:
+				gendung.TileIDMap[xx][yy] = uint8(tileID)
+			}
+		}
+	}
+}
+
 // generateHall generates a hall of columns and arches.
 //
 // PSX ref: 0x8013E974
