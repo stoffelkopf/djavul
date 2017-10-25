@@ -603,6 +603,72 @@ func getVertWallSpace(xx, yy int) int {
 	return height
 }
 
+// addHorizWall adds a horizontal wall based on the given tile ID.
+//
+// PSX ref: 0x8013DFF4
+// PSX sig: void L5HorizWall__Fiici(int i, int j, char p, int dx)
+//
+// ref: 0x40C35B
+func addHorizWall(xx, yy int, tileIDFirst TileID, xxCount int) {
+	// Select first and other tiles.
+	var tileIDOther TileID
+	switch engine.RandCap(0, 4) {
+	case 0, 1:
+		// Walls.
+		tileIDOther = WallSe
+	case 2:
+		// Arches.
+		tileIDOther = ArchSe
+		switch tileIDFirst {
+		case WallSe:
+			tileIDFirst = ArchSe
+		case WallSwWallSe:
+			tileIDFirst = WallSwArchSe
+		}
+	case 3:
+		// Bars.
+		tileIDOther = BarSe
+		switch tileIDFirst {
+		case WallSe:
+			tileIDFirst = BarSe
+		case WallSwWallSe:
+			tileIDFirst = WallSwBarSe
+		}
+	}
+
+	// Select random tile.
+	var tileIDRand TileID
+	switch engine.RandCap(0, 6) {
+	case 5:
+		tileIDRand = ArchSe
+	default:
+		// NOTE: BUG? DoorSe is always overwritten in original. Should probably be
+		// WallSe.
+		tileIDRand = DoorSe
+	}
+	if tileIDOther == ArchSe {
+		tileIDRand = ArchSe
+	}
+
+	// Place first tile.
+	gendung.TileIDMap[xx][yy] = uint8(tileIDFirst)
+
+	// Place other tiles.
+	for xxDelta := 1; xxDelta < xxCount; xxDelta++ {
+		gendung.TileIDMap[xx+xxDelta][yy] = uint8(tileIDOther)
+	}
+
+	// Place random tile.
+	xxDelta := int(engine.RandCap(0, int32(xxCount-1))) + 1
+	if tileIDRand == ArchSe {
+		gendung.TileIDMap[xx+xxDelta][yy] = uint8(ArchSe)
+	} else {
+		FlagMap[xx+xxDelta][yy] |= FlagFavourSe
+		gendung.TileIDMap[xx+xxDelta][yy] = uint8(WallSe)
+	}
+
+}
+
 // fixTiles fixes tile IDs of wall edges.
 //
 // PSX ref: 0x8013EA28

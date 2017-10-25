@@ -129,14 +129,14 @@ package l1
 // 	return f(xx, yy);
 // }
 //
-// static void __fastcall drlg_l1_add_horiz_wall(int xx, int yy, l1_tile_id tile_id, int xx_count) {
+// static void __fastcall drlg_l1_add_horiz_wall(int xx, int yy, l1_tile_id tile_id_first, int xx_count) {
 // 	void (__fastcall *f)(int, int, l1_tile_id, int) = (void *)0x40C35B;
-// 	f(xx, yy, tile_id, xx_count);
+// 	f(xx, yy, tile_id_first, xx_count);
 // }
 //
-// static void __fastcall drlg_l1_add_vert_wall(int xx, int yy, l1_tile_id tile_id, int yy_count) {
+// static void __fastcall drlg_l1_add_vert_wall(int xx, int yy, l1_tile_id tile_id_first, int yy_count) {
 // 	void (__fastcall *f)(int, int, l1_tile_id, int) = (void *)0x40C449;
-// 	f(xx, yy, tile_id, yy_count);
+// 	f(xx, yy, tile_id_first, yy_count);
 // }
 //
 // static void drlg_l1_fix_tiles() {
@@ -524,8 +524,12 @@ func GetVertWallSpace(xx, yy int) int {
 // PSX sig: void L5HorizWall__Fiici(int i, int j, char p, int dx)
 //
 // ref: 0x40C35B
-func AddHorizWall(xx, yy int, tileID TileID, xxCount int) {
-	C.drlg_l1_add_horiz_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileID), C.int(xxCount))
+func AddHorizWall(xx, yy int, tileIDFirst TileID, xxCount int) {
+	if useGo {
+		addHorizWall(xx, yy, tileIDFirst, xxCount)
+	} else {
+		C.drlg_l1_add_horiz_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileIDFirst), C.int(xxCount))
+	}
 }
 
 // AddVertWall adds a vertical wall based on the given tile ID.
@@ -534,8 +538,8 @@ func AddHorizWall(xx, yy int, tileID TileID, xxCount int) {
 // PSX sig: void L5VertWall__Fiici(int i, int j, char p, int dy)
 //
 // ref: 0x40C449
-func AddVertWall(xx int, yy int, tileID TileID, yyCount int) {
-	C.drlg_l1_add_vert_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileID), C.int(yyCount))
+func AddVertWall(xx int, yy int, tileIDFirst TileID, yyCount int) {
+	C.drlg_l1_add_vert_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileIDFirst), C.int(yyCount))
 }
 
 // FixTiles fixes tile IDs of wall edges.
