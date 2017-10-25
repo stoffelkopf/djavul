@@ -486,6 +486,59 @@ func generatePattern() {
 	}
 }
 
+// addWall adds wall, arch or bar tile IDs.
+//
+// PSX ref: 0x8013E458
+// PSX sig: void L5AddWall__Fv()
+//
+// ref: 0x40C0E0
+func addWall() {
+	for yy := 0; yy < 40; yy++ {
+		for xx := 0; xx < 40; xx++ {
+			if FlagMap[xx][yy] == 0 {
+				switch TileID(gendung.TileIDMap[xx][yy]) {
+				case WallSw:
+					// NOTE: rand_cap(100) < 100 always holds true.
+					_ = engine.RandCap(0, 100)
+					height := GetVertWallSpace(xx, yy)
+					if height != -1 {
+						AddVertWall(xx, yy, WallSw, height)
+					}
+				case WallSe:
+					_ = engine.RandCap(0, 100)
+					width := GetHorizWallSpace(xx, yy)
+					if width != -1 {
+						AddHorizWall(xx, yy, WallSe, width)
+					}
+				case ArchNeArchNw:
+					_ = engine.RandCap(0, 100)
+					width := GetHorizWallSpace(xx, yy)
+					if width != -1 {
+						AddHorizWall(xx, yy, WallSe, width)
+					}
+					_ = engine.RandCap(0, 100)
+					height := GetVertWallSpace(xx, yy)
+					if height != -1 {
+						AddVertWall(xx, yy, WallSw, height)
+					}
+				case WallEndSw:
+					_ = engine.RandCap(0, 100)
+					width := GetHorizWallSpace(xx, yy)
+					if width != -1 {
+						AddHorizWall(xx, yy, WallSwWallSe, width)
+					}
+				case WallEndSe:
+					_ = engine.RandCap(0, 100)
+					height := GetVertWallSpace(xx, yy)
+					if height != -1 {
+						AddVertWall(xx, yy, WallSwWallSe, height)
+					}
+				}
+			}
+		}
+	}
+}
+
 // fixTiles fixes tile IDs of wall edges.
 //
 // PSX ref: 0x8013EA28
@@ -678,6 +731,7 @@ func decorate() {
 			tileID := TileID(0xFF)
 			for i := engine.RandCap(0, 16); i >= 0; {
 				tileID++
+				// NOTE: 206 in original, which is a bug. Should be 207.
 				if tileID == 207 {
 					tileID = 0
 				}

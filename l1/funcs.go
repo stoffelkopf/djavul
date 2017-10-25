@@ -481,7 +481,11 @@ func GeneratePattern() {
 //
 // ref: 0x40C0E0
 func AddWall() {
-	C.drlg_l1_add_wall()
+	if useGo {
+		addWall()
+	} else {
+		C.drlg_l1_add_wall()
+	}
 }
 
 // GetHorizWallSpace returns the number of horizontal wall tiles that fit at the
