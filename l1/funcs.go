@@ -507,7 +507,11 @@ func GetHorizWallSpace(xx, yy int) int {
 //
 // ref: 0x40C2DC
 func GetVertWallSpace(xx, yy int) int {
-	return int(C.drlg_l1_get_vert_wall_space(C.int(xx), C.int(yy)))
+	if useGo {
+		return getVertWallSpace(xx, yy)
+	} else {
+		return int(C.drlg_l1_get_vert_wall_space(C.int(xx), C.int(yy)))
+	}
 }
 
 // AddHorizWall adds a horizontal wall based on the given tile ID.
