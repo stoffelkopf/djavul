@@ -638,6 +638,26 @@ func fixTiles() {
 	}
 }
 
+// generateHall generates a hall of columns and arches.
+//
+// PSX ref: 0x8013E974
+// PSX sig: void DRLG_L5GHall__Fiiii(int x1, int y1, int x2, int y2)
+//
+// ref: 0x40CEC7
+func generateHall(xxStart, yyStart, xxEnd, yyEnd int) {
+	if yyStart == yyEnd {
+		for xx := xxStart; xx < xxEnd; xx++ {
+			gendung.TileIDMap[xx][yyStart] = uint8(ArchSe)
+			gendung.TileIDMap[xx][yyStart+3] = uint8(ArchSe)
+		}
+	} else {
+		for yy := yyStart; yy < yyEnd; yy++ {
+			gendung.TileIDMap[xxStart][yy] = uint8(ArchSw)
+			gendung.TileIDMap[xxStart+3][yy] = uint8(ArchSw)
+		}
+	}
+}
+
 // fixDirt fixes dirt tile IDs after dungeon generation.
 //
 // PSX ref: 0x801406A8

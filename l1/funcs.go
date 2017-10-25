@@ -290,7 +290,7 @@ func CreateDungeon(seed, entry int32) {
 	}
 }
 
-// LoadQuestLun loads tile IDs from the dungeon file of the active quest level.
+// LoadQuestDun loads tile IDs from the dungeon file of the active quest level.
 //
 // PSX ref: 0x8013CDA0
 // PSX sig: void DRLG_LoadL1SP__Fv()
@@ -574,7 +574,11 @@ func GenerateChamber(xxStart, yyStart int, topRight, bottomLeft, topLeft, bottom
 //
 // ref: 0x40CEC7
 func GenerateHall(xxStart, yyStart, xxEnd, yyEnd int) {
-	C.drlg_l1_generate_hall(C.int(xxStart), C.int(yyStart), C.int(xxEnd), C.int(yyEnd))
+	if useGo {
+		generateHall(xxStart, yyStart, xxEnd, yyEnd)
+	} else {
+		C.drlg_l1_generate_hall(C.int(xxStart), C.int(yyStart), C.int(xxEnd), C.int(yyEnd))
+	}
 }
 
 // InitQuestDun initializes tile IDs based on the loaded quest dungeon file.
@@ -583,8 +587,8 @@ func GenerateHall(xxStart, yyStart, xxEnd, yyEnd int) {
 // PSX sig: void DRLG_L5SetRoom__Fii(int rx1, int ry1)
 //
 // ref: 0x40CF17
-func InitQuestDun(xx_start, yy_start int) {
-	C.drlg_l1_init_quest_dun(C.int(xx_start), C.int(yy_start))
+func InitQuestDun(xxStart, yyStart int) {
+	C.drlg_l1_init_quest_dun(C.int(xxStart), C.int(yyStart))
 }
 
 // FloorTransparency adds transparency to concealing walls.
