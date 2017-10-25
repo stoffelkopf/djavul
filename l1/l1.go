@@ -539,6 +539,38 @@ func addWall() {
 	}
 }
 
+// getHorizWallSpace returns the number of horizontal wall tiles that fit at the
+// given coordinate.
+//
+// PSX ref: 0x8013DD70
+// PSX sig: int L5HWallOk__Fii(int i, int j)
+//
+// ref: 0x40C23C
+func getHorizWallSpace(xx, yy int) int {
+	width := 1
+	for TileID(gendung.TileIDMap[xx+width][yy]) == Floor {
+		if TileID(gendung.TileIDMap[xx+width][yy-1]) != Floor {
+			break
+		}
+		if TileID(gendung.TileIDMap[xx+width][yy+1]) != Floor {
+			break
+		}
+		if FlagMap[xx+width][yy] != 0 {
+			break
+		}
+		width++
+	}
+	ok := false
+	switch TileID(gendung.TileIDMap[width+xx][yy]) {
+	case ArchNeArchNw, WallSwWallSe, ArchSwArchSe, WallEndSw, WallEndSe, ArchEndNe, ArchEndNw, DirtWallSw, DirtWallSe, DirtWallNeWallNw, DirtWallSwWallSe, DirtWallEndSw, DirtWallEndSe:
+		ok = true
+	}
+	if width == 1 || !ok {
+		return -1
+	}
+	return width
+}
+
 // getVertWallSpace returns the number of vertical wall tiles that fit at the
 // given coordinate.
 //

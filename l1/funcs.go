@@ -496,7 +496,11 @@ func AddWall() {
 //
 // ref: 0x40C23C
 func GetHorizWallSpace(xx, yy int) int {
-	return int(C.drlg_l1_get_horiz_wall_space(C.int(xx), C.int(yy)))
+	if useGo {
+		return getHorizWallSpace(xx, yy)
+	} else {
+		return int(C.drlg_l1_get_horiz_wall_space(C.int(xx), C.int(yy)))
+	}
 }
 
 // GetVertWallSpace returns the number of vertical wall tiles that fit at the
