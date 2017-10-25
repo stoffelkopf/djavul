@@ -539,7 +539,11 @@ func AddHorizWall(xx, yy int, tileIDFirst TileID, xxCount int) {
 //
 // ref: 0x40C449
 func AddVertWall(xx int, yy int, tileIDFirst TileID, yyCount int) {
-	C.drlg_l1_add_vert_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileIDFirst), C.int(yyCount))
+	if useGo {
+		addVertWall(xx, yy, tileIDFirst, yyCount)
+	} else {
+		C.drlg_l1_add_vert_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileIDFirst), C.int(yyCount))
+	}
 }
 
 // FixTiles fixes tile IDs of wall edges.
