@@ -438,7 +438,11 @@ func IsAreaEmpty(xxStart, yyStart, xxCount, yyCount int) bool {
 //
 // ref: 0x40C008
 func GetArea() int {
-	return int(C.drlg_l1_get_area())
+	if useGo {
+		return getArea()
+	} else {
+		return int(C.drlg_l1_get_area())
+	}
 }
 
 // InitTileBitMap initializes a tile ID map of twice the size, repeating each

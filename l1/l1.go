@@ -411,6 +411,24 @@ func clearFlags() {
 	}
 }
 
+// getArea returns the number of walls on the map.
+//
+// PSX ref: 0x8013DB9C
+// PSX sig: long L5GetArea__Fv()
+//
+// ref: 0x40C008
+func getArea() int {
+	n := 0
+	for xx := 0; xx < 40; xx++ {
+		for yy := 0; yy < 40; yy++ {
+			if TileID(gendung.TileIDMap[xx][yy]) == WallSw {
+				n++
+			}
+		}
+	}
+	return n
+}
+
 // initTileBitMap initializes a tile ID map of twice the size, repeating each
 // tile in blocks of 4.
 //
