@@ -625,7 +625,11 @@ func FixTransparency() {
 //
 // ref: 0x40D283
 func FixDirt() {
-	C.drlg_l1_fix_dirt()
+	if useGo {
+		fixDirt()
+	} else {
+		C.drlg_l1_fix_dirt()
+	}
 }
 
 // FixCorners fixes corner and arch tile IDs after dungeon generation.

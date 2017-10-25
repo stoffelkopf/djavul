@@ -638,6 +638,44 @@ func fixTiles() {
 	}
 }
 
+// fixDirt fixes dirt tile IDs after dungeon generation.
+//
+// PSX ref: 0x801406A8
+// PSX sig: void DRLG_L5DirtFix__Fv()
+//
+// ref: 0x40D283
+func fixDirt() {
+	for yy := 0; yy < 40; yy++ {
+		for xx := 0; xx < 40; xx++ {
+			switch TileID(gendung.TileIDMap[xx][yy]) {
+			case DirtWallSw:
+				if TileID(gendung.TileIDMap[xx][yy+1]) != DirtWallSw {
+					gendung.TileIDMap[xx][yy] = uint8(DirtWallSwDirt)
+				}
+			case DirtWallSe:
+				if TileID(gendung.TileIDMap[xx+1][yy]) != DirtWallSe {
+					gendung.TileIDMap[xx][yy] = uint8(DirtWallSeDirt)
+				}
+			case DirtWallSwWallSe:
+				if TileID(gendung.TileIDMap[xx+1][yy]) != DirtWallSe {
+					gendung.TileIDMap[xx][yy] = uint8(DirtWallSwWallSeDirt)
+				}
+				if TileID(gendung.TileIDMap[xx][yy+1]) != DirtWallSw {
+					gendung.TileIDMap[xx][yy] = uint8(DirtWallSwWallSeDirt)
+				}
+			case DirtWallEndSw:
+				if TileID(gendung.TileIDMap[xx][yy+1]) != DirtWallSw {
+					gendung.TileIDMap[xx][yy] = uint8(DirtWallEndSwDirt)
+				}
+			case DirtWallEndSe:
+				if TileID(gendung.TileIDMap[xx+1][yy]) != DirtWallSe {
+					gendung.TileIDMap[xx][yy] = uint8(DirtWallEndSeDirt)
+				}
+			}
+		}
+	}
+}
+
 // ### [ Helper functions ] ####################################################
 
 // getTiles returns the tileset of the active dungeon type.
