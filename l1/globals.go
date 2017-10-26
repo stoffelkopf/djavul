@@ -8,21 +8,33 @@ import "unsafe"
 var (
 	// Shadows contains shadows for 2x2 blocks of base tile IDs in the Cathedral.
 	//
+	// PSX ref: 0x8013A050
+	// PSX def: ShadowStruct SPATS[37]
+	//
 	// ref: 0x479C24
 	Shadows = (*[37]Shadow)(unsafe.Pointer(uintptr(0x479C24)))
 
 	// Base maps tile IDs to their corresponding base tile ID.
+	//
+	// PSX ref: 0x8013A154
+	// PSX def: unsigned char BSTYPES[206]
 	//
 	// ref: 0x479D28
 	Base = (*[207]TileID)(unsafe.Pointer(uintptr(0x479D28)))
 
 	// Plain maps tile IDs to their corresponding undecorated tile ID.
 	//
+	// PSX ref: 0x8013A224
+	// PSX def: unsigned char L5BTYPES[206]
+	//
 	// ref: 0x479DF8
 	Plain = (*[207]TileID)(unsafe.Pointer(uintptr(0x479DF8)))
 
 	// MinisetStairUp1 is a 4x4 miniset of tile IDs representing a staircase
 	// going up.
+	//
+	// PSX ref: 0x8013A2F4
+	// PSX def: unsigned char STAIRSUP[34]
 	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
@@ -47,6 +59,9 @@ var (
 	// MinisetStairUp2 is a 4x4 miniset of tile IDs representing a staircase
 	// going up.
 	//
+	// PSX ref: 0x8013A318
+	// PSX def: unsigned char L5STAIRSUP[34]
+	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
 	// miniset format.
@@ -69,6 +84,9 @@ var (
 
 	// MinisetStairDown is a 4x3 miniset of tile IDs representing a staircase
 	// going down.
+	//
+	// PSX ref: 0x8013A33C
+	// PSX def: unsigned char STAIRSDOWN[26]
 	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
@@ -93,6 +111,9 @@ var (
 	// MinisetCandlestick is a 2x2 miniset of tile IDs representing a
 	// candlestick.
 	//
+	// PSX ref: 0x8013A358
+	// PSX def: unsigned char LAMPS[10]
+	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
 	// miniset format.
@@ -115,6 +136,9 @@ var (
 
 	// MinisetStairDownPoison is a 6x6 miniset of tile IDs representing a
 	// staircase going down to the Poisoned Water Supply.
+	//
+	// PSX ref: 0x8013A364
+	// PSX def: unsigned char PWATERIN[74]
 	//
 	// Minisets specifies how to arrange tile IDs in order to form set areas of
 	// dungeons (e.g. staircases). Below follows a pseudo-code description of the
@@ -161,12 +185,65 @@ var (
 	//
 	// ref: 0x527064
 	FlagMap = (*[40][40]Flag)(unsafe.Pointer(uintptr(0x527064)))
+
+	// HorizRoom1 specifies whether to generate a horizontal room at position 1 in
+	// the Cathedral.
+	//
+	// PSX ref: 0x8011C8D8
+	// PSX def: unsigned char HR1
+	//
+	// ref: 0x5276A8
+	HorizRoom1 = (*bool)(unsafe.Pointer(uintptr(0x5276A8)))
+
+	// HorizRoom2 specifies whether to generate a horizontal room at position 2 in
+	// the Cathedral.
+	//
+	// PSX ref: 0x8011C8D9
+	// PSX def: unsigned char HR2
+	//
+	// ref: 0x5276AC
+	HorizRoom2 = (*bool)(unsafe.Pointer(uintptr(0x5276AC)))
+
+	// HorizRoom3 specifies whether to generate a horizontal room at position 3 in
+	// the Cathedral.
+	//
+	// PSX ref: 0x8011C8DA
+	// PSX def: unsigned char HR3
+	//
+	// ref: 0x5276B0
+	HorizRoom3 = (*bool)(unsafe.Pointer(uintptr(0x5276B0)))
+
+	// VertRoom1 specifies whether to generate a vertical room at position 1 in the
+	// Cathedral.
+	//
+	// PSX ref: 0x8011C8DB
+	// PSX def: unsigned char VR1
+	//
+	// ref: 0x5276B4
+	VertRoom1 = (*bool)(unsafe.Pointer(uintptr(0x5276B4)))
+
+	// VertRoom2 specifies whether to generate a vertical room at position 2 in the
+	// Cathedral.
+	//
+	// PSX ref: 0x8011C8DC
+	// PSX def: unsigned char VR2
+	//
+	// ref: 0x5276B8
+	VertRoom2 = (*bool)(unsafe.Pointer(uintptr(0x5276B8)))
+
+	// VertRoom3 specifies whether to generate a vertical room at position 3 in the
+	// Cathedral.
+	//
+	// PSX ref: 0x8011C8DD
+	// PSX def: unsigned char VR3
+	//
+	// ref: 0x5276BC
+	VertRoom3 = (*bool)(unsafe.Pointer(uintptr(0x5276BC)))
 )
 
 // A Shadow contains the shadows for a 2x2 block of base tile IDs.
 //
 // PSX def:
-//
 //    typedef struct ShadowStruct {
 //       unsigned char strig;
 //       unsigned char s1;
