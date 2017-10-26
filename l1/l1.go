@@ -411,6 +411,103 @@ func clearFlags() {
 	}
 }
 
+// generateFirstRoom generates the first room of the dungeon.
+//
+// PSX ref: 0x8013D7FC
+// PSX sig: void L5firstRoom__Fv()
+//
+// ref: 0x40BB33
+func generateFirstRoom() {
+	switch engine.RandCap(0, 2) {
+	case 0:
+		// Vertical rooms.
+		yyStart := 1
+		yyEnd := 39
+		*VertRoom1 = engine.RandCap(0, 2) == 1
+		*VertRoom2 = engine.RandCap(0, 2) == 1
+		*VertRoom3 = engine.RandCap(0, 2) == 1
+		if !(*VertRoom1 && *VertRoom3) {
+			*VertRoom2 = true
+		}
+		if *VertRoom1 {
+			AddRoom(15, 1, 10, 10)
+		} else {
+			yyStart = 18
+		}
+		if *VertRoom2 {
+			AddRoom(15, 15, 10, 10)
+		}
+		if *VertRoom3 {
+			AddRoom(15, 29, 10, 10)
+		} else {
+			yyEnd = 22
+		}
+		for yy := yyStart; yy < yyEnd; yy++ {
+			gendung.TileIDMap[17][yy] = uint8(WallSw)
+			gendung.TileIDMap[18][yy] = uint8(WallSw)
+			gendung.TileIDMap[19][yy] = uint8(WallSw)
+			gendung.TileIDMap[20][yy] = uint8(WallSw)
+			gendung.TileIDMap[21][yy] = uint8(WallSw)
+			gendung.TileIDMap[22][yy] = uint8(WallSw)
+		}
+		if *VertRoom1 {
+			GenerateRoom(15, 1, 10, 10, false)
+		}
+		if *VertRoom2 {
+			GenerateRoom(15, 15, 10, 10, false)
+		}
+		if *VertRoom3 {
+			GenerateRoom(15, 29, 10, 10, false)
+		}
+		*HorizRoom1 = false
+		*HorizRoom2 = false
+		*HorizRoom3 = false
+	case 1:
+		// Horizontal rooms.
+		xxStart := 1
+		xxEnd := 39
+		*HorizRoom1 = engine.RandCap(0, 2) == 1
+		*HorizRoom2 = engine.RandCap(0, 2) == 1
+		*HorizRoom3 = engine.RandCap(0, 2) == 1
+		if !(*HorizRoom1 && *HorizRoom3) {
+			*HorizRoom2 = true
+		}
+		if *HorizRoom1 {
+			AddRoom(1, 15, 10, 10)
+		} else {
+			xxStart = 18
+		}
+		if *HorizRoom2 {
+			AddRoom(15, 15, 10, 10)
+		}
+		if *HorizRoom3 {
+			AddRoom(29, 15, 10, 10)
+		} else {
+			xxEnd = 22
+		}
+		for xx := xxStart; xx < xxEnd; xx++ {
+			gendung.TileIDMap[xx][17] = uint8(WallSw)
+			gendung.TileIDMap[xx][18] = uint8(WallSw)
+			gendung.TileIDMap[xx][19] = uint8(WallSw)
+			gendung.TileIDMap[xx][20] = uint8(WallSw)
+			gendung.TileIDMap[xx][21] = uint8(WallSw)
+			gendung.TileIDMap[xx][22] = uint8(WallSw)
+		}
+		if *HorizRoom1 {
+			GenerateRoom(1, 15, 10, 10, true)
+		}
+		if *HorizRoom2 {
+			GenerateRoom(15, 15, 10, 10, true)
+		}
+		if *HorizRoom3 {
+			GenerateRoom(29, 15, 10, 10, true)
+		}
+		*VertRoom1 = false
+		*VertRoom2 = false
+		*VertRoom3 = false
+	}
+}
+
 // getArea returns the number of walls on the map.
 //
 // PSX ref: 0x8013DB9C

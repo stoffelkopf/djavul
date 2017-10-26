@@ -89,9 +89,9 @@ package l1
 // 	f(xx_start, yy_start, xx_count, yy_count);
 // }
 //
-// static void __fastcall drlg_l1_generate_room(int xx_start, int yy_start, int xx_count, int yy_count, int dir) {
-// 	void (__fastcall *f)(int, int, int, int, int) = (void *)0x40BD9D;
-// 	f(xx_start, yy_start, xx_count, yy_count, dir);
+// static void __fastcall drlg_l1_generate_room(int xx_start, int yy_start, int xx_count, int yy_count, bool32_t dir_horiz) {
+// 	void (__fastcall *f)(int, int, int, int, bool32_t) = (void *)0x40BD9D;
+// 	f(xx_start, yy_start, xx_count, yy_count, dir_horiz);
 // }
 //
 // static bool32_t __fastcall drlg_l1_is_area_empty(int xx_start, int yy_start, int xx_count, int yy_count) {
@@ -397,7 +397,11 @@ func ClearFlags() {
 //
 // ref: 0x40BB33
 func GenerateFirstRoom() {
-	C.drlg_l1_generate_first_room()
+	if useGo {
+		generateFirstRoom()
+	} else {
+		C.drlg_l1_generate_first_room()
+	}
 }
 
 // AddRoom adds walls for a room at the given area.
@@ -410,15 +414,15 @@ func AddRoom(xxStart, yyStart, xxCount, yyCount int) {
 	C.drlg_l1_add_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount))
 }
 
-// GenerateRoom generates a room of the given dimensions at the spcified
+// GenerateRoom generates a room of the given dimensions at the specified
 // coordinates.
 //
 // PSX ref: 0x8013D4CC
 // PSX sig: void L5roomGen__Fiiiii(int x, int y, int w, int h, int dir)
 //
 // ref: 0x40BD9D
-func GenerateRoom(xxStart, yyStart, xxCount, yyCount, dir int) {
-	C.drlg_l1_generate_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount), C.int(dir))
+func GenerateRoom(xxStart, yyStart, xxCount, yyCount int, dirHoriz bool) {
+	C.drlg_l1_generate_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount), bool32(dirHoriz))
 }
 
 // IsAreaEmpty reports whether the given area is empty.
