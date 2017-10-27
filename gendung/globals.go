@@ -67,6 +67,11 @@ var (
 	// ref: 0x5CF338
 	SetXx = (*int32)(unsafe.Pointer(uintptr(0x5CF338)))
 
+	// IsQuestLevel specifies whether the active level is a quest level.
+	//
+	// ref: 0x5CF31D
+	IsQuestLevel = (*bool)(unsafe.Pointer(uintptr(0x5CF31D)))
+
 	// LvlViewY specifies the level viewpoint y-coordinate of the map.
 	//
 	// PSX ref: 0x8011C130

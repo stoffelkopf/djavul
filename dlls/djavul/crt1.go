@@ -29,7 +29,10 @@ import (
 func Start() {
 	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
-	if err := drlgCheck(); err != nil {
+	if err := checkL1Regular(); err != nil {
+		log.Fatalf("%+v", err)
+	}
+	if err := checkL1Quest(); err != nil {
 		log.Fatalf("%+v", err)
 	}
 	os.Exit(0)
