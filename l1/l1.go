@@ -6,11 +6,76 @@ import (
 	"unsafe"
 
 	"github.com/pkg/errors"
+	"github.com/sanctuary/djavul/diablo"
 	"github.com/sanctuary/djavul/engine"
 	"github.com/sanctuary/djavul/gendung"
+	"github.com/sanctuary/djavul/lighting"
 	"github.com/sanctuary/djavul/quests"
 	"github.com/sanctuary/formats/level/til"
 )
+
+// resetMaps resets the dungeon flag, player, NPC, dead, object, item, missile
+// and arch maps.
+//
+// PSX ref: 0x8013CEAC
+// PSX sig: void DRLG_Init_Globals__Fv()
+//
+// ref: 0x40ADD6
+func resetMaps() {
+	for x := range gendung.DFlagMap {
+		for y := range gendung.DFlagMap[x] {
+			gendung.DFlagMap[x][y] = 0
+		}
+	}
+	for x := range gendung.PlayerNumMap {
+		for y := range gendung.PlayerNumMap[x] {
+			gendung.PlayerNumMap[x][y] = 0
+		}
+	}
+	for x := range gendung.NPCNumMap {
+		for y := range gendung.NPCNumMap[x] {
+			gendung.NPCNumMap[x][y] = 0
+		}
+	}
+	for x := range gendung.DeadMap {
+		for y := range gendung.DeadMap[x] {
+			gendung.DeadMap[x][y] = 0
+		}
+	}
+	for x := range gendung.ObjectNumMap {
+		for y := range gendung.ObjectNumMap[x] {
+			gendung.ObjectNumMap[x][y] = 0
+		}
+	}
+	for x := range gendung.ItemNumMap {
+		for y := range gendung.ItemNumMap[x] {
+			gendung.ItemNumMap[x][y] = 0
+		}
+	}
+	for x := range gendung.MissileNumMap {
+		for y := range gendung.MissileNumMap[x] {
+			gendung.MissileNumMap[x][y] = 0
+		}
+	}
+	for x := range gendung.ArchNumMap {
+		for y := range gendung.ArchNumMap[x] {
+			gendung.ArchNumMap[x][y] = 0
+		}
+	}
+	var dist int8
+	if !*lighting.Disabled {
+		if *diablo.LightingFlag4 == 0 {
+			dist = 15
+		} else {
+			dist = 3
+		}
+	}
+	for x := range gendung.LightingVisibleDistanceMap {
+		for y := range gendung.LightingVisibleDistanceMap[x] {
+			gendung.LightingVisibleDistanceMap[x][y] = dist
+		}
+	}
+}
 
 // randomizeStoneFloor randomizes floor tiles.
 //
@@ -260,7 +325,7 @@ func generateDungeon(entry int32) {
 
 	// Reset the dungeon flag, player, NPC, dead, object, item, missile and arch
 	// maps.
-	ResetMaps() // TODO: add test case
+	ResetMaps()
 
 	// Initialize quest area.
 	quests.InitQuestArea(*gendung.SetXx, *gendung.SetYy) // TODO: add test case

@@ -210,7 +210,11 @@ const useGo = true
 //
 // ref: 0x40ADD6
 func ResetMaps() {
-	C.drlg_l1_reset_maps()
+	if useGo {
+		resetMaps()
+	} else {
+		C.drlg_l1_reset_maps()
+	}
 }
 
 // LoadDun loads tile IDs, monsters and objects from the given dungeon file.

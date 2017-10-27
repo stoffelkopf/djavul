@@ -10,6 +10,13 @@ import (
 
 // Global variables.
 var (
+	// NPCNumMap contains the NPC numbers of the map. The NPC number represents a
+	// towner number (towners array index) in Tristram and a monster number
+	// (monsters array index) in the dungeon.
+	//
+	// ref: 0x52D208
+	NPCNumMap = (*[112][112]int32)(unsafe.Pointer(uintptr(0x52D208)))
+
 	// TileIDMap contains the tile IDs of the map.
 	//
 	// PSX ref: 0x800E40C4
@@ -17,6 +24,12 @@ var (
 	//
 	// ref: 0x539608
 	TileIDMap = (*[40][40]uint8)(unsafe.Pointer(uintptr(0x539608)))
+
+	// ObjectNumMap contains the object numbers (objects array indices) of the
+	// map.
+	//
+	// ref: 0x539C48
+	ObjectNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x539C48)))
 
 	// TileIDMapBackup contains a backup of the tile IDs of the map.
 	//
@@ -26,10 +39,25 @@ var (
 	// ref: 0x53CD50
 	TileIDMapBackup = (*[40][40]uint8)(unsafe.Pointer(uintptr(0x53CD50)))
 
+	// DeadMap contains the dead numbers (deads array indices) and dead direction
+	// of the map, encoded as specified by the pseudo-code below.
+	//
+	//    deadNum   = DeadMap[col][row]&0x1F
+	//    direction = DeadMap[col][row]>>5
+	//
+	// ref: 0x53D390
+	DeadMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x53D390)))
+
 	// PieceIDMap contains the piece IDs of each tile on the map.
 	//
 	// ref: 0x5A5BD8
 	PieceIDMap = (*[112][112]int32)(unsafe.Pointer(uintptr(0x5A5BD8)))
+
+	// LightingVisibleDistanceMap specifies the visible distance of light
+	// effects.
+	//
+	// ref: 0x5B1FD8
+	LightingVisibleDistanceMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5B1FD8)))
 
 	// TileDefs specifies the tile definitions of the active dungeon type; (e.g.
 	// levels/l1data/l1.til).
@@ -51,6 +79,12 @@ var (
 	// ref: 0x5BB1EE
 	DLvl = (*int8)(unsafe.Pointer(uintptr(0x5BB1EE)))
 
+	// PlayerNumMap contains the player numbers (players array indices) of the
+	// map.
+	//
+	// ref: 0x5BFEF8
+	PlayerNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5BFEF8)))
+
 	// ArchNumMap contains the arch frame numbers of the map from the special
 	// tileset (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of
 	// Tristram (i.e. "levels/towndata/towns.cel") contains trees rather than
@@ -58,6 +92,16 @@ var (
 	//
 	// ref: 0x5C3008
 	ArchNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5C3008)))
+
+	// DFlagMap specifies flags used for dungeon generation.
+	//
+	// ref: 0x5C6910
+	DFlagMap = (*[112][112]DFlag)(unsafe.Pointer(uintptr(0x5C6910)))
+
+	// ItemNumMap contains the item numbers (items array indices) of the map.
+	//
+	// ref: 0x5C9A10
+	ItemNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5C9A10)))
 
 	// SetXx specifies the active miniset x-coordinate of the map.
 	//
@@ -111,4 +155,10 @@ var (
 	//
 	// ref: 0x5CF344
 	SetYy = (*int32)(unsafe.Pointer(uintptr(0x5CF344)))
+
+	// MissileNumMap contains the missile numbers (missiles array indices) of the
+	// map.
+	//
+	// ref: 0x5CF350
+	MissileNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5CF350)))
 )

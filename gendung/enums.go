@@ -12,3 +12,6 @@ const (
 	Hell                         // dlvl: 13 - 16
 	DTypeNone DungeonType = 0xFF
 )
+
+// DFlag represents a set of flags used for dungeon generation.
+type DFlag uint8
