@@ -67,6 +67,22 @@ var (
 	// ref: 0x5CF338
 	SetXx = (*int32)(unsafe.Pointer(uintptr(0x5CF338)))
 
+	// LvlViewY specifies the level viewpoint y-coordinate of the map.
+	//
+	// PSX ref: 0x8011C130
+	// PSX def: int LvlViewY
+	//
+	// ref: 0x5CF320
+	LvlViewY = (*int32)(unsafe.Pointer(uintptr(0x5CF320)))
+
+	// LvlViewX specifies the level viewpoint x-coordinate of the map.
+	//
+	// PSX ref: 0x8011C12C
+	// PSX def: int LvlViewX
+	//
+	// ref: 0x5CF324
+	LvlViewX = (*int32)(unsafe.Pointer(uintptr(0x5CF324)))
+
 	// ViewX specifies the player viewpoint x-coordinate of the map.
 	//
 	// PSX ref: 0x8011C114
