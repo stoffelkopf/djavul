@@ -186,8 +186,17 @@ var (
 	// ref: 0x527064
 	FlagMap = (*[40][40]Flag)(unsafe.Pointer(uintptr(0x527064)))
 
-	// HorizRoom1 specifies whether to generate a horizontal room at position 1 in
-	// the Cathedral.
+	// SinglePlayerQuestDunLoaded specifies whether a single player quest DUN has
+	// been loaded.
+	//
+	// PSX ref: 0x8011C0F4
+	// PSX def: unsigned char setloadflag
+	//
+	// ref: 0x5276A4
+	SinglePlayerQuestDunLoaded = (*bool)(unsafe.Pointer(uintptr(0x5276A4)))
+
+	// HorizRoom1 specifies whether to generate a horizontal room at position 1
+	// in the Cathedral.
 	//
 	// PSX ref: 0x8011C8D8
 	// PSX def: unsigned char HR1
@@ -195,8 +204,8 @@ var (
 	// ref: 0x5276A8
 	HorizRoom1 = (*bool)(unsafe.Pointer(uintptr(0x5276A8)))
 
-	// HorizRoom2 specifies whether to generate a horizontal room at position 2 in
-	// the Cathedral.
+	// HorizRoom2 specifies whether to generate a horizontal room at position 2
+	// in the Cathedral.
 	//
 	// PSX ref: 0x8011C8D9
 	// PSX def: unsigned char HR2
@@ -204,8 +213,8 @@ var (
 	// ref: 0x5276AC
 	HorizRoom2 = (*bool)(unsafe.Pointer(uintptr(0x5276AC)))
 
-	// HorizRoom3 specifies whether to generate a horizontal room at position 3 in
-	// the Cathedral.
+	// HorizRoom3 specifies whether to generate a horizontal room at position 3
+	// in the Cathedral.
 	//
 	// PSX ref: 0x8011C8DA
 	// PSX def: unsigned char HR3
@@ -213,8 +222,8 @@ var (
 	// ref: 0x5276B0
 	HorizRoom3 = (*bool)(unsafe.Pointer(uintptr(0x5276B0)))
 
-	// VertRoom1 specifies whether to generate a vertical room at position 1 in the
-	// Cathedral.
+	// VertRoom1 specifies whether to generate a vertical room at position 1 in
+	// the Cathedral.
 	//
 	// PSX ref: 0x8011C8DB
 	// PSX def: unsigned char VR1
@@ -222,8 +231,8 @@ var (
 	// ref: 0x5276B4
 	VertRoom1 = (*bool)(unsafe.Pointer(uintptr(0x5276B4)))
 
-	// VertRoom2 specifies whether to generate a vertical room at position 2 in the
-	// Cathedral.
+	// VertRoom2 specifies whether to generate a vertical room at position 2 in
+	// the Cathedral.
 	//
 	// PSX ref: 0x8011C8DC
 	// PSX def: unsigned char VR2
@@ -231,14 +240,23 @@ var (
 	// ref: 0x5276B8
 	VertRoom2 = (*bool)(unsafe.Pointer(uintptr(0x5276B8)))
 
-	// VertRoom3 specifies whether to generate a vertical room at position 3 in the
-	// Cathedral.
+	// VertRoom3 specifies whether to generate a vertical room at position 3 in
+	// the Cathedral.
 	//
 	// PSX ref: 0x8011C8DD
 	// PSX def: unsigned char VR3
 	//
 	// ref: 0x5276BC
 	VertRoom3 = (*bool)(unsafe.Pointer(uintptr(0x5276BC)))
+
+	// SinglePlayerQuestDun contains the contents of the single player quest
+	// DUN file.
+	//
+	// PSX ref: 0x8011C0DC
+	// PSX def: unsigned char* pSetPiece
+	//
+	// ref: 0x5276C0
+	SinglePlayerQuestDun = (**uint8)(unsafe.Pointer(uintptr(0x5276C0)))
 )
 
 // A Shadow contains the shadows for a 2x2 block of base tile IDs.

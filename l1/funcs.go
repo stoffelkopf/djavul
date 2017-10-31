@@ -39,12 +39,12 @@ package l1
 //    f(seed, entry);
 // }
 //
-// static void drlg_l1_load_quest_dun(void) {
+// static void drlg_l1_load_single_player_quest_dun(void) {
 //    void (*f)(void) = (void*)0x40B276;
 //    f();
 // }
 //
-// static void drlg_l1_free_quest_dun(void) {
+// static void drlg_l1_free_single_player_quest_dun(void) {
 //    void (*f)(void) = (void*)0x40B2F4;
 //    f();
 // }
@@ -294,24 +294,34 @@ func CreateDungeon(seed, entry int32) {
 	}
 }
 
-// LoadQuestDun loads tile IDs from the dungeon file of the active quest level.
+// LoadSinglePlayerQuestDun loads tile IDs from the dungeon file of the active
+// single player quest level.
 //
 // PSX ref: 0x8013CDA0
 // PSX sig: void DRLG_LoadL1SP__Fv()
 //
 // ref: 0x40B276
-func LoadQuestDun() {
-	C.drlg_l1_load_quest_dun()
+func LoadSinglePlayerQuestDun() {
+	if useGo {
+		loadSinglePlayerQuestDun()
+	} else {
+		C.drlg_l1_load_single_player_quest_dun()
+	}
 }
 
-// FreeQuestDun frees the dungeon file of the active quest level.
+// FreeSinglePlayerQuestDun frees the dungeon file of the active single player
+// quest level.
 //
 // PSX ref: 0x8013CE7C
 // PSX sig: void DRLG_FreeL1SP__Fv()
 //
 // ref: 0x40B2F4
-func FreeQuestDun() {
-	C.drlg_l1_free_quest_dun()
+func FreeSinglePlayerQuestDun() {
+	if useGo {
+		freeSinglePlayerQuestDun()
+	} else {
+		C.drlg_l1_free_single_player_quest_dun()
+	}
 }
 
 // GenerateDungeon generates a Cathedral dungeon based on the given level entry.

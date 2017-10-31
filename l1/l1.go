@@ -1,6 +1,8 @@
 // Package l1 implements dynamic random level generation of Cathedral maps.
 package l1
 
+import "C"
+
 import (
 	"reflect"
 	"unsafe"
@@ -10,6 +12,7 @@ import (
 	"github.com/sanctuary/djavul/engine"
 	"github.com/sanctuary/djavul/gendung"
 	"github.com/sanctuary/djavul/lighting"
+	"github.com/sanctuary/djavul/multi"
 	"github.com/sanctuary/djavul/quests"
 	"github.com/sanctuary/formats/level/til"
 )
@@ -177,12 +180,49 @@ func createDungeon(seed, entry int32) {
 	engine.SetSeed(seed)
 	gendung.InitTransparency() // TODO: add test case
 	gendung.InitSetPiece()     // TODO: add test case
-	LoadQuestDun()             // TODO: add test case
+	LoadSinglePlayerQuestDun()
 	GenerateDungeon(entry)
 	InitPieceIDMap()
-	FreeQuestDun() // NOTE: not tested; only used for cleanup
+	FreeSinglePlayerQuestDun() // NOTE: not tested; only used for cleanup
 	InitArches()
 	gendung.MarkSetPiece() // TODO: add test case
+}
+
+// loadSinglePlayerQuestDun loads tile IDs from the dungeon file of the active
+// single player quest level.
+//
+// PSX ref: 0x8013CDA0
+// PSX sig: void DRLG_LoadL1SP__Fv()
+//
+// ref: 0x40B276
+func loadSinglePlayerQuestDun() {
+	*SinglePlayerQuestDunLoaded = false
+	switch {
+	case quests.IsActive(quests.TheButcher):
+		*SinglePlayerQuestDun = engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\rnd6.DUN`)), nil)
+		*SinglePlayerQuestDunLoaded = true
+	case quests.IsActive(quests.TheCurseOfKingLeoric):
+		if *multi.MaxPlayers == 1 {
+			*SinglePlayerQuestDun = engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\SKngDO.DUN`)), nil)
+			*SinglePlayerQuestDunLoaded = true
+		}
+	case quests.IsActive(quests.OgdensSign):
+		*SinglePlayerQuestDun = engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\Banner2.DUN`)), nil)
+		*SinglePlayerQuestDunLoaded = true
+	}
+}
+
+// freeSinglePlayerQuestDun frees the dungeon file of the active single player
+// quest level.
+//
+// PSX ref: 0x8013CE7C
+// PSX sig: void DRLG_FreeL1SP__Fv()
+//
+// ref: 0x40B2F4
+func freeSinglePlayerQuestDun() {
+	ptr := *SinglePlayerQuestDun
+	*SinglePlayerQuestDun = nil
+	engine.MemFree(unsafe.Pointer(ptr))
 }
 
 // generateDungeon generates a Cathedral dungeon based on the given level entry.

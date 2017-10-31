@@ -3,27 +3,34 @@ package engine
 // #include <stdint.h>
 //
 // static void __fastcall engine_set_seed(int32_t x) {
-// 	void (__fastcall *f)(int32_t) = (void *)0x417518;
-// 	f(x);
+//    void (__fastcall *f)(int32_t) = (void *)0x417518;
+//    f(x);
 // }
 //
 // static int32_t engine_rand() {
-// 	int32_t (*f)() = (void *)0x41752C;
-// 	return f();
+//    int32_t (*f)() = (void *)0x41752C;
+//    return f();
 // }
 //
 // static int32_t __fastcall engine_rand_cap(int unused, int32_t max) {
-// 	int32_t (__fastcall *f)(int, int32_t) = (void *)0x41754B;
-// 	return f(unused, max);
+//    int32_t (__fastcall *f)(int, int32_t) = (void *)0x41754B;
+//    return f(unused, max);
+// }
+//
+// static void __fastcall engine_mem_free(void *ptr) {
+//    void (__fastcall *f)(void *) = (void *)0x4175E8;
+//    f(ptr);
 // }
 //
 // static void * __fastcall engine_mem_load_file(char *file_path, int *size) {
-// 	void * (__fastcall *f)(char *, int *) = (void *)0x417618;
-// 	return f(file_path, size);
+//    void * (__fastcall *f)(char *, int *) = (void *)0x417618;
+//    return f(file_path, size);
 // }
 import "C"
 
-import "unsafe"
+import (
+	"unsafe"
+)
 
 // useGo specifies whether to use the Go implementation.
 const useGo = true
@@ -72,6 +79,16 @@ func RandCap(unused, max int32) int32 {
 	} else {
 		return int32(C.engine_rand_cap(C.int(unused), C.int32_t(max)))
 	}
+}
+
+// MemFree frees the given memory space.
+//
+// PSX ref: 0x8003DBDC
+// PSX def: void mem_free_dbg__FPv(void *p)
+//
+// ref: 0x4175E8
+func MemFree(ptr unsafe.Pointer) {
+	C.engine_mem_free(ptr)
 }
 
 // MemLoadFile returns the contents of the given file.
