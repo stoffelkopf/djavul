@@ -6,6 +6,14 @@ import "unsafe"
 
 // Global variables.
 var (
+	// QuestsData contains the data related to each quest ID.
+	//
+	// References:
+	//    * https://github.com/sanctuary/notes/blob/master/enums.h#quest_id
+	//
+	// ref: 0x4A1AE0
+	QuestsData = (*[16]QuestData)(unsafe.Pointer(uintptr(0x4A1AE0)))
+
 	// Quests contains the quests of the current game.
 	//
 	// PSX ref: 0x800DDA40
@@ -14,6 +22,55 @@ var (
 	// ref: 0x69BD10
 	Quests = (*[16]Quest)(unsafe.Pointer(uintptr(0x69BD10)))
 )
+
+// PSX def:
+//    typedef struct QuestData {
+//       unsigned char _qdlvl;
+//       char _qdmultlvl;
+//       unsigned char _qlvlt;
+//       unsigned char _qdtype;
+//       unsigned char _qdrnd;
+//       unsigned char _qslvl;
+//       unsigned char _qflags;
+//       int _qdmsg;
+//       int _qlstr;
+//    } QuestData;
+type QuestData struct {
+	// offset: 00000000
+	_ uint8
+	// offset: 00000001
+	_ uint8
+	// offset: 00000002
+	_ uint8
+	// offset: 00000003
+	_ uint8
+	// offset: 00000004
+	_ uint8
+	// offset: 00000005
+	_ uint8
+	// offset: 00000006
+	_ uint8
+	// offset: 00000007
+	_ uint8
+	// offset: 00000008
+	Multiplayer bool
+	// offset: 00000009
+	_ uint8
+	// offset: 0000000A
+	_ uint8
+	// offset: 0000000B
+	_ uint8
+	// offset: 0000000C
+	_ uint8
+	// offset: 0000000D
+	_ uint8
+	// offset: 0000000E
+	_ uint8
+	// offset: 0000000F
+	_ uint8
+	// offset: 00000010
+	Name unsafe.Pointer
+}
 
 // Quest describes in-game state of any quest.
 //

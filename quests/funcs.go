@@ -15,6 +15,9 @@ package quests
 // }
 import "C"
 
+// useGo specifies whether to use the Go implementation.
+const useGo = true
+
 // IsActive reports whether the given quest is active.
 //
 // NOTE: quest_num and quest_id are equivalent, as indicated by this function.
@@ -24,7 +27,11 @@ import "C"
 //
 // ref: 0x451831
 func IsActive(questNum QuestID) bool {
-	return C.quests_is_active(C.quest_id(questNum)) == 1
+	if useGo {
+		return isActive(questNum)
+	} else {
+		return C.quests_is_active(C.quest_id(questNum)) == 1
+	}
 }
 
 // InitQuestArea initializes the given quest area.

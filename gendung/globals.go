@@ -95,7 +95,7 @@ var (
 	// PSX def: unsigned char currlevel
 	//
 	// ref: 0x5BB1EE
-	DLvl = (*int8)(unsafe.Pointer(uintptr(0x5BB1EE)))
+	DLvl = (*uint8)(unsafe.Pointer(uintptr(0x5BB1EE)))
 
 	// TransparencyActive specifies the active transparency indices.
 	//
