@@ -1331,6 +1331,57 @@ func floorTransparency() {
 	}
 }
 
+// floorTransparencyRecursive recursively adds transparency to concealing walls.
+//
+// PSX ref: 0x8013FCE4
+// PSX sig: void DRLG_L5FTVR__Fiiiii(int i, int j, int x, int y, int d)
+//
+// ref: 0x40D00B
+func floorTransparencyRecursive(xx, yy, x, y, direction int) {
+	for gendung.TransparencyMap[x][y] == 0 && TileID(gendung.TileIDMap[xx][yy]) == Floor {
+		transIndex := *gendung.TransparencyIndex
+		gendung.TransparencyMap[x][y] = transIndex
+		gendung.TransparencyMap[x+1][y] = transIndex
+		gendung.TransparencyMap[x][y+1] = transIndex
+		gendung.TransparencyMap[x+1][y+1] = transIndex
+		FloorTransparencyRecursive(xx+1, yy, x+2, y, 1)
+		FloorTransparencyRecursive(xx-1, yy, x-2, y, 2)
+		FloorTransparencyRecursive(xx, yy+1, x, y+2, 3)
+		FloorTransparencyRecursive(xx, yy-1, x, y-2, 4)
+		FloorTransparencyRecursive(xx-1, yy-1, x-2, y-2, 5)
+		FloorTransparencyRecursive(xx+1, yy-1, x+2, y-2, 6)
+		FloorTransparencyRecursive(xx-1, yy+1, x-2, y+2, 7)
+		direction = 8
+		x += 2
+		y += 2
+		xx++
+		yy++
+	}
+	transIndex := *gendung.TransparencyIndex
+	switch direction {
+	case 1:
+		gendung.TransparencyMap[x][y] = transIndex
+		gendung.TransparencyMap[x][y+1] = transIndex
+	case 2:
+		gendung.TransparencyMap[x+1][y] = transIndex
+		gendung.TransparencyMap[x+1][y+1] = transIndex
+	case 3:
+		gendung.TransparencyMap[x][y] = transIndex
+		gendung.TransparencyMap[x+1][y] = transIndex
+	case 4:
+		gendung.TransparencyMap[x][y+1] = transIndex
+		gendung.TransparencyMap[x+1][y+1] = transIndex
+	case 5:
+		gendung.TransparencyMap[x+1][y+1] = transIndex
+	case 6:
+		gendung.TransparencyMap[x][y+1] = transIndex
+	case 7:
+		gendung.TransparencyMap[x+1][y] = transIndex
+	case 8:
+		gendung.TransparencyMap[x][y] = transIndex
+	}
+}
+
 // fixDirt fixes dirt tile IDs after dungeon generation.
 //
 // PSX ref: 0x801406A8

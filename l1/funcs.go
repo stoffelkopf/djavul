@@ -662,7 +662,11 @@ func FloorTransparency() {
 //
 // ref: 0x40D00B
 func FloorTransparencyRecursive(xx, yy, x, y, direction int) {
-	C.drlg_l1_floor_transparency_recursive(C.int(xx), C.int(yy), C.int(x), C.int(y), C.int(direction))
+	if useGo {
+		floorTransparencyRecursive(xx, yy, x, y, direction)
+	} else {
+		C.drlg_l1_floor_transparency_recursive(C.int(xx), C.int(yy), C.int(x), C.int(y), C.int(direction))
+	}
 }
 
 // FixTransparency fixes transparency close to dirt tile IDs after dungeon
