@@ -677,7 +677,11 @@ func FloorTransparencyRecursive(xx, yy, x, y, direction int) {
 //
 // ref: 0x40D1FB
 func FixTransparency() {
-	C.drlg_l1_fix_transparency()
+	if useGo {
+		fixTransparency()
+	} else {
+		C.drlg_l1_fix_transparency()
+	}
 }
 
 // FixDirt fixes dirt tile IDs after dungeon generation.

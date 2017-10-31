@@ -1382,6 +1382,48 @@ func floorTransparencyRecursive(xx, yy, x, y, direction int) {
 	}
 }
 
+// fixTransparency fixes transparency close to dirt tile IDs after dungeon
+// generation.
+//
+// PSX ref: 0x80140264
+// PSX sig: void DRLG_L5TransFix__Fv()
+//
+// ref: 0x40D1FB
+func fixTransparency() {
+	y := 16
+	for yy := 0; yy < 40; yy++ {
+		x := 16
+		for xx := 0; xx < 40; xx++ {
+			switch TileID(gendung.TileIDMap[xx][yy]) {
+			case DirtWallSw:
+				gendung.TransparencyMap[x+1][y] = gendung.TransparencyMap[x][y]
+				gendung.TransparencyMap[x+1][y+1] = gendung.TransparencyMap[x][y]
+			case DirtWallSe:
+				gendung.TransparencyMap[x][y+1] = gendung.TransparencyMap[x][y]
+				gendung.TransparencyMap[x+1][y+1] = gendung.TransparencyMap[x][y]
+			case DirtWallNeWallNw:
+				gendung.TransparencyMap[x+1][y] = gendung.TransparencyMap[x][y]
+				gendung.TransparencyMap[x][y+1] = gendung.TransparencyMap[x][y]
+				gendung.TransparencyMap[x+1][y+1] = gendung.TransparencyMap[x][y]
+			case DirtWallEndSw:
+				// NOTE: BUG? original checks outside of buffer for yy = 0 in
+				// gendung.TileIDMap[xx][yy-1].
+				if yy-1 >= 0 && TileID(gendung.TileIDMap[xx][yy-1]) == DirtWallSw {
+					gendung.TransparencyMap[x+1][y] = gendung.TransparencyMap[x][y]
+					gendung.TransparencyMap[x+1][y+1] = gendung.TransparencyMap[x][y]
+				}
+			case DirtWallEndSe:
+				if xx+1 < 40 && TileID(gendung.TileIDMap[xx+1][yy]) == DirtWallSe {
+					gendung.TransparencyMap[x][y+1] = gendung.TransparencyMap[x][y]
+					gendung.TransparencyMap[x+1][y+1] = gendung.TransparencyMap[x][y]
+				}
+			}
+			x += 2
+		}
+		y += 2
+	}
+}
+
 // fixDirt fixes dirt tile IDs after dungeon generation.
 //
 // PSX ref: 0x801406A8
