@@ -57,6 +57,10 @@ func dumpL1Map(seed int32) error {
 	if err := dumpData(path, *gendung.ArchNumMap); err != nil {
 		return errors.WithStack(err)
 	}
+	path = fmt.Sprintf("l1_transparency_%08X.bin", seed)
+	if err := dumpData(path, *gendung.TransparencyMap); err != nil {
+		return errors.WithStack(err)
+	}
 	return nil
 }
 
@@ -95,7 +99,6 @@ func checkL1Regular() error {
 		}
 		pretty.Println("got:", *gendung.ArchNumMap)
 		pretty.Println("want:", tiles)
-
 		return errors.WithStack(err)
 	}
 	if err := check(*gendung.PieceIDMap, "pieces", seed, "e15a7afb7505cb01b0b3d1befce5b8d4833ae1c6"); err != nil {
@@ -111,7 +114,6 @@ func checkL1Regular() error {
 		}
 		pretty.Println("got:", *gendung.ArchNumMap)
 		pretty.Println("want:", pieces)
-
 		return errors.WithStack(err)
 	}
 	if err := check(*gendung.ArchNumMap, "arches", seed, "5438e3d7761025a2ee6f7fec155c840fc289f5dd"); err != nil {
@@ -127,7 +129,21 @@ func checkL1Regular() error {
 		}
 		pretty.Println("got:", *gendung.ArchNumMap)
 		pretty.Println("want:", arches)
-
+		return errors.WithStack(err)
+	}
+	if err := check(*gendung.TransparencyMap, "transparency", seed, "1269467cb381070f72bc6c8e69938e88da7e58cc"); err != nil {
+		path := fmt.Sprintf("testdata_regular/l1_transparency_%08X.bin", seed)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
+		}
+		defer f.Close()
+		var trans [112][112]int8
+		if err := binary.Read(f, binary.LittleEndian, &trans); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("want:", trans)
 		return errors.WithStack(err)
 	}
 	fmt.Println("PASS: regular")
@@ -161,7 +177,6 @@ func checkL1Quest() error {
 		}
 		pretty.Println("got:", *gendung.ArchNumMap)
 		pretty.Println("want:", tiles)
-
 		return errors.WithStack(err)
 	}
 	if err := check(*gendung.PieceIDMap, "pieces", seed, "15f2209ff5d066cfd568a1eab77e4328d08474e8"); err != nil {
@@ -177,7 +192,6 @@ func checkL1Quest() error {
 		}
 		pretty.Println("got:", *gendung.ArchNumMap)
 		pretty.Println("want:", pieces)
-
 		return errors.WithStack(err)
 	}
 	if err := check(*gendung.ArchNumMap, "arches", seed, "42941df3ada356ebf87ce2987d26a06c44da711a"); err != nil {
@@ -193,7 +207,21 @@ func checkL1Quest() error {
 		}
 		pretty.Println("got:", *gendung.ArchNumMap)
 		pretty.Println("want:", arches)
-
+		return errors.WithStack(err)
+	}
+	if err := check(*gendung.TransparencyMap, "transparency", seed, "5f4e2e570b8a631d94fb3852c38ace0fa0397c7a"); err != nil {
+		path := fmt.Sprintf("testdata_quest/l1_transparency_%08X.bin", seed)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
+		}
+		defer f.Close()
+		var trans [112][112]int8
+		if err := binary.Read(f, binary.LittleEndian, &trans); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("want:", trans)
 		return errors.WithStack(err)
 	}
 	fmt.Println("PASS: quest")

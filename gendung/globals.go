@@ -48,6 +48,14 @@ var (
 	// ref: 0x53D390
 	DeadMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x53D390)))
 
+	// TransparencyIndex specifies the current transparency category.
+	//
+	// PSX ref: 0x8011C148
+	// PSX def: char TransVal
+	//
+	// ref: 0x5A5590
+	TransparencyIndex = (*int8)(unsafe.Pointer(uintptr(0x5A5590)))
+
 	// PieceIDMap contains the piece IDs of each tile on the map.
 	//
 	// ref: 0x5A5BD8
@@ -65,8 +73,18 @@ var (
 	// ref: 0x5B70DC
 	TileDefs = (**til.Tile)(unsafe.Pointer(uintptr(0x5B70DC)))
 
+	// TransparencyMap specifies the transparency at each coordinate of the map.
+	//
+	// PSX ref: 0x800E7A28
+	// PSX def: map_info dung_map[112][112] // dTransVal struct member
+	//
+	// ref: 0x5B78EC
+	TransparencyMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5B78EC)))
+
 	// DType specifies the active dungeon type of the current game.
 	//
+	// PSX ref: 0x8011C10D
+	// PSX def: unsigned char leveltype
 	//
 	// ref: 0x5BB1ED
 	DType = (*DungeonType)(unsafe.Pointer(uintptr(0x5BB1ED)))

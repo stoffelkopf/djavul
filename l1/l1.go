@@ -243,7 +243,7 @@ func generateDungeon(entry int32) {
 		minArea = 761
 	}
 	for {
-		gendung.InitTransparency() // TODO: add test case
+		gendung.InitTransparency()
 
 		// Regenerate rooms until the minimum number of walls are present on the
 		// map.
@@ -262,7 +262,7 @@ func generateDungeon(entry int32) {
 		FixTiles()
 		AddWall()
 		ClearFlags()
-		FloorTransparency() // TODO: add test case
+		FloorTransparency()
 
 		// Place staircases.
 		done := true
@@ -328,8 +328,8 @@ func generateDungeon(entry int32) {
 		xx := 0
 		for x := 16; x < 96; x += 2 {
 			if TileID(gendung.TileIDMap[xx][yy]) == StairB2 {
-				gendung.CopyTransparency(x, y+1, x, y)     // TODO: add test case
-				gendung.CopyTransparency(x+1, y+1, x+1, y) // TODO: add test case
+				gendung.CopyTransparency(x, y+1, x, y)
+				gendung.CopyTransparency(x+1, y+1, x+1, y)
 			}
 			xx++
 		}
@@ -337,7 +337,7 @@ func generateDungeon(entry int32) {
 	}
 
 	// Fix transparency, dirt and corners.
-	FixTransparency() // TODO: add test case
+	FixTransparency()
 	FixDirt()
 	FixCorners() // TODO: add test case
 
