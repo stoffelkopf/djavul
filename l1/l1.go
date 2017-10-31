@@ -1310,6 +1310,27 @@ func generateHall(xxStart, yyStart, xxEnd, yyEnd int) {
 	}
 }
 
+// floorTransparency adds transparency to concealing walls.
+//
+// PSX ref: 0x8014016C
+// PSX sig: void DRLG_L5FloodTVal__Fv()
+//
+// ref: 0x40CF9C
+func floorTransparency() {
+	y := 16
+	for yy := 0; yy < 40; yy++ {
+		x := 16
+		for xx := 0; xx < 40; xx++ {
+			if TileID(gendung.TileIDMap[xx][yy]) == Floor && gendung.TransparencyMap[x][y] == 0 {
+				FloorTransparencyRecursive(xx, yy, x, y, 0)
+				*gendung.TransparencyIndex++
+			}
+			x += 2
+		}
+		y += 2
+	}
+}
+
 // fixDirt fixes dirt tile IDs after dungeon generation.
 //
 // PSX ref: 0x801406A8

@@ -648,7 +648,11 @@ func InitQuestDun(xxStart, yyStart int) {
 //
 // ref: 0x40CF9C
 func FloorTransparency() {
-	C.drlg_l1_floor_transparency()
+	if useGo {
+		floorTransparency()
+	} else {
+		C.drlg_l1_floor_transparency()
+	}
 }
 
 // FloorTransparencyRecursive recursively adds transparency to concealing walls.
