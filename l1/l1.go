@@ -178,8 +178,8 @@ func initArches() {
 // ref: 0x40B229
 func createDungeon(seed, entry int32) {
 	engine.SetSeed(seed)
-	gendung.InitTransparency() // TODO: add test case
-	gendung.InitSetPiece()     // TODO: add test case
+	gendung.InitTransparency()
+	gendung.InitSetPiece() // TODO: add test case
 	LoadSinglePlayerQuestDun()
 	GenerateDungeon(entry)
 	InitPieceIDMap()
