@@ -26,6 +26,9 @@ package gendung
 // }
 import "C"
 
+// useGo specifies whether to use the Go implementation.
+const useGo = true
+
 // InitTransparency initializes transparency.
 //
 // PSX ref: 0x8015A070
@@ -33,7 +36,11 @@ import "C"
 //
 // ref: 0x41944A
 func InitTransparency() {
-	C.gendung_init_transparency()
+	if useGo {
+		initTransparency()
+	} else {
+		C.gendung_init_transparency()
+	}
 }
 
 // MakeRectTransparent makes the given rectangle transparent.

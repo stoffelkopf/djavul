@@ -97,6 +97,14 @@ var (
 	// ref: 0x5BB1EE
 	DLvl = (*int8)(unsafe.Pointer(uintptr(0x5BB1EE)))
 
+	// TransparencyActive specifies the active transparency indices.
+	//
+	// PSX ref: 0x800E7928
+	// PSX def: unsigned char TransList[256]
+	//
+	// ref: 0x5BB1F0
+	TransparencyActive = (*[256]bool)(unsafe.Pointer(uintptr(0x5BB1F0)))
+
 	// PlayerNumMap contains the player numbers (players array indices) of the
 	// map.
 	//
