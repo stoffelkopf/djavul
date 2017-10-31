@@ -50,7 +50,11 @@ func InitTransparency() {
 //
 // ref: 0x419477
 func MakeRectTransparent(xxStart, yyStart, xxEnd, yyEnd int) {
-	C.gendung_make_rect_transparent(C.int(xxStart), C.int(yyStart), C.int(xxEnd), C.int(yyEnd))
+	if useGo {
+		makeRectTransparent(xxStart, yyStart, xxEnd, yyEnd)
+	} else {
+		C.gendung_make_rect_transparent(C.int(xxStart), C.int(yyStart), C.int(xxEnd), C.int(yyEnd))
+	}
 }
 
 // CopyTransparency copies transparency from the source to the destination

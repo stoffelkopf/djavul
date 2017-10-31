@@ -19,6 +19,21 @@ func initTransparency() {
 	*TransparencyIndex = 1
 }
 
+// makeRectTransparent makes the given rectangle transparent.
+//
+// PSX ref: 0x800578DC
+// PSX def: void DRLG_MRectTrans__Fiiii(int x1, int y1, int x2, int y2)
+//
+// ref: 0x419477
+func makeRectTransparent(xxStart, yyStart, xxEnd, yyEnd int) {
+	for y := 2*yyStart + 17; y < 2*yyEnd+17; y++ {
+		for x := 2*xxStart + 17; x < 2*xxEnd+17; x++ {
+			TransparencyMap[x][y] = *TransparencyIndex
+		}
+	}
+	*TransparencyIndex++
+}
+
 // copyTransparency copies transparency from the source to the destination
 // coordinate.
 //
