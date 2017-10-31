@@ -61,7 +61,11 @@ func MakeRectTransparent(xxStart, yyStart, xxEnd, yyEnd int) {
 //
 // ref: 0x419515
 func CopyTransparency(srcX, srcY, dstX, dstY int) {
-	C.gendung_copy_transparency(C.int(srcX), C.int(srcY), C.int(dstX), C.int(dstY))
+	if useGo {
+		copyTransparency(srcX, srcY, dstX, dstY)
+	} else {
+		C.gendung_copy_transparency(C.int(srcX), C.int(srcY), C.int(dstX), C.int(dstY))
+	}
 }
 
 // InitSetPiece initializes the placement variables of the set piece (quest
