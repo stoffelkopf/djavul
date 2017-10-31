@@ -373,7 +373,11 @@ func InitShadows() {
 //
 // ref: 0x40B881
 func PlaceMiniset(miniset unsafe.Pointer, tmin, tmax, cx, cy int, setView bool, noquad, ldir int) int {
-	return int(C.drlg_l1_place_miniset((*C.uint8_t)(miniset), C.int(tmin), C.int(tmax), C.int(cx), C.int(cy), bool32(setView), C.int(noquad), C.int(ldir)))
+	if useGo {
+		return placeMiniset(miniset, tmin, tmax, cx, cy, setView, noquad, ldir)
+	} else {
+		return int(C.drlg_l1_place_miniset((*C.uint8_t)(miniset), C.int(tmin), C.int(tmax), C.int(cx), C.int(cy), bool32(setView), C.int(noquad), C.int(ldir)))
+	}
 }
 
 // Reset resets the tile ID and the dungeon flag maps.

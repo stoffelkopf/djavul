@@ -465,7 +465,6 @@ func initShadows() {
 			}
 		}
 	}
-
 	// Add shadows for bar tiles.
 	for yy := 1; yy < 40; yy++ {
 		for xx := 1; xx < 40; xx++ {
@@ -484,6 +483,140 @@ func initShadows() {
 				}
 			}
 		}
+	}
+}
+
+// placeMiniset places the given miniset of tile IDs.
+//
+// PSX ref: 0x8013C5A0
+// PSX sig: int DRLG_PlaceMiniSet__FPCUciiiiiii(unsigned char *miniset, int tmin, int tmax, int cx, int cy, int setview, int noquad, int ldir)
+//
+// ref: 0x40B881
+func placeMiniset(miniset unsafe.Pointer, tmin, tmax, cx, cy int, setView bool, noquad, ldir int) int {
+	// Size of the largest miniset (i.e. MinisetStairDownPoison).
+	const maxSize = 1 + 1 + 6*6 + 6*6
+	sh := reflect.SliceHeader{Data: uintptr(miniset), Len: maxSize, Cap: maxSize}
+	mini := *(*[]uint8)(unsafe.Pointer(&sh))
+	width := int(mini[0])
+	height := int(mini[1])
+	// Actual size of miniset.
+	n := 1 + 1 + width*height + width*height
+	mini = mini[:n:n]
+	// Number of times to place the miniset.
+	t := 1
+	if tmin != tmax {
+		t = tmin + int(engine.RandCap(0, int32(tmax-tmin)))
+	}
+	xMax := 40 - width
+	yMax := 40 - height
+	var x, y int
+	for i := 0; i < t; i++ {
+		x = int(engine.RandCap(0, int32(xMax)))
+		j := 0
+		y = int(engine.RandCap(0, int32(yMax)))
+		for {
+			found := true
+			if cx != -1 && x >= cx-width && x <= cx+12 {
+				x++
+				found = false
+			}
+			if cy != -1 && y >= cy-height && y <= cy+12 {
+				y++
+				found = false
+			}
+			switch noquad {
+			case 0:
+				if x < cx && y < cy {
+					found = false
+				}
+			case 1:
+				if x > cx && y < cy {
+					found = false
+				}
+			case 2:
+				if x < cx && y > cy {
+					found = false
+				}
+			case 3:
+				if x > cx && y > cy {
+					found = false
+				}
+			}
+			// Locate miniset before pattern in map.
+			k := 2
+			for yDelta := 0; yDelta < height; yDelta++ {
+				if !found {
+					break
+				}
+				for xDelta := 0; xDelta < width; xDelta++ {
+					if !found {
+						break
+					}
+					v := mini[k]
+					if v != 0 && gendung.TileIDMap[x+xDelta][y+yDelta] != v {
+						found = false
+					}
+					if FlagMap[x+xDelta][y+yDelta] != 0 {
+						found = false
+					}
+					k++
+				}
+			}
+			if found {
+				break
+			}
+			x++
+			if x == xMax {
+				x = 0
+				y++
+				if y == yMax {
+					y = 0
+				}
+			}
+			j++
+			if j > 4000 {
+				return -1
+			}
+		}
+		// Add miniset to map.
+		k := 2 + width*height
+		for yDelta := 0; yDelta < height; yDelta++ {
+			for xDelta := 0; xDelta < width; xDelta++ {
+				v := mini[k]
+				if v != 0 {
+					gendung.TileIDMap[x+xDelta][y+yDelta] = v
+				}
+				k++
+			}
+		}
+	}
+	// Add transparency and entrance for Poisoned Water Supply.
+	if miniset == unsafe.Pointer(MinisetStairDownPoison) {
+		transIndexBak := *gendung.TransparencyIndex
+		*gendung.TransparencyIndex = 0
+		gendung.MakeRectTransparent(x, y+2, x+5, y+4)
+		*gendung.TransparencyIndex = transIndexBak
+		quests.Quests[quests.PoisonedWaterSupply].EnteranceX = int32(2*x + 21)
+		quests.Quests[quests.PoisonedWaterSupply].EnteranceY = int32(2*y + 22)
+	}
+	if setView {
+		*gendung.ViewX = int32(2*x + 19)
+		*gendung.ViewY = int32(2*y + 20)
+	}
+	if ldir != 0 {
+		*gendung.LvlViewX = int32(2*x + 19)
+		*gendung.LvlViewY = int32(2*y + 20)
+	}
+	switch {
+	case x < cx && y < cy:
+		return 0
+	case x > cx && y < cy:
+		return 1
+	case x < cx && y > cy:
+		return 2
+	default:
+		// (x <= cx || y >= cy) && (x >= cx || y <= cy)
+		return 3
 	}
 }
 
@@ -1237,6 +1370,6 @@ func getTiles() []til.Tile {
 		panic(errors.Errorf("invalid dungeon type %d", *gendung.DType))
 	}
 	data := (uintptr)(unsafe.Pointer(*gendung.TileDefs))
-	sh := &reflect.SliceHeader{Data: data, Len: n, Cap: n}
-	return *(*[]til.Tile)(unsafe.Pointer(sh))
+	sh := reflect.SliceHeader{Data: data, Len: n, Cap: n}
+	return *(*[]til.Tile)(unsafe.Pointer(&sh))
 }
