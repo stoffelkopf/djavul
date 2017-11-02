@@ -1290,6 +1290,141 @@ func decorate() {
 	}
 }
 
+// generateChambers generates chambers.
+//
+// PSX ref: 0x8013F5F8
+// PSX sig: void L5FillChambers__Fv()
+//
+// ref: 0x40C99D
+func generateChambers() {
+	// Generate horizontal chambers.
+	v := 1
+	if *HorizRoom1 {
+		GenerateChamber(0, 14, false, false, false, true)
+	}
+	if *HorizRoom1 && *HorizRoom2 && !*HorizRoom3 {
+		GenerateChamber(14, 14, false, false, true, false)
+	}
+	if *HorizRoom2 && *HorizRoom3 {
+		GenerateChamber(14, 14, false, false, false, true)
+	}
+	if *HorizRoom1 && *HorizRoom2 && *HorizRoom3 {
+		GenerateChamber(14, 14, false, false, true, true)
+	}
+	if !*HorizRoom1 && *HorizRoom2 && !*HorizRoom3 {
+		GenerateChamber(14, 14, false, false, false, false)
+	}
+	if *HorizRoom3 {
+		GenerateChamber(28, 14, false, false, true, false)
+	}
+	if *HorizRoom1 && *HorizRoom2 {
+		GenerateHall(12, 18, 14, 18)
+	}
+	if *HorizRoom2 && *HorizRoom3 {
+		GenerateHall(26, 18, 28, 18)
+	}
+	if *HorizRoom1 && !*HorizRoom2 && *HorizRoom3 {
+		GenerateHall(12, 18, 28, 18)
+	}
+
+	// Generate vertical chambers.
+	if *VertRoom1 {
+		GenerateChamber(14, 0, false, true, false, false)
+	}
+	if *VertRoom1 && *VertRoom2 && !*VertRoom3 {
+		GenerateChamber(14, 14, true, false, false, false)
+	}
+	if *VertRoom2 && *VertRoom3 {
+		GenerateChamber(14, 14, false, true, false, false)
+	}
+	if *VertRoom1 && *VertRoom2 && *VertRoom3 {
+		GenerateChamber(14, 14, true, true, false, false)
+	}
+	if !*VertRoom1 && *VertRoom2 && !*VertRoom3 {
+		GenerateChamber(14, 14, false, false, false, false)
+	}
+	if *VertRoom3 {
+		GenerateChamber(14, 28, true, false, false, false)
+	}
+	if *VertRoom1 && *VertRoom2 {
+		GenerateHall(18, 12, 18, 14)
+	}
+	if *VertRoom2 && *VertRoom3 {
+		GenerateHall(18, 26, 18, 28)
+	}
+	if *VertRoom1 && !*VertRoom2 && *VertRoom3 {
+		GenerateHall(18, 12, 18, 28)
+	}
+
+	// Early exit for non-quest maps.
+	if !*SinglePlayerQuestDunLoaded {
+		return
+	}
+
+	// Generate horizontal quest areas.
+	if !*VertRoom1 && !*VertRoom2 && !*VertRoom3 {
+		if !*HorizRoom1 && *HorizRoom2 && *HorizRoom3 {
+			if engine.RandCap(0, 2) != 0 {
+				v = 2
+			}
+		}
+		if *HorizRoom1 && *HorizRoom2 && !*HorizRoom3 {
+			if engine.RandCap(0, 2) != 0 {
+				v = 0
+			}
+		}
+		if *HorizRoom1 && !*HorizRoom2 && *HorizRoom3 {
+			if engine.RandCap(0, 2) != 0 {
+				v = 0
+			} else {
+				v = 2
+			}
+		}
+		if *HorizRoom1 && *HorizRoom2 && *HorizRoom3 {
+			v = int(engine.RandCap(0, 3))
+		}
+		switch v {
+		case 0:
+			InitQuestDun(2, 16)
+		case 1:
+			InitQuestDun(16, 16)
+		case 2:
+			InitQuestDun(30, 16)
+		}
+		return
+	}
+
+	// Generate vertical quest areas.
+	if !*VertRoom1 && *VertRoom2 && *VertRoom3 {
+		if engine.RandCap(0, 2) != 0 {
+			v = 2
+		}
+	}
+	if *VertRoom1 && *VertRoom2 && !*VertRoom3 {
+		if engine.RandCap(0, 2) != 0 {
+			v = 0
+		}
+	}
+	if *VertRoom1 && !*VertRoom2 && *VertRoom3 {
+		if engine.RandCap(0, 2) != 0 {
+			v = 0
+		} else {
+			v = 2
+		}
+	}
+	if *VertRoom1 && *VertRoom2 && *VertRoom3 {
+		v = int(engine.RandCap(0, 3))
+	}
+	switch v {
+	case 0:
+		InitQuestDun(16, 2)
+	case 1:
+		InitQuestDun(16, 16)
+	case 2:
+		InitQuestDun(16, 30)
+	}
+}
+
 // generateHall generates a hall of columns and arches.
 //
 // PSX ref: 0x8013E974

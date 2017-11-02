@@ -603,7 +603,11 @@ func Decorate() {
 //
 // ref: 0x40C99D
 func GenerateChambers() {
-	C.drlg_l1_generate_chambers()
+	if useGo {
+		generateChambers()
+	} else {
+		C.drlg_l1_generate_chambers()
+	}
 }
 
 // GenerateChamber generates a chamber at the given coordiates with columns on
