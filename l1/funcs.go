@@ -618,7 +618,11 @@ func GenerateChambers() {
 //
 // ref: 0x40CD86
 func GenerateChamber(xxStart, yyStart int, topRight, bottomLeft, topLeft, bottomRight bool) {
-	C.drlg_l1_generate_chamber(C.int(xxStart), C.int(yyStart), bool32(topRight), bool32(bottomLeft), bool32(topLeft), bool32(bottomRight))
+	if useGo {
+		generateChamber(xxStart, yyStart, topRight, bottomLeft, topLeft, bottomRight)
+	} else {
+		C.drlg_l1_generate_chamber(C.int(xxStart), C.int(yyStart), bool32(topRight), bool32(bottomLeft), bool32(topLeft), bool32(bottomRight))
+	}
 }
 
 // GenerateHall generates a hall of columns and arches.

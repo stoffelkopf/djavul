@@ -1425,6 +1425,62 @@ func generateChambers() {
 	}
 }
 
+// generateChamber generates a chamber at the given coordiates with columns on
+// the specified sides.
+//
+// PSX ref: 0x8013E6B4
+// PSX sig: void DRLG_L5GChamber__Fiiiiii(int sx, int sy, int topflag, int bottomflag, int leftflag, int rightflag)
+//
+// ref: 0x40CD86
+func generateChamber(xxStart, yyStart int, topRight, bottomLeft, topLeft, bottomRight bool) {
+	if topRight {
+		gendung.TileIDMap[xxStart+2][yyStart] = uint8(ArchSe)
+		gendung.TileIDMap[xxStart+3][yyStart] = uint8(ArchSe)
+		gendung.TileIDMap[xxStart+4][yyStart] = uint8(ArchNeArchNw)
+		gendung.TileIDMap[xxStart+7][yyStart] = uint8(ArchEndSe)
+		gendung.TileIDMap[xxStart+8][yyStart] = uint8(ArchSe)
+		gendung.TileIDMap[xxStart+9][yyStart] = uint8(WallSe)
+	}
+	if bottomLeft {
+		gendung.TileIDMap[xxStart+2][yyStart+11] = uint8(WallSwArchSe)
+		gendung.TileIDMap[xxStart+3][yyStart+11] = uint8(ArchSe)
+		gendung.TileIDMap[xxStart+4][yyStart+11] = uint8(ArchEndSw)
+		gendung.TileIDMap[xxStart+7][yyStart+11] = uint8(ArchSwArchSe)
+		gendung.TileIDMap[xxStart+8][yyStart+11] = uint8(ArchSe)
+		if TileID(gendung.TileIDMap[xxStart+9][yyStart+11]) != WallSwWallSe {
+			gendung.TileIDMap[xxStart+9][yyStart+11] = uint8(DirtWallSwWallSe)
+		}
+	}
+	if topLeft {
+		gendung.TileIDMap[xxStart][yyStart+2] = uint8(ArchSw)
+		gendung.TileIDMap[xxStart][yyStart+3] = uint8(ArchSw)
+		gendung.TileIDMap[xxStart][yyStart+4] = uint8(ArchNeArchNw)
+		gendung.TileIDMap[xxStart][yyStart+7] = uint8(ArchEndSw)
+		gendung.TileIDMap[xxStart][yyStart+8] = uint8(ArchSw)
+		gendung.TileIDMap[xxStart][yyStart+9] = uint8(WallSw)
+	}
+	if bottomRight {
+		gendung.TileIDMap[xxStart+11][yyStart+2] = uint8(ArchSwWallSe)
+		gendung.TileIDMap[xxStart+11][yyStart+3] = uint8(ArchSw)
+		gendung.TileIDMap[xxStart+11][yyStart+4] = uint8(ArchEndSe)
+		gendung.TileIDMap[xxStart+11][yyStart+7] = uint8(ArchSwArchSe)
+		gendung.TileIDMap[xxStart+11][yyStart+8] = uint8(ArchSw)
+		if TileID(gendung.TileIDMap[xxStart+11][yyStart+9]) != WallSwWallSe {
+			gendung.TileIDMap[xxStart+11][yyStart+9] = uint8(DirtWallSwWallSe)
+		}
+	}
+	for yyDelta := 1; yyDelta < 10; yyDelta++ {
+		for xxDelta := 1; xxDelta < 10; xxDelta++ {
+			FlagMap[xxStart+xxDelta][yyStart+yyDelta] |= Flag40
+			gendung.TileIDMap[xxStart+xxDelta][yyStart+yyDelta] = uint8(Floor)
+		}
+	}
+	gendung.TileIDMap[xxStart+4][yyStart+4] = uint8(Column)
+	gendung.TileIDMap[xxStart+7][yyStart+4] = uint8(Column)
+	gendung.TileIDMap[xxStart+4][yyStart+7] = uint8(Column)
+	gendung.TileIDMap[xxStart+7][yyStart+7] = uint8(Column)
+}
+
 // generateHall generates a hall of columns and arches.
 //
 // PSX ref: 0x8013E974
