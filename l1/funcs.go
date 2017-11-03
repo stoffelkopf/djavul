@@ -429,7 +429,11 @@ func GenerateFirstRoom() {
 //
 // ref: 0x40BD66
 func AddRoom(xxStart, yyStart, xxCount, yyCount int) {
-	C.drlg_l1_add_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount))
+	if useGo {
+		addRoom(xxStart, yyStart, xxCount, yyCount)
+	} else {
+		C.drlg_l1_add_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount))
+	}
 }
 
 // GenerateRoom generates a room of the given dimensions at the specified

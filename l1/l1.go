@@ -746,6 +746,20 @@ func generateFirstRoom() {
 	}
 }
 
+// addRoom adds walls for a room at the given area.
+//
+// PSX ref: 0x8013D3CC
+// PSX sig: void L5drawRoom__Fiiii(int x, int y, int w, int h)
+//
+// ref: 0x40BD66
+func addRoom(xxStart, yyStart, xxCount, yyCount int) {
+	for yyDelta := 0; yyDelta < yyCount; yyDelta++ {
+		for xxDelta := 0; xxDelta < xxCount; xxDelta++ {
+			gendung.TileIDMap[xxStart+xxDelta][yyStart+yyDelta] = uint8(WallSw)
+		}
+	}
+}
+
 // generateRoom generates a room of the given dimensions at the specified
 // coordinates.
 //
