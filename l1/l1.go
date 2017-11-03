@@ -746,6 +746,100 @@ func generateFirstRoom() {
 	}
 }
 
+// generateRoom generates a room of the given dimensions at the specified
+// coordinates.
+//
+// PSX ref: 0x8013D4CC
+// PSX sig: void L5roomGen__Fiiiii(int x, int y, int w, int h, int dir)
+//
+// ref: 0x40BD9D
+func generateRoom(xxStart, yyStart, xxCount, yyCount int, dirVert bool) {
+	for {
+		v := engine.RandCap(0, 4)
+		if dirVert && v != 0 || !dirVert && v == 0 {
+			// Generate rooms in vertical direction.
+			var (
+				xxCountNew int
+				yyCountNew int
+				xxStartNew int
+				yyStartNew int
+				empty1     bool
+			)
+			for i := 0; i < 20; i++ {
+				xxCountNew = int(uint32((engine.RandCap(0, 5) + 2)) & 0xFFFFFFFE)
+				yyCountNew = int(uint32((engine.RandCap(0, 5) + 2)) & 0xFFFFFFFE)
+				xxStartNew = xxStart + xxCount/2 - xxCountNew/2
+				yyStartNew = yyStart - yyCountNew
+				empty1 = IsAreaEmpty(xxStartNew-1, yyStartNew-1, xxCountNew+2, yyCountNew+1)
+				if empty1 {
+					break
+				}
+			}
+			if empty1 {
+				AddRoom(xxStartNew, yyStartNew, xxCountNew, yyCountNew)
+			}
+			yyStartNew2 := yyStart + yyCount
+			empty2 := IsAreaEmpty(xxStartNew-1, yyStartNew2, xxCountNew+2, yyCountNew+1)
+			if empty2 {
+				AddRoom(xxStartNew, yyStartNew2, xxCountNew, yyCountNew)
+			}
+			if empty1 {
+				GenerateRoom(xxStartNew, yyStartNew, xxCountNew, yyCountNew, false)
+			}
+			if !empty2 {
+				return
+			}
+			dirVert = false
+			xxCount = xxCountNew
+			yyCount = yyCountNew
+			xxStart = xxStartNew
+			yyStart = yyStartNew2
+		} else {
+			// Generate rooms in horizontal direction.
+			var (
+				xxCountNew int
+				yyCountNew int
+				xxStartNew int
+				yyStartNew int
+				empty1     bool
+			)
+			for j := 0; j < 20; j++ {
+				xxCountNew = int(uint32((engine.RandCap(0, 5) + 2)) & 0xFFFFFFFE)
+				yyCountNew = int(uint32((engine.RandCap(0, 5) + 2)) & 0xFFFFFFFE)
+				xxStartNew = xxStart - xxCountNew
+				yyStartNew = yyStart + yyCount/2 - yyCountNew/2
+				// NOTE: BUG in original. yy and xx swapped in 3rd and 4th argument.
+				//
+				// Note to self. It would be interest to check which seeds generate
+				// faulty maps based on this bug.
+				empty1 = IsAreaEmpty(xxStartNew-1, yyStartNew-1, yyCountNew+2, xxCountNew+1)
+				if empty1 {
+					break
+				}
+			}
+			if empty1 {
+				AddRoom(xxStartNew, yyStartNew, xxCountNew, yyCountNew)
+			}
+			xxStartNew2 := xxStart + xxCount
+			empty2 := IsAreaEmpty(xxStartNew2, yyStartNew-1, xxCountNew+1, yyCountNew+2)
+			if empty2 {
+				AddRoom(xxStartNew2, yyStartNew, xxCountNew, yyCountNew)
+			}
+			if empty1 {
+				GenerateRoom(xxStartNew, yyStartNew, xxCountNew, yyCountNew, true)
+			}
+			if !empty2 {
+				return
+			}
+			dirVert = true
+			xxCount = xxCountNew
+			yyCount = yyCountNew
+			xxStart = xxStartNew2
+			yyStart = yyStartNew
+		}
+	}
+}
+
 // getArea returns the number of walls on the map.
 //
 // PSX ref: 0x8013DB9C

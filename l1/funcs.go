@@ -440,7 +440,11 @@ func AddRoom(xxStart, yyStart, xxCount, yyCount int) {
 //
 // ref: 0x40BD9D
 func GenerateRoom(xxStart, yyStart, xxCount, yyCount int, dirHoriz bool) {
-	C.drlg_l1_generate_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount), bool32(dirHoriz))
+	if useGo {
+		generateRoom(xxStart, yyStart, xxCount, yyCount, dirHoriz)
+	} else {
+		C.drlg_l1_generate_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount), bool32(dirHoriz))
+	}
 }
 
 // IsAreaEmpty reports whether the given area is empty.
