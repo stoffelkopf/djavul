@@ -96,7 +96,7 @@ package l1
 //
 // static bool32_t __fastcall drlg_l1_is_area_empty(int xx_start, int yy_start, int xx_count, int yy_count) {
 // 	bool32_t (__fastcall *f)(int, int, int, int) = (void *)0x40BFA4;
-// 	f(xx_start, yy_start, xx_count, yy_count);
+// 	return f(xx_start, yy_start, xx_count, yy_count);
 // }
 //
 // static int drlg_l1_get_area() {
