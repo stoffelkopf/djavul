@@ -82,7 +82,11 @@ func CopyTransparency(srcX, srcY, dstX, dstY int) {
 //
 // ref: 0x4195A2
 func InitSetPiece() {
-	C.gendung_init_set_piece()
+	if useGo {
+		initSetPiece()
+	} else {
+		C.gendung_init_set_piece()
+	}
 }
 
 // MarkSetPiece marks the area of the set piece (quest dungeon).

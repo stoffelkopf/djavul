@@ -55,8 +55,10 @@ func copyTransparency(srcX, srcY, dstX, dstY int) {
 //
 // ref: 0x4195A2
 func initSetPiece() {
-	// TODO: Implement initSetPiece.
-	log.Printf("note: initSetPiece not yet implemented.")
+	*SetXx = 0
+	*SetYy = 0
+	*SetWidth = 0
+	*SetHeight = 0
 }
 
 // markSetPiece marks the area of the set piece (quest dungeon).
