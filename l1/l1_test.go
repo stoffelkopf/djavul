@@ -68,22 +68,20 @@ func TestCreateDungeon(t *testing.T) {
 			arches:       "42941df3ada356ebf87ce2987d26a06c44da711a",
 			transparency: "5f4e2e570b8a631d94fb3852c38ace0fa0397c7a",
 		},
-		/*
-			{
-				// meta.
-				dungeonName: "Poisoned Water Supply",
-				// pre.
-				dlvl:    2,
-				dtype:   gendung.Cathedral,
-				questID: quests.TheButcher,
-				seed:    123,
-				// post.
-				tiles:        "f4525775a47ef083d85c7faf5560b9808ce203ff",
-				pieces:       "cb2f37c9d04a39ec22c4171c6e95c88a260364e3",
-				arches:       "87418c244b8123dbdb3439812a2e1d8af5032c21",
-				transparency: "5d548a45afb50e56cd77847fd832822eee0b01e7",
-			},
-		*/
+		{
+			// meta.
+			dungeonName: "Poisoned Water Supply",
+			// pre.
+			dlvl:    2,
+			dtype:   gendung.Cathedral,
+			questID: quests.PoisonedWaterSupply,
+			seed:    123,
+			// post.
+			tiles:        "f4525775a47ef083d85c7faf5560b9808ce203ff",
+			pieces:       "cb2f37c9d04a39ec22c4171c6e95c88a260364e3",
+			arches:       "87418c244b8123dbdb3439812a2e1d8af5032c21",
+			transparency: "5d548a45afb50e56cd77847fd832822eee0b01e7",
+		},
 	}
 
 	for _, g := range golden {

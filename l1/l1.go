@@ -4,6 +4,7 @@ package l1
 import "C"
 
 import (
+	"log"
 	"reflect"
 	"unsafe"
 
@@ -1828,6 +1829,7 @@ func fixDirt() {
 // ref: 0x40D2EF
 func fixCorners() {
 	// TODO: Implement fixCorners.
+	log.Printf("note: fixCorners not yet implemented.")
 }
 
 // ### [ Helper functions ] ####################################################

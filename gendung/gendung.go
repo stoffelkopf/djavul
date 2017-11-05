@@ -1,6 +1,8 @@
 // Package gendung implements dungeon generation utility functions.
 package gendung
 
+import "log"
+
 // initTransparency initializes transparency.
 //
 // PSX ref: 0x8015A070
@@ -54,6 +56,7 @@ func copyTransparency(srcX, srcY, dstX, dstY int) {
 // ref: 0x4195A2
 func initSetPiece() {
 	// TODO: Implement initSetPiece.
+	log.Printf("note: initSetPiece not yet implemented.")
 }
 
 // markSetPiece marks the area of the set piece (quest dungeon).
@@ -64,4 +67,5 @@ func initSetPiece() {
 // ref: 0x4195B9
 func markSetPiece() {
 	// TODO: Implement markSetPiece.
+	log.Printf("note: markSetPiece not yet implemented.")
 }
