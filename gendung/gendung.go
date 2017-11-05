@@ -44,3 +44,24 @@ func makeRectTransparent(xxStart, yyStart, xxEnd, yyEnd int) {
 func copyTransparency(srcX, srcY, dstX, dstY int) {
 	TransparencyMap[dstX][dstY] = TransparencyMap[srcX][srcY]
 }
+
+// initSetPiece initializes the placement variables of the set piece (quest
+// dungeon).
+//
+// PSX ref: 0x8015A2A4
+// PSX def: void DRLG_InitSetPC__Fv()
+//
+// ref: 0x4195A2
+func initSetPiece() {
+	// TODO: Implement initSetPiece.
+}
+
+// markSetPiece marks the area of the set piece (quest dungeon).
+//
+// PSX ref: 0x8015A2BC
+// PSX def: void DRLG_SetPC__Fv()
+//
+// ref: 0x4195B9
+func markSetPiece() {
+	// TODO: Implement markSetPiece.
+}

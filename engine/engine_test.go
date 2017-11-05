@@ -1,3 +1,5 @@
+//+build !djavul
+
 package engine_test
 
 import (

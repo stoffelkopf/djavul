@@ -1,8 +1,10 @@
-//+build !djavul
+//+build djavul
 
 // Global variable wrappers for multi.cpp
 
 package multi
+
+import "unsafe"
 
 // Global variables.
 var (
@@ -10,5 +12,5 @@ var (
 	// represents a single player game and 4 represents a multi player game.
 	//
 	// ref: 0x679660
-	MaxPlayers = new(uint8)
+	MaxPlayers = (*uint8)(unsafe.Pointer(uintptr(0x679660)))
 )

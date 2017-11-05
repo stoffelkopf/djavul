@@ -2,6 +2,16 @@
 // functions.
 package engine
 
+import (
+	"io/ioutil"
+	"log"
+	"path/filepath"
+	"strings"
+	"unsafe"
+
+	"github.com/pkg/errors"
+)
+
 // setSeed sets the global seed to x.
 //
 // PSX ref: 0x8003DACC
@@ -45,6 +55,28 @@ func randCap(max int32) int32 {
 		x >>= 16
 	}
 	return x % max
+}
+
+// memLoadFile returns the contents of the given file.
+//
+// PSX ref: 0x80074E9C
+// PSX def: unsigned char* GRL_LoadFileInMemSig__FPCcPUl(char *Name, unsigned long *Len)
+//
+// ref: 0x417618
+func memLoadFile(path string, size *int32) *uint8 {
+	// mpqDir specifies a directory containing an extracted copy of the files
+	// contained within DIABDAT.MPQ. Note that the extracted files should have
+	// lowercase names.
+	const mpqDir = "diabdat"
+	path = filepath.Join(mpqDir, strings.ToLower(path))
+	buf, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Fatalf("unable to load file %q; %v", path, errors.WithStack(err))
+	}
+	if size != nil {
+		*size = int32(len(buf))
+	}
+	return (*uint8)(unsafe.Pointer(&buf[0]))
 }
 
 // ### [ Helper functions ] ####################################################

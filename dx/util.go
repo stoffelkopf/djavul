@@ -1,9 +1,8 @@
+//+build ddraw
+
 // Utility functions for interacting with dx.cpp.
 
 package dx
-
-// #include <ddraw.h>
-import "C"
 
 import (
 	"image/color"

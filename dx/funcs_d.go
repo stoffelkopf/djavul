@@ -1,3 +1,5 @@
+//+build ddraw
+
 // Function wrappers for dx.cpp
 
 package dx

@@ -34,3 +34,13 @@ func isActive(questNum QuestID) bool {
 	}
 	return true
 }
+
+// initQuestArea initializes the given quest area.
+//
+// PSX ref: 0x8015F334
+// PSX def: void DRLG_CheckQuests__Fii(int x, int y)
+//
+// ref: 0x451F20
+func initQuestArea(xx, yy int32) {
+	// TODO: Implement initQuestArea.
+}

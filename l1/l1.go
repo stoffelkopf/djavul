@@ -1632,6 +1632,16 @@ func generateHall(xxStart, yyStart, xxEnd, yyEnd int) {
 	}
 }
 
+// initQuestDun initializes tile IDs based on the loaded quest dungeon file.
+//
+// PSX ref: 0x8013F4F8
+// PSX sig: void DRLG_L5SetRoom__Fii(int rx1, int ry1)
+//
+// ref: 0x40CF17
+func initQuestDun(xxStart, yyStart int) {
+	// TODO: Implement initQuestDun.
+}
+
 // floorTransparency adds transparency to concealing walls.
 //
 // PSX ref: 0x8014016C
@@ -1782,6 +1792,16 @@ func fixDirt() {
 			}
 		}
 	}
+}
+
+// fixCorners fixes corner and arch tile IDs after dungeon generation.
+//
+// PSX ref: 0x80140824
+// PSX sig: void DRLG_L5CornerFix__Fv()
+//
+// ref: 0x40D2EF
+func fixCorners() {
+	// TODO: Implement fixCorners.
 }
 
 // ### [ Helper functions ] ####################################################

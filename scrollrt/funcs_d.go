@@ -1,3 +1,5 @@
+//+build djavul
+
 package scrollrt
 
 // void scrollrt_draw_main_W(void) {

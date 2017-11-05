@@ -1,8 +1,10 @@
-//+build !djavul
+//+build djavul
 
 // Global variable wrappers for drlg_l1.cpp
 
 package l1
+
+import "unsafe"
 
 // Global variables.
 var (
@@ -12,7 +14,7 @@ var (
 	// PSX def: ShadowStruct SPATS[37]
 	//
 	// ref: 0x479C24
-	Shadows = new([37]Shadow)
+	Shadows = (*[37]Shadow)(unsafe.Pointer(uintptr(0x479C24)))
 
 	// Base maps tile IDs to their corresponding base tile ID.
 	//
@@ -20,7 +22,7 @@ var (
 	// PSX def: unsigned char BSTYPES[206]
 	//
 	// ref: 0x479D28
-	Base = new([207]TileID)
+	Base = (*[207]TileID)(unsafe.Pointer(uintptr(0x479D28)))
 
 	// Plain maps tile IDs to their corresponding undecorated tile ID.
 	//
@@ -28,7 +30,7 @@ var (
 	// PSX def: unsigned char L5BTYPES[206]
 	//
 	// ref: 0x479DF8
-	Plain = new([207]TileID)
+	Plain = (*[207]TileID)(unsafe.Pointer(uintptr(0x479DF8)))
 
 	// MinisetStairUp1 is a 4x4 miniset of tile IDs representing a staircase
 	// going up.
@@ -54,7 +56,7 @@ var (
 	//    }
 	//
 	// ref: 0x479EC8
-	MinisetStairUp1 = new([34]uint8)
+	MinisetStairUp1 = (*[34]uint8)(unsafe.Pointer(uintptr(0x479EC8)))
 
 	// MinisetStairUp2 is a 4x4 miniset of tile IDs representing a staircase
 	// going up.
@@ -80,7 +82,7 @@ var (
 	//    }
 	//
 	// ref: 0x479EEC
-	MinisetStairUp2 = new([34]uint8)
+	MinisetStairUp2 = (*[34]uint8)(unsafe.Pointer(uintptr(0x479EEC)))
 
 	// MinisetStairDown is a 4x3 miniset of tile IDs representing a staircase
 	// going down.
@@ -106,7 +108,7 @@ var (
 	//    }
 	//
 	// ref: 0x479F10
-	MinisetStairDown = new([26]uint8)
+	MinisetStairDown = (*[26]uint8)(unsafe.Pointer(uintptr(0x479F10)))
 
 	// MinisetCandlestick is a 2x2 miniset of tile IDs representing a
 	// candlestick.
@@ -132,7 +134,7 @@ var (
 	//    }
 	//
 	// ref: 0x479F2C
-	MinisetCandlestick = new([10]uint8)
+	MinisetCandlestick = (*[10]uint8)(unsafe.Pointer(uintptr(0x479F2C)))
 
 	// MinisetStairDownPoison is a 6x6 miniset of tile IDs representing a
 	// staircase going down to the Poisoned Water Supply.
@@ -158,7 +160,7 @@ var (
 	//    }
 	//
 	// ref: 0x479F38
-	MinisetStairDownPoison = new([74]uint8)
+	MinisetStairDownPoison = (*[74]uint8)(unsafe.Pointer(uintptr(0x479F38)))
 
 	// PatternLookup is a lookup table for the 16 possible patterns of a 2x2
 	// area, where each cell either contains a SW door or it doesn't.
@@ -167,7 +169,7 @@ var (
 	// PSX def: unsigned char L5ConvTbl[16]
 	//
 	// ref: 0x484778
-	PatternLookup = new([16]TileID)
+	PatternLookup = (*[16]TileID)(unsafe.Pointer(uintptr(0x484778)))
 
 	// TileBitMap represents a tile ID map of twice the size, repeating each tile
 	// of the original map in blocks of 4.
@@ -176,7 +178,7 @@ var (
 	// PSX def: unsigned char L5dungeon[80][80]
 	//
 	// ref: 0x525764
-	TileBitMap = new([80][80]TileID)
+	TileBitMap = (*[80][80]TileID)(unsafe.Pointer(uintptr(0x525764)))
 
 	// FlagMap contains flags used for dungeon generation of the Cathedral.
 	//
@@ -184,7 +186,7 @@ var (
 	// PSX def: unsigned char* mydflags
 	//
 	// ref: 0x527064
-	FlagMap = new([40][40]Flag)
+	FlagMap = (*[40][40]Flag)(unsafe.Pointer(uintptr(0x527064)))
 
 	// SinglePlayerQuestDunLoaded specifies whether a single player quest DUN has
 	// been loaded.
@@ -193,7 +195,7 @@ var (
 	// PSX def: unsigned char setloadflag
 	//
 	// ref: 0x5276A4
-	SinglePlayerQuestDunLoaded = new(bool)
+	SinglePlayerQuestDunLoaded = (*bool)(unsafe.Pointer(uintptr(0x5276A4)))
 
 	// HorizRoom1 specifies whether to generate a horizontal room at position 1
 	// in the Cathedral.
@@ -202,7 +204,7 @@ var (
 	// PSX def: unsigned char HR1
 	//
 	// ref: 0x5276A8
-	HorizRoom1 = new(bool)
+	HorizRoom1 = (*bool)(unsafe.Pointer(uintptr(0x5276A8)))
 
 	// HorizRoom2 specifies whether to generate a horizontal room at position 2
 	// in the Cathedral.
@@ -211,7 +213,7 @@ var (
 	// PSX def: unsigned char HR2
 	//
 	// ref: 0x5276AC
-	HorizRoom2 = new(bool)
+	HorizRoom2 = (*bool)(unsafe.Pointer(uintptr(0x5276AC)))
 
 	// HorizRoom3 specifies whether to generate a horizontal room at position 3
 	// in the Cathedral.
@@ -220,7 +222,7 @@ var (
 	// PSX def: unsigned char HR3
 	//
 	// ref: 0x5276B0
-	HorizRoom3 = new(bool)
+	HorizRoom3 = (*bool)(unsafe.Pointer(uintptr(0x5276B0)))
 
 	// VertRoom1 specifies whether to generate a vertical room at position 1 in
 	// the Cathedral.
@@ -229,7 +231,7 @@ var (
 	// PSX def: unsigned char VR1
 	//
 	// ref: 0x5276B4
-	VertRoom1 = new(bool)
+	VertRoom1 = (*bool)(unsafe.Pointer(uintptr(0x5276B4)))
 
 	// VertRoom2 specifies whether to generate a vertical room at position 2 in
 	// the Cathedral.
@@ -238,7 +240,7 @@ var (
 	// PSX def: unsigned char VR2
 	//
 	// ref: 0x5276B8
-	VertRoom2 = new(bool)
+	VertRoom2 = (*bool)(unsafe.Pointer(uintptr(0x5276B8)))
 
 	// VertRoom3 specifies whether to generate a vertical room at position 3 in
 	// the Cathedral.
@@ -247,7 +249,7 @@ var (
 	// PSX def: unsigned char VR3
 	//
 	// ref: 0x5276BC
-	VertRoom3 = new(bool)
+	VertRoom3 = (*bool)(unsafe.Pointer(uintptr(0x5276BC)))
 
 	// SinglePlayerQuestDun contains the contents of the single player quest
 	// DUN file.
@@ -256,5 +258,5 @@ var (
 	// PSX def: unsigned char* pSetPiece
 	//
 	// ref: 0x5276C0
-	SinglePlayerQuestDun = new(*uint8)
+	SinglePlayerQuestDun = (**uint8)(unsafe.Pointer(uintptr(0x5276C0)))
 )

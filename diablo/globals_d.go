@@ -1,8 +1,10 @@
-//+build !djavul
+//+build djavul
 
 // Global variable wrappers for diablo.cpp
 
 package diablo
+
+import "unsafe"
 
 // Global variables.
 var (
@@ -12,5 +14,5 @@ var (
 	// PSX def: unsigned char light4flag
 	//
 	// ref: 0x525728
-	LightingFlag4 = new(uint32)
+	LightingFlag4 = (*uint32)(unsafe.Pointer(uintptr(0x525728)))
 )

@@ -1,10 +1,12 @@
-//+build !djavul
+//+build djavul
 
 // Global variable wrappers for gendung.cpp
 
 package gendung
 
 import (
+	"unsafe"
+
 	"github.com/sanctuary/formats/level/til"
 )
 
@@ -15,7 +17,7 @@ var (
 	// (monsters array index) in the dungeon.
 	//
 	// ref: 0x52D208
-	NPCNumMap = new([112][112]int32)
+	NPCNumMap = (*[112][112]int32)(unsafe.Pointer(uintptr(0x52D208)))
 
 	// TileIDMap contains the tile IDs of the map.
 	//
@@ -23,13 +25,13 @@ var (
 	// PSX def: unsigned short dungeon[48][48]
 	//
 	// ref: 0x539608
-	TileIDMap = new([40][40]uint8)
+	TileIDMap = (*[40][40]uint8)(unsafe.Pointer(uintptr(0x539608)))
 
 	// ObjectNumMap contains the object numbers (objects array indices) of the
 	// map.
 	//
 	// ref: 0x539C48
-	ObjectNumMap = new([112][112]int8)
+	ObjectNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x539C48)))
 
 	// TileIDMapBackup contains a backup of the tile IDs of the map.
 	//
@@ -37,7 +39,7 @@ var (
 	// PSX def: unsigned char pdungeon[40][40]
 	//
 	// ref: 0x53CD50
-	TileIDMapBackup = new([40][40]uint8)
+	TileIDMapBackup = (*[40][40]uint8)(unsafe.Pointer(uintptr(0x53CD50)))
 
 	// DeadMap contains the dead numbers (deads array indices) and dead direction
 	// of the map, encoded as specified by the pseudo-code below.
@@ -46,7 +48,7 @@ var (
 	//    direction = DeadMap[col][row]>>5
 	//
 	// ref: 0x53D390
-	DeadMap = new([112][112]int8)
+	DeadMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x53D390)))
 
 	// TransparencyIndex specifies the current transparency category.
 	//
@@ -54,24 +56,24 @@ var (
 	// PSX def: char TransVal
 	//
 	// ref: 0x5A5590
-	TransparencyIndex = new(int8)
+	TransparencyIndex = (*int8)(unsafe.Pointer(uintptr(0x5A5590)))
 
 	// PieceIDMap contains the piece IDs of each tile on the map.
 	//
 	// ref: 0x5A5BD8
-	PieceIDMap = new([112][112]int32)
+	PieceIDMap = (*[112][112]int32)(unsafe.Pointer(uintptr(0x5A5BD8)))
 
 	// LightingVisibleDistanceMap specifies the visible distance of light
 	// effects.
 	//
 	// ref: 0x5B1FD8
-	LightingVisibleDistanceMap = new([112][112]int8)
+	LightingVisibleDistanceMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5B1FD8)))
 
 	// TileDefs specifies the tile definitions of the active dungeon type; (e.g.
 	// levels/l1data/l1.til).
 	//
 	// ref: 0x5B70DC
-	TileDefs = new(*til.Tile)
+	TileDefs = (**til.Tile)(unsafe.Pointer(uintptr(0x5B70DC)))
 
 	// TransparencyMap specifies the transparency at each coordinate of the map.
 	//
@@ -79,7 +81,7 @@ var (
 	// PSX def: map_info dung_map[112][112] // dTransVal struct member
 	//
 	// ref: 0x5B78EC
-	TransparencyMap = new([112][112]int8)
+	TransparencyMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5B78EC)))
 
 	// DType specifies the active dungeon type of the current game.
 	//
@@ -87,7 +89,7 @@ var (
 	// PSX def: unsigned char leveltype
 	//
 	// ref: 0x5BB1ED
-	DType = new(DungeonType)
+	DType = (*DungeonType)(unsafe.Pointer(uintptr(0x5BB1ED)))
 
 	// DLvl specifies the active dungeon level of the current game.
 	//
@@ -95,7 +97,7 @@ var (
 	// PSX def: unsigned char currlevel
 	//
 	// ref: 0x5BB1EE
-	DLvl = new(uint8)
+	DLvl = (*uint8)(unsafe.Pointer(uintptr(0x5BB1EE)))
 
 	// TransparencyActive specifies the active transparency indices.
 	//
@@ -103,13 +105,13 @@ var (
 	// PSX def: unsigned char TransList[256]
 	//
 	// ref: 0x5BB1F0
-	TransparencyActive = new([256]bool)
+	TransparencyActive = (*[256]bool)(unsafe.Pointer(uintptr(0x5BB1F0)))
 
 	// PlayerNumMap contains the player numbers (players array indices) of the
 	// map.
 	//
 	// ref: 0x5BFEF8
-	PlayerNumMap = new([112][112]int8)
+	PlayerNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5BFEF8)))
 
 	// ArchNumMap contains the arch frame numbers of the map from the special
 	// tileset (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of
@@ -117,17 +119,17 @@ var (
 	// arches.
 	//
 	// ref: 0x5C3008
-	ArchNumMap = new([112][112]int8)
+	ArchNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5C3008)))
 
 	// DFlagMap specifies flags used for dungeon generation.
 	//
 	// ref: 0x5C6910
-	DFlagMap = new([112][112]DFlag)
+	DFlagMap = (*[112][112]DFlag)(unsafe.Pointer(uintptr(0x5C6910)))
 
 	// ItemNumMap contains the item numbers (items array indices) of the map.
 	//
 	// ref: 0x5C9A10
-	ItemNumMap = new([112][112]int8)
+	ItemNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5C9A10)))
 
 	// SetXx specifies the active miniset x-coordinate of the map.
 	//
@@ -135,12 +137,12 @@ var (
 	// PSX def: int setpc_x
 	//
 	// ref: 0x5CF338
-	SetXx = new(int32)
+	SetXx = (*int32)(unsafe.Pointer(uintptr(0x5CF338)))
 
 	// IsQuestLevel specifies whether the active level is a quest level.
 	//
 	// ref: 0x5CF31D
-	IsQuestLevel = new(bool)
+	IsQuestLevel = (*bool)(unsafe.Pointer(uintptr(0x5CF31D)))
 
 	// LvlViewY specifies the level viewpoint y-coordinate of the map.
 	//
@@ -148,7 +150,7 @@ var (
 	// PSX def: int LvlViewY
 	//
 	// ref: 0x5CF320
-	LvlViewY = new(int32)
+	LvlViewY = (*int32)(unsafe.Pointer(uintptr(0x5CF320)))
 
 	// LvlViewX specifies the level viewpoint x-coordinate of the map.
 	//
@@ -156,7 +158,7 @@ var (
 	// PSX def: int LvlViewX
 	//
 	// ref: 0x5CF324
-	LvlViewX = new(int32)
+	LvlViewX = (*int32)(unsafe.Pointer(uintptr(0x5CF324)))
 
 	// ViewX specifies the player viewpoint x-coordinate of the map.
 	//
@@ -164,7 +166,7 @@ var (
 	// PSX def: int ViewX
 	//
 	// ref: 0x5CF33C
-	ViewX = new(int32)
+	ViewX = (*int32)(unsafe.Pointer(uintptr(0x5CF33C)))
 
 	// ViewY specifies the player viewpoint y-coordinate of the map.
 	//
@@ -172,7 +174,7 @@ var (
 	// PSX def: int ViewY
 	//
 	// ref: 0x5CF340
-	ViewY = new(int32)
+	ViewY = (*int32)(unsafe.Pointer(uintptr(0x5CF340)))
 
 	// SetYy specifies the active miniset y-coordinate of the map.
 	//
@@ -180,11 +182,11 @@ var (
 	// PSX def: int setpc_y
 	//
 	// ref: 0x5CF344
-	SetYy = new(int32)
+	SetYy = (*int32)(unsafe.Pointer(uintptr(0x5CF344)))
 
 	// MissileNumMap contains the missile numbers (missiles array indices) of the
 	// map.
 	//
 	// ref: 0x5CF350
-	MissileNumMap = new([112][112]int8)
+	MissileNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5CF350)))
 )

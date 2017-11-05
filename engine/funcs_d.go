@@ -1,12 +1,41 @@
-//+build !djavul
+//+build djavul
 
 package engine
 
+// #include <stdint.h>
+//
+// static void __fastcall engine_set_seed(int32_t x) {
+//    void (__fastcall *f)(int32_t) = (void *)0x417518;
+//    f(x);
+// }
+//
+// static int32_t engine_rand() {
+//    int32_t (*f)() = (void *)0x41752C;
+//    return f();
+// }
+//
+// static int32_t __fastcall engine_rand_cap(int unused, int32_t max) {
+//    int32_t (__fastcall *f)(int, int32_t) = (void *)0x41754B;
+//    return f(unused, max);
+// }
+//
+// static void __fastcall engine_mem_free(void *ptr) {
+//    void (__fastcall *f)(void *) = (void *)0x4175E8;
+//    f(ptr);
+// }
+//
+// static void * __fastcall engine_mem_load_file(char *file_path, int *size) {
+//    void * (__fastcall *f)(char *, int *) = (void *)0x417618;
+//    return f(file_path, size);
+// }
 import "C"
 
 import (
 	"unsafe"
 )
+
+// useGo specifies whether to use the Go implementation.
+const useGo = true
 
 // SetSeed sets the global seed to x.
 //
@@ -15,7 +44,11 @@ import (
 //
 // ref: 0x417518
 func SetSeed(x int32) {
-	setSeed(x)
+	if useGo {
+		setSeed(x)
+	} else {
+		C.engine_set_seed(C.int32_t(x))
+	}
 }
 
 // Rand returns a non-negative pseudo-random integer in [0, 2^31), using the
@@ -27,7 +60,11 @@ func SetSeed(x int32) {
 //
 // ref: 0x41752C
 func Rand() int32 {
-	return rand()
+	if useGo {
+		return rand()
+	} else {
+		return int32(C.engine_rand())
+	}
 }
 
 // RandCap returns a capped non-negative pseudo-random integer in [0, max),
@@ -39,7 +76,11 @@ func Rand() int32 {
 //
 // ref: 0x41754B
 func RandCap(unused, max int32) int32 {
-	return randCap(max)
+	if useGo {
+		return randCap(max)
+	} else {
+		return int32(C.engine_rand_cap(C.int(unused), C.int32_t(max)))
+	}
 }
 
 // MemFree frees the given memory space.
@@ -49,7 +90,7 @@ func RandCap(unused, max int32) int32 {
 //
 // ref: 0x4175E8
 func MemFree(ptr unsafe.Pointer) {
-	// NOTE: Being garbage collected, MemFree is a no-op in Go.
+	C.engine_mem_free(ptr)
 }
 
 // MemLoadFile returns the contents of the given file.
@@ -59,5 +100,6 @@ func MemFree(ptr unsafe.Pointer) {
 //
 // ref: 0x417618
 func MemLoadFile(path unsafe.Pointer, size *int32) *uint8 {
-	return memLoadFile(C.GoString((*C.char)(path)), size)
+	buf := C.engine_mem_load_file((*C.char)(path), (*C.int32_t)(unsafe.Pointer(size)))
+	return (*uint8)(unsafe.Pointer(buf))
 }

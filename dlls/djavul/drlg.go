@@ -1,3 +1,5 @@
+//+build djavul
+
 package main
 
 import (

@@ -1,3 +1,5 @@
+//+build ddraw
+
 // Package capture implements screenshot capturing.
 package capture
 

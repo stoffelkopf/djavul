@@ -1,3 +1,5 @@
+//+build ddraw
+
 // Package ddraw provides access to DirectDraw functions.
 package ddraw
 

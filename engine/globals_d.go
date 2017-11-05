@@ -1,15 +1,17 @@
-//+build !djavul
+//+build djavul
 
 // Global variable wrappers for engine.cpp
 
 package engine
+
+import "unsafe"
 
 // Global variables.
 var (
 	// InitialSeed represents the initial global seed of the game.
 	//
 	// ref: 0x52B974
-	InitialSeed = new(int32)
+	InitialSeed = (*int32)(unsafe.Pointer(uintptr(0x52B974)))
 
 	// Seed represents the global seed of the game.
 	//
@@ -17,7 +19,7 @@ var (
 	// PSX def: long sglGameSeed
 	//
 	// ref: 0x52B97C
-	Seed = new(int32)
+	Seed = (*int32)(unsafe.Pointer(uintptr(0x52B97C)))
 
 	// SeedCount specifies the number of invokations to engine_rand.
 	//
@@ -25,5 +27,5 @@ var (
 	// PSX def: int SeedCount
 	//
 	// ref: 0x52B998
-	SeedCount = new(int32)
+	SeedCount = (*int32)(unsafe.Pointer(uintptr(0x52B998)))
 )
