@@ -100,6 +100,10 @@ func MemFree(ptr unsafe.Pointer) {
 //
 // ref: 0x417618
 func MemLoadFile(path unsafe.Pointer, size *int32) *uint8 {
-	buf := C.engine_mem_load_file((*C.char)(path), (*C.int32_t)(unsafe.Pointer(size)))
-	return (*uint8)(unsafe.Pointer(buf))
+	if useGo {
+		return memLoadFile(path, size)
+	} else {
+		buf := C.engine_mem_load_file((*C.char)(path), (*C.int32_t)(unsafe.Pointer(size)))
+		return (*uint8)(unsafe.Pointer(buf))
+	}
 }

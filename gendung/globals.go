@@ -5,6 +5,7 @@
 package gendung
 
 import (
+	"github.com/sanctuary/formats/level/min"
 	"github.com/sanctuary/formats/level/til"
 )
 
@@ -73,6 +74,12 @@ var (
 	// ref: 0x5B70DC
 	TileDefs = new(*til.Tile)
 
+	// DPieceDefs specifies the dungeon piece definitions (a.k.a. miniture tiles)
+	// of the active dungeon type; (e.g. levels/l1data/l1.min).
+	//
+	// ref: 0x5B70E0
+	DPieceDefs = new(*min.Block)
+
 	// TransparencyMap specifies the transparency at each coordinate of the map.
 	//
 	// PSX ref: 0x800E7A28
@@ -105,6 +112,13 @@ var (
 	// ref: 0x5BB1F0
 	TransparencyActive = new([256]bool)
 
+	// LevelCEL points to the contents of the active tileset, which is one of
+	// "levels/towndata/town.cel", "levels/l1data/l1.cel",
+	// "levels/l2data/l2.cel", "levels/l3data/l3.cel" or "levels/l4data/l4.cel".
+	//
+	// ref: 0x5BDB0C
+	LevelCEL = new(*uint8)
+
 	// PlayerNumMap contains the player numbers (players array indices) of the
 	// map.
 	//
@@ -118,6 +132,13 @@ var (
 	//
 	// ref: 0x5C3008
 	ArchNumMap = new([112][112]int8)
+
+	// LevelSpecialCEL points to the contents of the active special tileset,
+	// which is one of "levels/towndata/towns.cel", "levels/l1data/l1s.cel" or
+	// "levels/l2data/l2s.cel".
+	//
+	// ref: 0x5C690C
+	LevelSpecialCEL = new(*uint8)
 
 	// DFlagMap specifies flags used for dungeon generation.
 	//

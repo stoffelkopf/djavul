@@ -7,6 +7,7 @@ package gendung
 import (
 	"unsafe"
 
+	"github.com/sanctuary/formats/level/min"
 	"github.com/sanctuary/formats/level/til"
 )
 
@@ -75,6 +76,12 @@ var (
 	// ref: 0x5B70DC
 	TileDefs = (**til.Tile)(unsafe.Pointer(uintptr(0x5B70DC)))
 
+	// DPieceDefs specifies the dungeon piece definitions (a.k.a. miniture tiles)
+	// of the active dungeon type; (e.g. levels/l1data/l1.min).
+	//
+	// ref: 0x5B70E0
+	DPieceDefs = (**min.Block)(unsafe.Pointer(uintptr(0x5B70E0)))
+
 	// TransparencyMap specifies the transparency at each coordinate of the map.
 	//
 	// PSX ref: 0x800E7A28
@@ -107,6 +114,13 @@ var (
 	// ref: 0x5BB1F0
 	TransparencyActive = (*[256]bool)(unsafe.Pointer(uintptr(0x5BB1F0)))
 
+	// LevelCEL points to the contents of the active tileset, which is one of
+	// "levels/towndata/town.cel", "levels/l1data/l1.cel",
+	// "levels/l2data/l2.cel", "levels/l3data/l3.cel" or "levels/l4data/l4.cel".
+	//
+	// ref: 0x5BDB0C
+	LevelCEL = (**uint8)(unsafe.Pointer(uintptr(0x5BDB0C)))
+
 	// PlayerNumMap contains the player numbers (players array indices) of the
 	// map.
 	//
@@ -120,6 +134,13 @@ var (
 	//
 	// ref: 0x5C3008
 	ArchNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5C3008)))
+
+	// LevelSpecialCEL points to the contents of the active special tileset,
+	// which is one of "levels/towndata/towns.cel", "levels/l1data/l1s.cel" or
+	// "levels/l2data/l2s.cel".
+	//
+	// ref: 0x5C690C
+	LevelSpecialCEL = (**uint8)(unsafe.Pointer(uintptr(0x5C690C)))
 
 	// DFlagMap specifies flags used for dungeon generation.
 	//

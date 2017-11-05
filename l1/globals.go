@@ -4,6 +4,16 @@
 
 package l1
 
+import (
+	"encoding/binary"
+	"fmt"
+	"io"
+	"log"
+	"os"
+
+	"github.com/pkg/errors"
+)
+
 // Global variables.
 var (
 	// Shadows contains shadows for 2x2 blocks of base tile IDs in the Cathedral.
@@ -258,3 +268,94 @@ var (
 	// ref: 0x5276C0
 	SinglePlayerQuestDun = new(*uint8)
 )
+
+// init initializes read-only data of structures from DIABLO.EXE.
+func init() {
+	if err := initDiabloStructs(); err != nil {
+		log.Fatalf("%+v", err)
+	}
+}
+
+// initDiabloStructs initializes read-only data of structures from DIABLO.EXE.
+func initDiabloStructs() error {
+	f, err := os.Open("diablo.exe")
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	defer f.Close()
+	if err := readData(f, offset(0x479C24), Shadows); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := readData(f, offset(0x479D28), Base); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := readData(f, offset(0x479DF8), Plain); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := readData(f, offset(0x479EC8), MinisetStairUp1); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := readData(f, offset(0x479EEC), MinisetStairUp2); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := readData(f, offset(0x479F10), MinisetStairDown); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := readData(f, offset(0x479F2C), MinisetCandlestick); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := readData(f, offset(0x479F38), MinisetStairDownPoison); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := readData(f, offset(0x484778), PatternLookup); err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
+// offset returns the file offset of the given address in diablo.exe.
+func offset(addr uint32) int64 {
+	switch {
+	case addr >= 0x401000 && addr < 0x479000:
+		// .text
+		//   start: 0x401000
+		//   end:   0x479000
+		//
+		// file offset: 0x00000400
+		return 0x00000400 + int64(addr) - 0x401000
+	case addr >= 0x479000 && addr < 0x483000:
+		// .rdata
+		//   start: 0x479000
+		//   end:   0x483000
+		//
+		// file offset: 0x00077A00
+		return 0x00077A00 + int64(addr) - 0x479000
+	case addr >= 0x483000 && addr < 0x6AE000:
+		// .data
+		//   start: 0x483000
+		//   end:   0x6AE000
+		//
+		// file offset: 0x00080E00
+		return 0x00080E00 + int64(addr) - 0x483000
+	case addr >= 0x6AE000 && addr < 0x6B2000:
+		// .rsrc
+		//   start: 0x6AE000
+		//   end:   0x6B2000
+		//
+		// file offset: 0x000B5800
+		return 0x000B5800 + int64(addr) - 0x6AE000
+	default:
+		panic(fmt.Errorf("unknown segment of address 0x%08X", addr))
+	}
+}
+
+// readData reads the data at the specified address.
+func readData(r io.ReadSeeker, offset int64, data interface{}) error {
+	if _, err := r.Seek(offset, io.SeekStart); err != nil {
+		return errors.WithStack(err)
+	}
+	if err := binary.Read(r, binary.LittleEndian, data); err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}

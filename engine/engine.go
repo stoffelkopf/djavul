@@ -2,6 +2,8 @@
 // functions.
 package engine
 
+import "C"
+
 import (
 	"io/ioutil"
 	"log"
@@ -63,15 +65,17 @@ func randCap(max int32) int32 {
 // PSX def: unsigned char* GRL_LoadFileInMemSig__FPCcPUl(char *Name, unsigned long *Len)
 //
 // ref: 0x417618
-func memLoadFile(path string, size *int32) *uint8 {
+func memLoadFile(path unsafe.Pointer, size *int32) *uint8 {
 	// mpqDir specifies a directory containing an extracted copy of the files
 	// contained within DIABDAT.MPQ. Note that the extracted files should have
 	// lowercase names.
 	const mpqDir = "diabdat"
-	path = filepath.Join(mpqDir, strings.ToLower(path))
-	buf, err := ioutil.ReadFile(path)
+	p := C.GoString((*C.char)(path))
+	p = strings.Replace(p, "\\", "/", -1)
+	p = filepath.Join(mpqDir, strings.ToLower(p))
+	buf, err := ioutil.ReadFile(p)
 	if err != nil {
-		log.Fatalf("unable to load file %q; %v", path, errors.WithStack(err))
+		log.Fatalf("unable to load file %q; %v", p, errors.WithStack(err))
 	}
 	if size != nil {
 		*size = int32(len(buf))

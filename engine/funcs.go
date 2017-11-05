@@ -59,5 +59,5 @@ func MemFree(ptr unsafe.Pointer) {
 //
 // ref: 0x417618
 func MemLoadFile(path unsafe.Pointer, size *int32) *uint8 {
-	return memLoadFile(C.GoString((*C.char)(path)), size)
+	return memLoadFile(path, size)
 }
