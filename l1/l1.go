@@ -1639,7 +1639,33 @@ func generateHall(xxStart, yyStart, xxEnd, yyEnd int) {
 //
 // ref: 0x40CF17
 func initQuestDun(xxStart, yyStart int) {
-	// TODO: Implement initQuestDun.
+	// Size of the largest single player quest DUN file (i.e. banner2.dun).
+	const maxSize = 1 + 1 + 8*8
+	sh := reflect.SliceHeader{Data: uintptr(unsafe.Pointer(*SinglePlayerQuestDun)), Len: maxSize, Cap: maxSize}
+	qdun := *(*[]uint16)(unsafe.Pointer(&sh))
+	width := int(qdun[0])
+	height := int(qdun[1])
+	// Actual size of single player quest DUN.
+	n := 1 + 1 + width*height
+	qdun = qdun[:n:n]
+	// Place DUN.
+	*gendung.SetXx = int32(xxStart)
+	*gendung.SetYy = int32(yyStart)
+	*gendung.SetWidth = int32(width)
+	*gendung.SetHeight = int32(height)
+	i := 2
+	for yy := yyStart; yy < yyStart+height; yy++ {
+		for xx := xxStart; xx < xxStart+width; xx++ {
+			tileID := qdun[i]
+			if tileID != 0 {
+				FlagMap[xx][yy] |= FlagDone
+				gendung.TileIDMap[xx][yy] = uint8(tileID)
+			} else {
+				gendung.TileIDMap[xx][yy] = uint8(Floor)
+			}
+			i++
+		}
+	}
 }
 
 // floorTransparency adds transparency to concealing walls.

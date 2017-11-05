@@ -152,6 +152,22 @@ var (
 	// ref: 0x5C9A10
 	ItemNumMap = (*[112][112]int8)(unsafe.Pointer(uintptr(0x5C9A10)))
 
+	// SetHeight specifies the height of the active miniset of the map.
+	//
+	// PSX ref: 0x8011C0F0
+	// PSX def: int setpc_h
+	//
+	// ref: 0x5CF330
+	SetHeight = (*int32)(unsafe.Pointer(uintptr(0x5CF330)))
+
+	// SetWidth specifies the width of the active miniset of the map.
+	//
+	// PSX ref: 0x8011C0EC
+	// PSX def: int setpc_w
+	//
+	// ref: 0x5CF334
+	SetWidth = (*int32)(unsafe.Pointer(uintptr(0x5CF334)))
+
 	// SetXx specifies the active miniset x-coordinate of the map.
 	//
 	// PSX ref: 0x8011C0E4

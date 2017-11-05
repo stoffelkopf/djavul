@@ -660,7 +660,11 @@ func GenerateHall(xxStart, yyStart, xxEnd, yyEnd int) {
 //
 // ref: 0x40CF17
 func InitQuestDun(xxStart, yyStart int) {
-	C.drlg_l1_init_quest_dun(C.int(xxStart), C.int(yyStart))
+	if useGo {
+		initQuestDun(xxStart, yyStart)
+	} else {
+		C.drlg_l1_init_quest_dun(C.int(xxStart), C.int(yyStart))
+	}
 }
 
 // FloorTransparency adds transparency to concealing walls.

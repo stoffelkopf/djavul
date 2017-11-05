@@ -1,7 +1,5 @@
 package quests
 
-import "unsafe"
-
 // Quest describes in-game state of any quest.
 //
 // PSX def:
@@ -99,5 +97,5 @@ type QuestData struct {
 	// offset: 0000000F
 	_ uint8
 	// offset: 00000010
-	Name unsafe.Pointer
+	_ uint32
 }
