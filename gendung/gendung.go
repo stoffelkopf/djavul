@@ -1,8 +1,6 @@
 // Package gendung implements dungeon generation utility functions.
 package gendung
 
-import "log"
-
 // initTransparency initializes transparency.
 //
 // PSX ref: 0x8015A070
@@ -68,6 +66,13 @@ func initSetPiece() {
 //
 // ref: 0x4195B9
 func markSetPiece() {
-	// TODO: Implement markSetPiece.
-	log.Printf("note: markSetPiece not yet implemented.")
+	yStart := *SetYy*2 + 16
+	yCount := *SetHeight * 2
+	xStart := *SetXx*2 + 16
+	xCount := *SetWidth * 2
+	for y := yStart; y < yStart+yCount; y++ {
+		for x := xStart; x < xStart+xCount; x++ {
+			DFlagMap[x][y] |= DFlag08
+		}
+	}
 }

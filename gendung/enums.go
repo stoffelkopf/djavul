@@ -15,3 +15,8 @@ const (
 
 // DFlag represents a set of flags used for dungeon generation.
 type DFlag uint8
+
+// Dungeon generation flags.
+const (
+	DFlag08 DFlag = 0x08
+)

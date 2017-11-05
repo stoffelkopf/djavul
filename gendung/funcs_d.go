@@ -96,5 +96,9 @@ func InitSetPiece() {
 //
 // ref: 0x4195B9
 func MarkSetPiece() {
-	C.gendung_mark_set_piece()
+	if useGo {
+		markSetPiece()
+	} else {
+		C.gendung_mark_set_piece()
+	}
 }
