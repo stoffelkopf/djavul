@@ -854,6 +854,29 @@ func generateRoom(xxStart, yyStart, xxCount, yyCount int, dirVert bool) {
 	}
 }
 
+// isAreaEmpty reports whether the given area is empty.
+//
+// PSX ref: 0x8013D438
+// PSX sig: unsigned char L5checkRoom__Fiiii(int x, int y, int width, int height)
+//
+// ref: 0x40BFA4
+func isAreaEmpty(xxStart, yyStart, xxCount, yyCount int) bool {
+	for yy := yyStart; yy < yyStart+yyCount; yy++ {
+		if yy < 0 || yy >= 40 {
+			return false
+		}
+		for xx := xxStart; xx < xxStart+xxCount; xx++ {
+			if xx < 0 || xx >= 40 {
+				return false
+			}
+			if gendung.TileIDMap[xx][yy] != 0 {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 // getArea returns the number of walls on the map.
 //
 // PSX ref: 0x8013DB9C

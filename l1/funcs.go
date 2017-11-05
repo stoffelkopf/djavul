@@ -458,7 +458,11 @@ func GenerateRoom(xxStart, yyStart, xxCount, yyCount int, dirHoriz bool) {
 //
 // ref: 0x40BFA4
 func IsAreaEmpty(xxStart, yyStart, xxCount, yyCount int) bool {
-	return C.drlg_l1_is_area_empty(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount)) == 1
+	if useGo {
+		return isAreaEmpty(xxStart, yyStart, xxCount, yyCount)
+	} else {
+		return C.drlg_l1_is_area_empty(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount)) == 1
+	}
 }
 
 // GetArea returns the number of walls on the map.
