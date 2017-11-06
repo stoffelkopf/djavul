@@ -78,7 +78,7 @@ func TestCreateDungeon(t *testing.T) {
 			tiles:        "659b95eec3e1c18d13b7f9932de108b88b356b9b",
 			pieces:       "15f2209ff5d066cfd568a1eab77e4328d08474e8",
 			arches:       "42941df3ada356ebf87ce2987d26a06c44da711a",
-			transparency: "5f4e2e570b8a631d94fb3852c38ace0fa0397c7a",
+			transparency: "74c24e596ec57a91261bc3a559270f31d6811336",
 		},
 		{
 			// meta.
@@ -105,6 +105,7 @@ func TestCreateDungeon(t *testing.T) {
 		*gendung.DLvl = g.dlvl
 		*multi.MaxPlayers = 1
 		for i := range quests.Quests {
+			quests.Quests[i].ID = quests.QuestID(i)
 			quests.Quests[i].Active = false
 		}
 		*gendung.IsQuestLevel = false

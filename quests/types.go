@@ -22,7 +22,7 @@ type Quest struct {
 	// offset 00000000
 	DLvl uint8
 	// offset 00000001
-	ID uint8
+	ID QuestID
 	// offset 00000002
 	Active bool
 	// offset 00000003
@@ -71,7 +71,7 @@ type QuestData struct {
 	// offset: 00000002
 	_ uint8
 	// offset: 00000003
-	_ uint8
+	ID QuestID
 	// offset: 00000004
 	_ uint8
 	// offset: 00000005

@@ -29,26 +29,28 @@ func dumpL1Maps() {
 	//*gendung.DType = gendung.Cathedral
 
 	// Quest - The Butcher.
-	//for i := range quests.Quests {
-	//	quests.Quests[i].Active = false
-	//}
-	//*gendung.DLvl = 2
-	//*gendung.DType = gendung.Cathedral
-	//*gendung.IsQuestLevel = false
-	//*multi.MaxPlayers = 1
-	//quests.Quests[quests.TheButcher].Active = true
-	//quests.Quests[quests.TheButcher].DLvl = 2
-
-	// Quest - Poisoned Water Supply.
 	for i := range quests.Quests {
+		quests.Quests[i].ID = quests.QuestID(i)
 		quests.Quests[i].Active = false
 	}
 	*gendung.DLvl = 2
 	*gendung.DType = gendung.Cathedral
 	*gendung.IsQuestLevel = false
 	*multi.MaxPlayers = 1
-	quests.Quests[quests.PoisonedWaterSupply].Active = true
-	quests.Quests[quests.PoisonedWaterSupply].DLvl = 2
+	quests.Quests[quests.TheButcher].Active = true
+	quests.Quests[quests.TheButcher].DLvl = 2
+
+	// Quest - Poisoned Water Supply.
+	//for i := range quests.Quests {
+	//	quests.Quests[i].ID = quests.QuestID(i)
+	//	quests.Quests[i].Active = false
+	//}
+	//*gendung.DLvl = 2
+	//*gendung.DType = gendung.Cathedral
+	//*gendung.IsQuestLevel = false
+	//*multi.MaxPlayers = 1
+	//quests.Quests[quests.PoisonedWaterSupply].Active = true
+	//quests.Quests[quests.PoisonedWaterSupply].DLvl = 2
 
 	diablo.LoadLevelGraphics()
 	for seed := int32(0); seed <= 0xFF; seed++ {
@@ -235,6 +237,7 @@ func checkL1Quest() error {
 func checkL1QuestTheButcher() error {
 	dinit.Archives()
 	for i := range quests.Quests {
+		quests.Quests[i].ID = quests.QuestID(i)
 		quests.Quests[i].Active = false
 	}
 	*gendung.DLvl = 2
@@ -291,7 +294,7 @@ func checkL1QuestTheButcher() error {
 		pretty.Println("want:", arches)
 		return errors.WithStack(err)
 	}
-	if err := check(*gendung.TransparencyMap, "transparency", seed, "5f4e2e570b8a631d94fb3852c38ace0fa0397c7a"); err != nil {
+	if err := check(*gendung.TransparencyMap, "transparency", seed, "74c24e596ec57a91261bc3a559270f31d6811336"); err != nil {
 		path := fmt.Sprintf("testdata_quest_the_butcher/l1_transparency_%08X.bin", seed)
 		f, e := os.Open(path)
 		if e != nil {
@@ -316,6 +319,7 @@ func checkL1QuestTheButcher() error {
 func checkL1QuestPoisonedWaterSupply() error {
 	dinit.Archives()
 	for i := range quests.Quests {
+		quests.Quests[i].ID = quests.QuestID(i)
 		quests.Quests[i].Active = false
 	}
 	*gendung.DLvl = 2
