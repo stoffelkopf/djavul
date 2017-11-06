@@ -88,14 +88,14 @@ func main() {
 }
 
 // dump dumps the map to standard output.
-func dump(m [40][40]uint8, raw bool) error {
+func dump(tiles [40][40]uint8, raw bool) error {
 	if raw {
-		if err := binary.Write(os.Stdout, binary.LittleEndian, m); err != nil {
+		if err := binary.Write(os.Stdout, binary.LittleEndian, tiles); err != nil {
 			return errors.WithStack(err)
 		}
 		return nil
 	}
-	buf, err := json.Marshal(m)
+	buf, err := json.Marshal(tiles)
 	if err != nil {
 		return errors.WithStack(err)
 	}
