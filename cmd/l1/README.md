@@ -39,3 +39,10 @@ l1 -dlvl 2 -seed 1 -quest "Poisoned Water Supply"
 ```
 
 ![Poisoned Water Supply, seed 1](https://github.com/sanctuary/graphics/blob/master/l1/maps/poisoned_water_supply_seed_1.png?raw=true)
+
+```bash
+# Generate the Cathedral map of dungeon level 4 with seed 1000.
+l1 -dlvl 4 -seed 1000
+```
+
+![Dungeon level 4, seed 1000](https://github.com/sanctuary/graphics/blob/master/l1/maps/dlvl_4_seed_1000.png)
