@@ -179,13 +179,13 @@ func initArches() {
 func createDungeon(seed, entry int32) {
 	engine.SetSeed(seed)
 	gendung.InitTransparency()
-	gendung.InitSetPiece() // TODO: add test case
+	gendung.InitSetPiece()
 	LoadSinglePlayerQuestDun()
 	GenerateDungeon(entry)
 	InitPieceIDMap()
-	FreeSinglePlayerQuestDun() // NOTE: not tested; only used for cleanup
+	FreeSinglePlayerQuestDun()
 	InitArches()
-	gendung.MarkSetPiece() // TODO: add test case
+	gendung.MarkSetPiece()
 }
 
 // loadSinglePlayerQuestDun loads tile IDs from the dungeon file of the active
