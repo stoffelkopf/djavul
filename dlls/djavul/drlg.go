@@ -94,6 +94,55 @@ func dumpData(path string, data interface{}) error {
 	return nil
 }
 
+// compareL1 compares the original and the Go implementation of the dynamic
+// random level generation of Cathedral maps against one another.
+func compareL1() error {
+	dinit.Archives()
+	*gendung.DLvl = 1
+	*gendung.DType = gendung.Cathedral
+	diablo.LoadLevelGraphics()
+	for seed := int32(0); seed <= 255; seed++ {
+		// Original implementation.
+		l1.UseGo = false
+		l1.CreateDungeon(seed, 0)
+		wantTiles := hash(*gendung.TileIDMap)
+		wantPieces := hash(*gendung.PieceIDMap)
+		wantArches := hash(*gendung.ArchNumMap)
+		wantTransparency := hash(*gendung.TransparencyMap)
+		// Go implementation.
+		l1.UseGo = true
+		l1.CreateDungeon(seed, 0)
+		gotTiles := hash(*gendung.TileIDMap)
+		gotPieces := hash(*gendung.PieceIDMap)
+		gotArches := hash(*gendung.ArchNumMap)
+		gotTransparency := hash(*gendung.TransparencyMap)
+		if gotTiles != wantTiles {
+			return errors.Errorf("SHA1 hash mismatch for tiles, seed 0x%08X; expected %q, got %q", seed, wantTiles, gotTiles)
+		}
+		if gotPieces != wantPieces {
+			return errors.Errorf("SHA1 hash mismatch for pieces, seed 0x%08X; expected %q, got %q", seed, wantPieces, gotPieces)
+		}
+		if gotArches != wantArches {
+			return errors.Errorf("SHA1 hash mismatch for arches, seed 0x%08X; expected %q, got %q", seed, wantArches, gotArches)
+		}
+		if gotTransparency != wantTransparency {
+			return errors.Errorf("SHA1 hash mismatch for transparency, seed 0x%08X; expected %q, got %q", seed, wantTransparency, gotTransparency)
+		}
+	}
+	fmt.Println("PASS")
+	return nil
+}
+
+// hash returns the SHA1 hash of the given data.
+func hash(data interface{}) string {
+	buf := &bytes.Buffer{}
+	if err := binary.Write(buf, binary.LittleEndian, data); err != nil {
+		log.Fatalf("unable to write data to bytes buffer; %+v", errors.WithStack(err))
+	}
+	sum := sha1.Sum(buf.Bytes())
+	return fmt.Sprintf("%040x", sum[:])
+}
+
 // checkL1Regular validates the implemenation of the dynamic random level
 // generation of Cathedral maps.
 func checkL1Regular() error {
@@ -114,7 +163,7 @@ func checkL1Regular() error {
 		if err := binary.Read(f, binary.LittleEndian, &tiles); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.TileIDMap)
 		pretty.Println("want:", tiles)
 		return errors.WithStack(err)
 	}
@@ -129,7 +178,7 @@ func checkL1Regular() error {
 		if err := binary.Read(f, binary.LittleEndian, &pieces); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.PieceIDMap)
 		pretty.Println("want:", pieces)
 		return errors.WithStack(err)
 	}
@@ -159,7 +208,7 @@ func checkL1Regular() error {
 		if err := binary.Read(f, binary.LittleEndian, &trans); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.TransparencyMap)
 		pretty.Println("want:", trans)
 		return errors.WithStack(err)
 	}

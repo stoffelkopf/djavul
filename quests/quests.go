@@ -45,5 +45,5 @@ func isActive(questNum QuestID) bool {
 // ref: 0x451F20
 func initQuestArea(xx, yy int32) {
 	// TODO: Implement initQuestArea.
-	log.Printf("note: initQuestArea not yet implemented.")
+	log.Print("note: initQuestArea not yet implemented.")
 }

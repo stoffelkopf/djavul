@@ -4,7 +4,6 @@ package l1
 import "C"
 
 import (
-	"log"
 	"reflect"
 	"unsafe"
 
@@ -340,7 +339,7 @@ func generateDungeon(entry int32) {
 	// Fix transparency, dirt and corners.
 	FixTransparency()
 	FixDirt()
-	FixCorners() // TODO: add test case
+	FixCorners()
 
 	// Place doors.
 	for yy := 0; yy < 40; yy++ {
@@ -1828,8 +1827,22 @@ func fixDirt() {
 //
 // ref: 0x40D2EF
 func fixCorners() {
-	// TODO: Implement fixCorners.
-	log.Printf("note: fixCorners not yet implemented.")
+	for yy := 1; yy < 39; yy++ {
+		for xx := 1; xx < 39; xx++ {
+			if FlagMap[xx][yy]&FlagDone == 0 &&
+				TileID(gendung.TileIDMap[xx][yy]) == ArchEndNw &&
+				TileID(gendung.TileIDMap[xx-1][yy]) == Floor &&
+				TileID(gendung.TileIDMap[xx][yy-1]) == WallSw {
+				FlagMap[xx][yy-1] &= FlagDone
+				gendung.TileIDMap[xx][yy] = uint8(ArchEndNe)
+			}
+			if TileID(gendung.TileIDMap[xx][yy]) == DirtWallSwWallSeDirt &&
+				TileID(gendung.TileIDMap[xx+1][yy]) == Floor &&
+				TileID(gendung.TileIDMap[xx][yy+1]) == WallSw {
+				gendung.TileIDMap[xx][yy] = uint8(ArchEndSw)
+			}
+		}
+	}
 }
 
 // ### [ Helper functions ] ####################################################

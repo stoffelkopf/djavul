@@ -201,8 +201,8 @@ import (
 	"unsafe"
 )
 
-// useGo specifies whether to use the Go implementation.
-const useGo = true
+// UseGo specifies whether to use the Go implementation.
+var UseGo = true
 
 // ResetMaps resets the dungeon flag, player, NPC, dead, object, item, missile
 // and arch maps.
@@ -212,7 +212,7 @@ const useGo = true
 //
 // ref: 0x40ADD6
 func ResetMaps() {
-	if useGo {
+	if UseGo {
 		resetMaps()
 	} else {
 		C.drlg_l1_reset_maps()
@@ -236,7 +236,7 @@ func LoadDun(dunPath unsafe.Pointer, viewX, viewY int32) {
 //
 // ref: 0x40AF65
 func RandomizeStoneFloor() {
-	if useGo {
+	if UseGo {
 		randomizeStoneFloor()
 	} else {
 		C.drlg_l1_randomize_stone_floor()
@@ -250,7 +250,7 @@ func RandomizeStoneFloor() {
 //
 // ref: 0x40AFB3
 func InitPieceIDMap() {
-	if useGo {
+	if UseGo {
 		initPieceIDMap()
 	} else {
 		C.drlg_l1_init_piece_id_map()
@@ -264,7 +264,7 @@ func InitPieceIDMap() {
 //
 // ref: 0x40B0A5
 func InitArches() {
-	if useGo {
+	if UseGo {
 		initArches()
 	} else {
 		C.drlg_l1_init_arches()
@@ -289,7 +289,7 @@ func PreloadDun(dunPath *int8, viewX, viewY int32) {
 //
 // ref: 0x40B229
 func CreateDungeon(seed, entry int32) {
-	if useGo {
+	if UseGo {
 		createDungeon(seed, entry)
 	} else {
 		C.drlg_l1_create_dungeon(C.uint32_t(seed), C.int(entry))
@@ -304,7 +304,7 @@ func CreateDungeon(seed, entry int32) {
 //
 // ref: 0x40B276
 func LoadSinglePlayerQuestDun() {
-	if useGo {
+	if UseGo {
 		loadSinglePlayerQuestDun()
 	} else {
 		C.drlg_l1_load_single_player_quest_dun()
@@ -319,7 +319,7 @@ func LoadSinglePlayerQuestDun() {
 //
 // ref: 0x40B2F4
 func FreeSinglePlayerQuestDun() {
-	if useGo {
+	if UseGo {
 		freeSinglePlayerQuestDun()
 	} else {
 		C.drlg_l1_free_single_player_quest_dun()
@@ -333,7 +333,7 @@ func FreeSinglePlayerQuestDun() {
 //
 // ref: 0x40B306
 func GenerateDungeon(entry int32) {
-	if useGo {
+	if UseGo {
 		generateDungeon(entry)
 	} else {
 		C.drlg_l1_generate_dungeon()
@@ -347,7 +347,7 @@ func GenerateDungeon(entry int32) {
 //
 // ref: 0x40B56F
 func PlaceDoor(xx, yy int) {
-	if useGo {
+	if UseGo {
 		placeDoor(xx, yy)
 	} else {
 		C.drlg_l1_place_door(C.int(xx), C.int(yy))
@@ -361,7 +361,7 @@ func PlaceDoor(xx, yy int) {
 //
 // ref: 0x40B699
 func InitShadows() {
-	if useGo {
+	if UseGo {
 		initShadows()
 	} else {
 		C.drlg_l1_init_shadows()
@@ -375,7 +375,7 @@ func InitShadows() {
 //
 // ref: 0x40B881
 func PlaceMiniset(miniset unsafe.Pointer, tmin, tmax, cx, cy int, setView bool, noquad, ldir int) int {
-	if useGo {
+	if UseGo {
 		return placeMiniset(miniset, tmin, tmax, cx, cy, setView, noquad, ldir)
 	} else {
 		return int(C.drlg_l1_place_miniset((*C.uint8_t)(miniset), C.int(tmin), C.int(tmax), C.int(cx), C.int(cy), bool32(setView), C.int(noquad), C.int(ldir)))
@@ -389,7 +389,7 @@ func PlaceMiniset(miniset unsafe.Pointer, tmin, tmax, cx, cy int, setView bool, 
 //
 // ref: 0x40BAF6
 func Reset() {
-	if useGo {
+	if UseGo {
 		reset()
 	} else {
 		C.drlg_l1_reset()
@@ -403,7 +403,7 @@ func Reset() {
 //
 // ref: 0x40BB18
 func ClearFlags() {
-	if useGo {
+	if UseGo {
 		clearFlags()
 	} else {
 		C.drlg_l1_clear_flags()
@@ -417,7 +417,7 @@ func ClearFlags() {
 //
 // ref: 0x40BB33
 func GenerateFirstRoom() {
-	if useGo {
+	if UseGo {
 		generateFirstRoom()
 	} else {
 		C.drlg_l1_generate_first_room()
@@ -431,7 +431,7 @@ func GenerateFirstRoom() {
 //
 // ref: 0x40BD66
 func AddRoom(xxStart, yyStart, xxCount, yyCount int) {
-	if useGo {
+	if UseGo {
 		addRoom(xxStart, yyStart, xxCount, yyCount)
 	} else {
 		C.drlg_l1_add_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount))
@@ -446,7 +446,7 @@ func AddRoom(xxStart, yyStart, xxCount, yyCount int) {
 //
 // ref: 0x40BD9D
 func GenerateRoom(xxStart, yyStart, xxCount, yyCount int, dirHoriz bool) {
-	if useGo {
+	if UseGo {
 		generateRoom(xxStart, yyStart, xxCount, yyCount, dirHoriz)
 	} else {
 		C.drlg_l1_generate_room(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount), bool32(dirHoriz))
@@ -460,7 +460,7 @@ func GenerateRoom(xxStart, yyStart, xxCount, yyCount int, dirHoriz bool) {
 //
 // ref: 0x40BFA4
 func IsAreaEmpty(xxStart, yyStart, xxCount, yyCount int) bool {
-	if useGo {
+	if UseGo {
 		return isAreaEmpty(xxStart, yyStart, xxCount, yyCount)
 	} else {
 		return C.drlg_l1_is_area_empty(C.int(xxStart), C.int(yyStart), C.int(xxCount), C.int(yyCount)) == 1
@@ -474,7 +474,7 @@ func IsAreaEmpty(xxStart, yyStart, xxCount, yyCount int) bool {
 //
 // ref: 0x40C008
 func GetArea() int {
-	if useGo {
+	if UseGo {
 		return getArea()
 	} else {
 		return int(C.drlg_l1_get_area())
@@ -489,7 +489,7 @@ func GetArea() int {
 //
 // ref: 0x40C02A
 func InitTileBitMap() {
-	if useGo {
+	if UseGo {
 		initTileBitMap()
 	} else {
 		C.drlg_l1_init_tile_bit_map()
@@ -503,7 +503,7 @@ func InitTileBitMap() {
 //
 // ref: 0x40C06E
 func GeneratePattern() {
-	if useGo {
+	if UseGo {
 		generatePattern()
 	} else {
 		C.drlg_l1_generate_pattern()
@@ -517,7 +517,7 @@ func GeneratePattern() {
 //
 // ref: 0x40C0E0
 func AddWall() {
-	if useGo {
+	if UseGo {
 		addWall()
 	} else {
 		C.drlg_l1_add_wall()
@@ -532,7 +532,7 @@ func AddWall() {
 //
 // ref: 0x40C23C
 func GetHorizWallSpace(xx, yy int) int {
-	if useGo {
+	if UseGo {
 		return getHorizWallSpace(xx, yy)
 	} else {
 		return int(C.drlg_l1_get_horiz_wall_space(C.int(xx), C.int(yy)))
@@ -547,7 +547,7 @@ func GetHorizWallSpace(xx, yy int) int {
 //
 // ref: 0x40C2DC
 func GetVertWallSpace(xx, yy int) int {
-	if useGo {
+	if UseGo {
 		return getVertWallSpace(xx, yy)
 	} else {
 		return int(C.drlg_l1_get_vert_wall_space(C.int(xx), C.int(yy)))
@@ -561,7 +561,7 @@ func GetVertWallSpace(xx, yy int) int {
 //
 // ref: 0x40C35B
 func AddHorizWall(xx, yy int, tileIDFirst TileID, xxCount int) {
-	if useGo {
+	if UseGo {
 		addHorizWall(xx, yy, tileIDFirst, xxCount)
 	} else {
 		C.drlg_l1_add_horiz_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileIDFirst), C.int(xxCount))
@@ -575,7 +575,7 @@ func AddHorizWall(xx, yy int, tileIDFirst TileID, xxCount int) {
 //
 // ref: 0x40C449
 func AddVertWall(xx int, yy int, tileIDFirst TileID, yyCount int) {
-	if useGo {
+	if UseGo {
 		addVertWall(xx, yy, tileIDFirst, yyCount)
 	} else {
 		C.drlg_l1_add_vert_wall(C.int(xx), C.int(yy), C.l1_tile_id(tileIDFirst), C.int(yyCount))
@@ -589,7 +589,7 @@ func AddVertWall(xx int, yy int, tileIDFirst TileID, yyCount int) {
 //
 // ref: 0x40C551
 func FixTiles() {
-	if useGo {
+	if UseGo {
 		fixTiles()
 	} else {
 		C.drlg_l1_fix_tiles()
@@ -603,7 +603,7 @@ func FixTiles() {
 //
 // ref: 0x40C8C0
 func Decorate() {
-	if useGo {
+	if UseGo {
 		decorate()
 	} else {
 		C.drlg_l1_decorate()
@@ -617,7 +617,7 @@ func Decorate() {
 //
 // ref: 0x40C99D
 func GenerateChambers() {
-	if useGo {
+	if UseGo {
 		generateChambers()
 	} else {
 		C.drlg_l1_generate_chambers()
@@ -632,7 +632,7 @@ func GenerateChambers() {
 //
 // ref: 0x40CD86
 func GenerateChamber(xxStart, yyStart int, topRight, bottomLeft, topLeft, bottomRight bool) {
-	if useGo {
+	if UseGo {
 		generateChamber(xxStart, yyStart, topRight, bottomLeft, topLeft, bottomRight)
 	} else {
 		C.drlg_l1_generate_chamber(C.int(xxStart), C.int(yyStart), bool32(topRight), bool32(bottomLeft), bool32(topLeft), bool32(bottomRight))
@@ -646,7 +646,7 @@ func GenerateChamber(xxStart, yyStart int, topRight, bottomLeft, topLeft, bottom
 //
 // ref: 0x40CEC7
 func GenerateHall(xxStart, yyStart, xxEnd, yyEnd int) {
-	if useGo {
+	if UseGo {
 		generateHall(xxStart, yyStart, xxEnd, yyEnd)
 	} else {
 		C.drlg_l1_generate_hall(C.int(xxStart), C.int(yyStart), C.int(xxEnd), C.int(yyEnd))
@@ -660,7 +660,7 @@ func GenerateHall(xxStart, yyStart, xxEnd, yyEnd int) {
 //
 // ref: 0x40CF17
 func InitQuestDun(xxStart, yyStart int) {
-	if useGo {
+	if UseGo {
 		initQuestDun(xxStart, yyStart)
 	} else {
 		C.drlg_l1_init_quest_dun(C.int(xxStart), C.int(yyStart))
@@ -674,7 +674,7 @@ func InitQuestDun(xxStart, yyStart int) {
 //
 // ref: 0x40CF9C
 func FloorTransparency() {
-	if useGo {
+	if UseGo {
 		floorTransparency()
 	} else {
 		C.drlg_l1_floor_transparency()
@@ -688,7 +688,7 @@ func FloorTransparency() {
 //
 // ref: 0x40D00B
 func FloorTransparencyRecursive(xx, yy, x, y, direction int) {
-	if useGo {
+	if UseGo {
 		floorTransparencyRecursive(xx, yy, x, y, direction)
 	} else {
 		C.drlg_l1_floor_transparency_recursive(C.int(xx), C.int(yy), C.int(x), C.int(y), C.int(direction))
@@ -703,7 +703,7 @@ func FloorTransparencyRecursive(xx, yy, x, y, direction int) {
 //
 // ref: 0x40D1FB
 func FixTransparency() {
-	if useGo {
+	if UseGo {
 		fixTransparency()
 	} else {
 		C.drlg_l1_fix_transparency()
@@ -717,7 +717,7 @@ func FixTransparency() {
 //
 // ref: 0x40D283
 func FixDirt() {
-	if useGo {
+	if UseGo {
 		fixDirt()
 	} else {
 		C.drlg_l1_fix_dirt()
@@ -731,7 +731,11 @@ func FixDirt() {
 //
 // ref: 0x40D2EF
 func FixCorners() {
-	C.drlg_l1_fix_corners()
+	if UseGo {
+		fixCorners()
+	} else {
+		C.drlg_l1_fix_corners()
+	}
 }
 
 // ### [ Helper functions ] ####################################################

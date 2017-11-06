@@ -56,6 +56,20 @@ func TestCreateDungeon(t *testing.T) {
 		},
 		{
 			// meta.
+			dungeonName: "Cathedral (fix corners)",
+			// pre.
+			dlvl:    1,
+			dtype:   gendung.Cathedral,
+			questID: quests.Invalid,
+			seed:    35,
+			// post.
+			tiles:        "69157cd5da2deab75788e134ade347f6fbf90bcc",
+			pieces:       "813cfaf6eaba7bd186a1a0f6ded2e4f2c95af38b",
+			arches:       "19848d30f077e077529476961d2e51080ce71c9a",
+			transparency: "4ec6659fbc5c81a49741a61ad01455d926ecbcf1",
+		},
+		{
+			// meta.
 			dungeonName: "The Butcher",
 			// pre.
 			dlvl:    2,
