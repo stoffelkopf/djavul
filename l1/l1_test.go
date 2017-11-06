@@ -12,7 +12,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/diablo"
 	"github.com/sanctuary/djavul/gendung"
-	dinit "github.com/sanctuary/djavul/init"
 	"github.com/sanctuary/djavul/l1"
 	"github.com/sanctuary/djavul/multi"
 	"github.com/sanctuary/djavul/quests"
@@ -25,7 +24,6 @@ func TestCreateDungeon(t *testing.T) {
 	//    - levels/l1data/l1s.cel
 	//    - levels/l1data/l1.til
 	//    - levels/l1data/l1.min
-	dinit.Archives()
 	golden := []struct {
 		// meta.
 		dungeonName string

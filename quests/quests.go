@@ -2,8 +2,6 @@
 package quests
 
 import (
-	"log"
-
 	"github.com/sanctuary/djavul/gendung"
 	"github.com/sanctuary/djavul/multi"
 )
@@ -45,5 +43,5 @@ func isActive(questNum QuestID) bool {
 // ref: 0x451F20
 func initQuestArea(xx, yy int32) {
 	// TODO: Implement initQuestArea.
-	log.Print("note: initQuestArea not yet implemented.")
+	//log.Print("note: initQuestArea not yet implemented.")
 }
