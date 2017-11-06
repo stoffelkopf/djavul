@@ -15,10 +15,7 @@ go get github.com/sanctuary/djavul/cmd/l1
 ```bash
 # Extract diabdat.mpq to the "diabdat" directory.
 go get github.com/sanctuary/mpq
-mkdir diabdat
-cd diabdat
-mpq -m /path/to/diabdat.mpq
-cd ..
+mpq -dir diabdat -m /path/to/diabdat.mpq
 
 # Copy diablo.exe version 1.09b to the current directory.
 cp /path/to/diablo.exe .
