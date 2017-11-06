@@ -15,4 +15,10 @@ var (
 	//
 	// ref: 0x525728
 	LightingFlag4 = (*uint32)(unsafe.Pointer(uintptr(0x525728)))
+
+	// FlagRSeed specifies the seed used for dungeon generation through the -r
+	// command line flag.
+	//
+	// ref: 0x525738
+	FlagRSeed = (*int32)(unsafe.Pointer(uintptr(0x525738)))
 )

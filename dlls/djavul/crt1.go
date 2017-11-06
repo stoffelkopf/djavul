@@ -19,8 +19,6 @@ import "C"
 import (
 	"flag"
 	"fmt"
-	"log"
-	"os"
 	"strings"
 
 	"github.com/AllenDang/w32"
@@ -31,20 +29,28 @@ import (
 func Start() {
 	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
-	if err := compareL1(); err != nil {
-		log.Fatalf("+%v", err)
-	}
+	//if err := compareL1(); err != nil {
+	//	log.Fatalf("+%v", err)
+	//}
 	//if err := checkL1Regular(); err != nil {
 	//	log.Fatalf("%+v", err)
 	//}
 	//if err := checkL1Quest(); err != nil {
 	//	log.Fatalf("%+v", err)
 	//}
-	os.Exit(0)
-	return
+	//os.Exit(0)
+	//return
 	inst := w32.GetModuleHandle("")
 	// Parse arguments from command line.
+	var s int64
+	flag.Int64Var(&s, "r", 0, "initial signed 32-bit seed for dungeon generation")
 	flag.Parse()
+	switch {
+	case s >= -2147483648 && s <= 2147483647:
+		*diablo.FlagRSeed = int32(s)
+	default:
+		panic(fmt.Errorf("invalid seed; expected >= -2147483648 and <= 2147483647; got %d", s))
+	}
 	args := strings.Join(flag.Args(), " ")
 	fmt.Println("args:", args)
 	show := w32.SW_SHOWDEFAULT
