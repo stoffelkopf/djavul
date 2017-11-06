@@ -22,6 +22,16 @@ func MakeRectTransparent(xxStart, yyStart, xxEnd, yyEnd int) {
 	makeRectTransparent(xxStart, yyStart, xxEnd, yyEnd)
 }
 
+// RectTransparent makes the given rectangle transparent.
+//
+// PSX ref: 0x8015A0E4
+// PSX def: void DRLG_RectTrans__Fiiii(int x1, int y1, int x2, int y2)
+//
+// ref: 0x4194D0
+func RectTransparent(xStart, yStart, xEnd, yEnd int) {
+	rectTransparent(xStart, yStart, xEnd, yEnd)
+}
+
 // CopyTransparency copies transparency from the source to the destination
 // coordinate.
 //

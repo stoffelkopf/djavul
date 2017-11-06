@@ -1,6 +1,8 @@
 // Package gendung implements dungeon generation utility functions.
 package gendung
 
+import "log"
+
 // initTransparency initializes transparency.
 //
 // PSX ref: 0x8015A070
@@ -32,6 +34,17 @@ func makeRectTransparent(xxStart, yyStart, xxEnd, yyEnd int) {
 		}
 	}
 	*TransparencyIndex++
+}
+
+// rectTransparent makes the given rectangle transparent.
+//
+// PSX ref: 0x8015A0E4
+// PSX def: void DRLG_RectTrans__Fiiii(int x1, int y1, int x2, int y2)
+//
+// ref: 0x4194D0
+func rectTransparent(xStart, yStart, xEnd, yEnd int) {
+	// TODO: Implement rectTransparent.
+	log.Print("note: rectTransparent not yet implemented.")
 }
 
 // copyTransparency copies transparency from the source to the destination

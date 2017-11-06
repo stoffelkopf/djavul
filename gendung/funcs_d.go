@@ -12,6 +12,11 @@ package gendung
 // 	f(xx_start, yy_start, xx_end, yy_end);
 // }
 //
+// static void __fastcall gendung_rect_transparent(int x_start, int y_start, int x_end, int y_end) {
+// 	void (__fastcall *f)(int, int, int, int) = (void *)0x4194D0;
+// 	f(x_start, y_start, x_end, y_end);
+// }
+//
 // static void __fastcall gendung_copy_transparency(int src_x, int src_y, int dst_x, int dst_y) {
 // 	void (__fastcall *f)(int, int, int, int) = (void *)0x419515;
 // 	f(src_x, src_y, dst_x, dst_y);
@@ -56,6 +61,20 @@ func MakeRectTransparent(xxStart, yyStart, xxEnd, yyEnd int) {
 		makeRectTransparent(xxStart, yyStart, xxEnd, yyEnd)
 	} else {
 		C.gendung_make_rect_transparent(C.int(xxStart), C.int(yyStart), C.int(xxEnd), C.int(yyEnd))
+	}
+}
+
+// RectTransparent makes the given rectangle transparent.
+//
+// PSX ref: 0x8015A0E4
+// PSX def: void DRLG_RectTrans__Fiiii(int x1, int y1, int x2, int y2)
+//
+// ref: 0x4194D0
+func RectTransparent(xStart, yStart, xEnd, yEnd int) {
+	if useGo {
+		rectTransparent(xStart, yStart, xEnd, yEnd)
+	} else {
+		C.gendung_rect_transparent(C.int(xStart), C.int(yStart), C.int(xEnd), C.int(yEnd))
 	}
 }
 
