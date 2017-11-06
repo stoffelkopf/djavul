@@ -36,32 +36,32 @@ func main() {
 	var (
 		// Dungeon level.
 		dlvl uint8
-		// Initial seed for dungeon generation.
-		seed int32
 		// Active quest ID.
 		questID quests.QuestID
 		// Store output in raw binary format.
 		raw bool
+		// Initial seed for dungeon generation.
+		seed int32
 	)
-	var s, d int64
+	var d, s int64
 	var q string
 	flag.Int64Var(&d, "dlvl", 1, "dungeon level (1-16)")
-	flag.Int64Var(&s, "seed", 0, "initial seed")
-	flag.BoolVar(&raw, "raw", false, "raw output format")
 	flag.StringVar(&q, "quest", "", "active quest")
+	flag.BoolVar(&raw, "raw", false, "raw output format")
+	flag.Int64Var(&s, "seed", 0, "initial seed")
 	flag.Usage = usage
 	flag.Parse()
 	dlvl = uint8(d)
-	switch {
-	case s >= -2147483648 || s <= 2147483647:
-		seed = int32(s)
-	default:
-		panic(fmt.Errorf("invalid seed; expected >= -2147483648 and <= 2147483647, got %d", s))
-	}
 	if len(q) > 0 {
 		if err := questID.Set(q); err != nil {
 			log.Fatalf("unable to set quest ID; %v", err)
 		}
+	}
+	switch {
+	case s >= -2147483648 && s <= 2147483647:
+		seed = int32(s)
+	default:
+		panic(fmt.Errorf("invalid seed; expected >= -2147483648 and <= 2147483647, got %d", s))
 	}
 
 	// Load level graphics.
