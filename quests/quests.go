@@ -44,8 +44,7 @@ func isActive(questNum QuestID) bool {
 //
 // ref: 0x451BEA
 func initTheButcherArea() {
-	// TODO: Implement initTheButcherArea.
-	log.Print("note: initTheButcherArea not yet implemented.")
+	gendung.RectTransparent(int(*gendung.SetXx*2+19), int(*gendung.SetYy*2+19), int(*gendung.SetXx*2+26), int(*gendung.SetYy*2+26))
 }
 
 // initTheCurseOfKingLeoricArea initializes the quest area of The Curse of King
@@ -57,7 +56,7 @@ func initTheButcherArea() {
 // ref: 0x451C11
 func initTheCurseOfKingLeoricArea(questID QuestID, xx, yy int32) {
 	// TODO: Implement initTheCurseOfKingLeoricArea.
-	log.Print("note: initTheCurseOfKingLeoricArea not yet implemented.")
+	log.Print("note: quests.initTheCurseOfKingLeoricArea not yet implemented.")
 }
 
 // initWarlordOfBloodArea initializes the quest area of Warlord of Blood.
@@ -68,7 +67,7 @@ func initTheCurseOfKingLeoricArea(questID QuestID, xx, yy int32) {
 // ref: 0x451C32
 func initWarlordOfBloodArea(xx, yy int32) {
 	// TODO: Implement initWarlordOfBloodArea.
-	log.Print("note: initWarlordOfBloodArea not yet implemented.")
+	log.Print("note: quests.initWarlordOfBloodArea not yet implemented.")
 }
 
 // initTheChamberOfBoneArea initializes the quest area of The Chamber of Bone.
@@ -79,7 +78,7 @@ func initWarlordOfBloodArea(xx, yy int32) {
 // ref: 0x451CC2
 func initTheChamberOfBoneArea(questID QuestID, xx, yy int32) {
 	// TODO: Implement initTheChamberOfBoneArea.
-	log.Print("note: initTheChamberOfBoneArea not yet implemented.")
+	log.Print("note: quests.initTheChamberOfBoneArea not yet implemented.")
 }
 
 // initOdgensSignArea initializes the quest area of Odgen's Sign.
@@ -90,7 +89,7 @@ func initTheChamberOfBoneArea(questID QuestID, xx, yy int32) {
 // ref: 0x451D7C
 func initOdgensSignArea(xx, yy int32) {
 	// TODO: Implement initOdgensSignArea.
-	log.Print("note: initOdgensSignArea not yet implemented.")
+	log.Print("note: quests.initOdgensSignArea not yet implemented.")
 }
 
 // initHallsOfTheBlindArea initializes the quest area of Halls of the Blind.
@@ -101,7 +100,7 @@ func initOdgensSignArea(xx, yy int32) {
 // ref: 0x451E08
 func initHallsOfTheBlindArea(xx, yy int32) {
 	// TODO: Implement initHallsOfTheBlindArea.
-	log.Print("note: initHallsOfTheBlindArea not yet implemented.")
+	log.Print("note: quests.initHallsOfTheBlindArea not yet implemented.")
 }
 
 // initValorArea initializes the quest area of Valor.
@@ -112,7 +111,7 @@ func initHallsOfTheBlindArea(xx, yy int32) {
 // ref: 0x451E94
 func initValorArea(xx, yy int32) {
 	// TODO: Implement initValorArea.
-	log.Print("note: initValorArea not yet implemented.")
+	log.Print("note: quests.initValorArea not yet implemented.")
 }
 
 // initQuestArea initializes the given quest area.
