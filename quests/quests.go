@@ -55,8 +55,8 @@ func initTheButcherArea() {
 //
 // ref: 0x451C11
 func initTheCurseOfKingLeoricArea(questID QuestID, xx, yy int32) {
-	// TODO: Implement initTheCurseOfKingLeoricArea.
-	log.Print("note: quests.initTheCurseOfKingLeoricArea not yet implemented.")
+	Quests[questID].EnteranceX = 2*xx + 28
+	Quests[questID].EnteranceY = 2*yy + 23
 }
 
 // initWarlordOfBloodArea initializes the quest area of Warlord of Blood.
