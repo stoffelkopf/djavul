@@ -1,8 +1,6 @@
 // Package gendung implements dungeon generation utility functions.
 package gendung
 
-import "log"
-
 // initTransparency initializes transparency.
 //
 // PSX ref: 0x8015A070
@@ -43,8 +41,12 @@ func makeRectTransparent(xxStart, yyStart, xxEnd, yyEnd int) {
 //
 // ref: 0x4194D0
 func rectTransparent(xStart, yStart, xEnd, yEnd int) {
-	// TODO: Implement rectTransparent.
-	log.Print("note: rectTransparent not yet implemented.")
+	for y := yStart; y <= yEnd; y++ {
+		for x := xStart; x <= xEnd; x++ {
+			TransparencyMap[x][y] = *TransparencyIndex
+		}
+	}
+	*TransparencyIndex++
 }
 
 // copyTransparency copies transparency from the source to the destination
