@@ -1,9 +1,14 @@
 // Package quests implements quest functions.
 package quests
 
+import "C"
+
 import (
 	"log"
+	"reflect"
+	"unsafe"
 
+	"github.com/sanctuary/djavul/engine"
 	"github.com/sanctuary/djavul/gendung"
 	"github.com/sanctuary/djavul/multi"
 )
@@ -87,9 +92,32 @@ func initTheChamberOfBoneArea(questID QuestID, xx, yy int32) {
 // PSX def: void DrawLTBanner__Fii(int x, int y)
 //
 // ref: 0x451D7C
-func initOdgensSignArea(xx, yy int32) {
-	// TODO: Implement initOdgensSignArea.
-	log.Print("note: quests.initOdgensSignArea not yet implemented.")
+func initOdgensSignArea(xxStart, yyStart int32) {
+	buf := engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\Banner1.DUN`)), nil)
+	// Maximum number of elements contained in the single player quest DUN file
+	// (i.e. banner2.dun).
+	const maxSize = 1 + 1 + 8*8
+	sh := reflect.SliceHeader{Data: uintptr(unsafe.Pointer(buf)), Len: maxSize, Cap: maxSize}
+	qdun := *(*[]uint16)(unsafe.Pointer(&sh))
+	width := int32(qdun[0])
+	height := int32(qdun[1])
+	// Actual size of single player quest DUN.
+	n := 1 + 1 + width*height
+	qdun = qdun[:n:n]
+	// Place DUN.
+	*gendung.SetXx = int32(xxStart)
+	*gendung.SetYy = int32(yyStart)
+	*gendung.SetWidth = int32(width)
+	*gendung.SetHeight = int32(height)
+	i := 2
+	for yy := yyStart; yy < yyStart+height; yy++ {
+		for xx := xxStart; xx < xxStart+width; xx++ {
+			if qdun[i] != 0 {
+				gendung.TileIDMapBackup[xx][yy] = uint8(qdun[i])
+			}
+			i++
+		}
+	}
 }
 
 // initHallsOfTheBlindArea initializes the quest area of Halls of the Blind.
@@ -128,7 +156,7 @@ func initQuestArea(xx, yy int32) {
 			case TheButcher:
 				InitTheButcherArea()
 			case OgdensSign:
-				InitOdgensSignArea(xx, yy)
+				InitOdgensSignArea(xx, yy) // TODO: Add test case
 			case HallsOfTheBlind:
 				InitHallsOfTheBlindArea(xx, yy)
 			case Valor:

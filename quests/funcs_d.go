@@ -118,8 +118,8 @@ func InitTheChamberOfBoneArea(questID QuestID, xx, yy int32) {
 // PSX def: void DrawLTBanner__Fii(int x, int y)
 //
 // ref: 0x451D7C
-func InitOdgensSignArea(xx, yy int32) {
-	C.quests_init_odgens_sign_area(C.int(xx), C.int(yy))
+func InitOdgensSignArea(xx_start, yy_start int32) {
+	C.quests_init_odgens_sign_area(C.int(xx_start), C.int(yy_start))
 }
 
 // InitHallsOfTheBlindArea initializes the quest area of Halls of the Blind.

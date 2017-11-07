@@ -1639,7 +1639,8 @@ func generateHall(xxStart, yyStart, xxEnd, yyEnd int) {
 //
 // ref: 0x40CF17
 func initQuestDun(xxStart, yyStart int) {
-	// Size of the largest single player quest DUN file (i.e. banner2.dun).
+	// Maximum number of elements contained in the single player quest DUN file
+	// (i.e. banner2.dun).
 	const maxSize = 1 + 1 + 8*8
 	sh := reflect.SliceHeader{Data: uintptr(unsafe.Pointer(*SinglePlayerQuestDun)), Len: maxSize, Cap: maxSize}
 	qdun := *(*[]uint16)(unsafe.Pointer(&sh))
