@@ -78,7 +78,11 @@ func IsActive(questNum QuestID) bool {
 //
 // ref: 0x451BEA
 func InitTheButcherArea() {
-	C.quests_init_the_butcher_area()
+	if useGo {
+		initTheButcherArea()
+	} else {
+		C.quests_init_the_butcher_area()
+	}
 }
 
 // InitTheCurseOfKingLeoricArea initializes the quest area of The Curse of King
@@ -89,7 +93,11 @@ func InitTheButcherArea() {
 //
 // ref: 0x451C11
 func InitTheCurseOfKingLeoricArea(questID QuestID, xx, yy int32) {
-	C.quests_init_the_curse_of_king_leoric_area(C.int(questID), C.int(xx), C.int(yy))
+	if useGo {
+		initTheCurseOfKingLeoricArea(questID, xx, yy)
+	} else {
+		C.quests_init_the_curse_of_king_leoric_area(C.int(questID), C.int(xx), C.int(yy))
+	}
 }
 
 // InitWarlordOfBloodArea initializes the quest area of Warlord of Blood.
@@ -118,8 +126,12 @@ func InitTheChamberOfBoneArea(questID QuestID, xx, yy int32) {
 // PSX def: void DrawLTBanner__Fii(int x, int y)
 //
 // ref: 0x451D7C
-func InitOdgensSignArea(xx_start, yy_start int32) {
-	C.quests_init_odgens_sign_area(C.int(xx_start), C.int(yy_start))
+func InitOdgensSignArea(xxStart, yyStart int32) {
+	if useGo {
+		initOdgensSignArea(xxStart, yyStart)
+	} else {
+		C.quests_init_odgens_sign_area(C.int(xxStart), C.int(yyStart))
+	}
 }
 
 // InitHallsOfTheBlindArea initializes the quest area of Halls of the Blind.
@@ -149,5 +161,9 @@ func InitValorArea(xx, yy int32) {
 //
 // ref: 0x451F20
 func InitQuestArea(xx, yy int32) {
-	C.quests_init_quest_area(C.int(xx), C.int(yy))
+	if useGo {
+		initQuestArea(xx, yy)
+	} else {
+		C.quests_init_quest_area(C.int(xx), C.int(yy))
+	}
 }
