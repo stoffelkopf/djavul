@@ -48,7 +48,7 @@ func (q QuestID) String() string {
 	case TheButcher:
 		return "The Butcher"
 	case OgdensSign:
-		return "Ogdens Sign"
+		return "Ogden's Sign"
 	case HallsOfTheBlind:
 		return "Halls of the Blind"
 	case Valor:
@@ -89,7 +89,7 @@ func (q *QuestID) Set(s string) error {
 		*q = Diablo
 	case "The Butcher":
 		*q = TheButcher
-	case "Ogdens Sign":
+	case "Ogden's Sign":
 		*q = OgdensSign
 	case "Halls of the Blind":
 		*q = HallsOfTheBlind
@@ -108,7 +108,7 @@ func (q *QuestID) Set(s string) error {
 	case "Archbishop Lazarus":
 		*q = ArchbishopLazarus
 	default:
-		return errors.Errorf(`invalid quest ID string representation; expected "The Magic Rock", "Black Mushroom", "Gharbad the Weak", "Zhar the Mad", "Lachdanan", "Diablo", "The Butcher", "Ogdens Sign", "Halls of the Blind", "Valor", "Anvil of Fury", "Warlord of Blood", "The Curse of King Leoric", "Poisoned Water Supply", "The Chamber of Bone", or "Archbishop Lazarus", got %q`, s)
+		return errors.Errorf(`invalid quest ID string representation; expected "The Magic Rock", "Black Mushroom", "Gharbad the Weak", "Zhar the Mad", "Lachdanan", "Diablo", "The Butcher", "Ogden's Sign", "Halls of the Blind", "Valor", "Anvil of Fury", "Warlord of Blood", "The Curse of King Leoric", "Poisoned Water Supply", "The Chamber of Bone", or "Archbishop Lazarus", got %q`, s)
 	}
 	return nil
 }

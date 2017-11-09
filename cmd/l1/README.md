@@ -38,6 +38,13 @@ l1 -dlvl 2 -seed 1 -quest "Poisoned Water Supply"
 ![Poisoned Water Supply, seed 1](https://github.com/sanctuary/graphics/blob/master/l1/maps/poisoned_water_supply_seed_1.png?raw=true)
 
 ```bash
+# Generate the Cathedral map of dungeon level 4 with seed 215 and Ogden's Sign quest active.
+l1 -dlvl 4 -seed 215 -quest "Ogden's Sign"
+```
+
+![Ogden's Sign, seed 215](https://github.com/sanctuary/graphics/blob/master/l1/maps/ogdens_sign_seed_215.png?raw=true)
+
+```bash
 # Generate the Cathedral map of dungeon level 4 with seed 1000.
 l1 -dlvl 4 -seed 1000
 ```
