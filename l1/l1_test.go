@@ -70,7 +70,7 @@ func TestCreateDungeon(t *testing.T) {
 			// meta.
 			dungeonName: "The Butcher",
 			// pre.
-			dlvl:    2,
+			dlvl:    quests.QuestsData[quests.TheButcher].DLvl,
 			dtype:   gendung.Cathedral,
 			questID: quests.TheButcher,
 			seed:    123,
@@ -84,7 +84,7 @@ func TestCreateDungeon(t *testing.T) {
 			// meta.
 			dungeonName: "Poisoned Water Supply",
 			// pre.
-			dlvl:    2,
+			dlvl:    quests.QuestsData[quests.PoisonedWaterSupply].DLvl,
 			dtype:   gendung.Cathedral,
 			questID: quests.PoisonedWaterSupply,
 			seed:    123,
@@ -93,6 +93,20 @@ func TestCreateDungeon(t *testing.T) {
 			pieces:       "cb2f37c9d04a39ec22c4171c6e95c88a260364e3",
 			arches:       "87418c244b8123dbdb3439812a2e1d8af5032c21",
 			transparency: "5d548a45afb50e56cd77847fd832822eee0b01e7",
+		},
+		{
+			// meta.
+			dungeonName: "Ogden's Sign",
+			// pre.
+			dlvl:    quests.QuestsData[quests.OgdensSign].DLvl,
+			dtype:   gendung.Cathedral,
+			questID: quests.OgdensSign,
+			seed:    123,
+			// post.
+			tiles:        "3a54760d2ce39932f556dbb3ae924c8425e5f9ea",
+			pieces:       "f6fcf0461dfad18da42b3d25dde5e60cdc7b4daf",
+			arches:       "7e97023f45d78a37dffb569111762018e6b0c93f",
+			transparency: "10156f455d85c0c4be6d26be23fc540776253aa9",
 		},
 	}
 

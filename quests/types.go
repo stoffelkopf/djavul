@@ -65,7 +65,7 @@ type Quest struct {
 //    } QuestData;
 type QuestData struct {
 	// offset: 00000000
-	_ uint8
+	DLvl uint8
 	// offset: 00000001
 	_ uint8
 	// offset: 00000002

@@ -29,28 +29,40 @@ func dumpL1Maps() {
 	//*gendung.DType = gendung.Cathedral
 
 	// Quest - The Butcher.
-	for i := range quests.Quests {
-		quests.Quests[i].ID = quests.QuestID(i)
-		quests.Quests[i].Active = false
-	}
-	*gendung.DLvl = 2
-	*gendung.DType = gendung.Cathedral
-	*gendung.IsQuestLevel = false
-	*multi.MaxPlayers = 1
-	quests.Quests[quests.TheButcher].Active = true
-	quests.Quests[quests.TheButcher].DLvl = 2
+	//for i := range quests.Quests {
+	//	quests.Quests[i].ID = quests.QuestID(i)
+	//	quests.Quests[i].Active = false
+	//}
+	//*gendung.DLvl = quests.QuestsData[quests.TheButcher].DLvl
+	//*gendung.DType = gendung.Cathedral
+	//*gendung.IsQuestLevel = false
+	//*multi.MaxPlayers = 1
+	//quests.Quests[quests.TheButcher].Active = true
+	//quests.Quests[quests.TheButcher].DLvl = quests.QuestsData[quests.TheButcher].DLvl
 
 	// Quest - Poisoned Water Supply.
 	//for i := range quests.Quests {
 	//	quests.Quests[i].ID = quests.QuestID(i)
 	//	quests.Quests[i].Active = false
 	//}
-	//*gendung.DLvl = 2
+	//*gendung.DLvl = quests.QuestsData[quests.PoisonedWaterSupply].DLvl
 	//*gendung.DType = gendung.Cathedral
 	//*gendung.IsQuestLevel = false
 	//*multi.MaxPlayers = 1
 	//quests.Quests[quests.PoisonedWaterSupply].Active = true
-	//quests.Quests[quests.PoisonedWaterSupply].DLvl = 2
+	//quests.Quests[quests.PoisonedWaterSupply].DLvl = quests.QuestsData[quests.PoisonedWaterSupply].DLvl
+
+	// Quest - Odgen's Sign.
+	for i := range quests.Quests {
+		quests.Quests[i].ID = quests.QuestID(i)
+		quests.Quests[i].Active = false
+	}
+	*gendung.DLvl = quests.QuestsData[quests.OgdensSign].DLvl
+	*gendung.DType = gendung.Cathedral
+	*gendung.IsQuestLevel = false
+	*multi.MaxPlayers = 1
+	quests.Quests[quests.OgdensSign].Active = true
+	quests.Quests[quests.OgdensSign].DLvl = quests.QuestsData[quests.OgdensSign].DLvl
 
 	diablo.LoadLevelGraphics()
 	for seed := int32(0); seed <= 0xFF; seed++ {
@@ -228,6 +240,9 @@ func checkL1Quest() error {
 	if err := checkL1QuestPoisonedWaterSupply(); err != nil {
 		return errors.WithStack(err)
 	}
+	if err := checkL1QuestOgdensSign(); err != nil {
+		return errors.WithStack(err)
+	}
 	return nil
 }
 
@@ -240,12 +255,12 @@ func checkL1QuestTheButcher() error {
 		quests.Quests[i].ID = quests.QuestID(i)
 		quests.Quests[i].Active = false
 	}
-	*gendung.DLvl = 2
+	*gendung.DLvl = quests.QuestsData[quests.TheButcher].DLvl
 	*gendung.DType = gendung.Cathedral
 	*gendung.IsQuestLevel = false
 	*multi.MaxPlayers = 1
 	quests.Quests[quests.TheButcher].Active = true
-	quests.Quests[quests.TheButcher].DLvl = 2
+	quests.Quests[quests.TheButcher].DLvl = quests.QuestsData[quests.TheButcher].DLvl
 	diablo.LoadLevelGraphics()
 	seed := int32(123)
 	l1.CreateDungeon(seed, 0)
@@ -260,7 +275,7 @@ func checkL1QuestTheButcher() error {
 		if err := binary.Read(f, binary.LittleEndian, &tiles); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.TileIDMap)
 		pretty.Println("want:", tiles)
 		return errors.WithStack(err)
 	}
@@ -275,7 +290,7 @@ func checkL1QuestTheButcher() error {
 		if err := binary.Read(f, binary.LittleEndian, &pieces); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.PieceIDMap)
 		pretty.Println("want:", pieces)
 		return errors.WithStack(err)
 	}
@@ -305,7 +320,7 @@ func checkL1QuestTheButcher() error {
 		if err := binary.Read(f, binary.LittleEndian, &trans); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.TransparencyMap)
 		pretty.Println("want:", trans)
 		return errors.WithStack(err)
 	}
@@ -322,12 +337,12 @@ func checkL1QuestPoisonedWaterSupply() error {
 		quests.Quests[i].ID = quests.QuestID(i)
 		quests.Quests[i].Active = false
 	}
-	*gendung.DLvl = 2
+	*gendung.DLvl = quests.QuestsData[quests.PoisonedWaterSupply].DLvl
 	*gendung.DType = gendung.Cathedral
 	*gendung.IsQuestLevel = false
 	*multi.MaxPlayers = 1
 	quests.Quests[quests.PoisonedWaterSupply].Active = true
-	quests.Quests[quests.PoisonedWaterSupply].DLvl = 2
+	quests.Quests[quests.PoisonedWaterSupply].DLvl = quests.QuestsData[quests.PoisonedWaterSupply].DLvl
 	diablo.LoadLevelGraphics()
 	seed := int32(123)
 	l1.CreateDungeon(seed, 0)
@@ -342,7 +357,7 @@ func checkL1QuestPoisonedWaterSupply() error {
 		if err := binary.Read(f, binary.LittleEndian, &tiles); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.TileIDMap)
 		pretty.Println("want:", tiles)
 		return errors.WithStack(err)
 	}
@@ -357,7 +372,7 @@ func checkL1QuestPoisonedWaterSupply() error {
 		if err := binary.Read(f, binary.LittleEndian, &pieces); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.PieceIDMap)
 		pretty.Println("want:", pieces)
 		return errors.WithStack(err)
 	}
@@ -387,11 +402,93 @@ func checkL1QuestPoisonedWaterSupply() error {
 		if err := binary.Read(f, binary.LittleEndian, &trans); err != nil {
 			return errors.WithStack(err)
 		}
-		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("got:", *gendung.TransparencyMap)
 		pretty.Println("want:", trans)
 		return errors.WithStack(err)
 	}
 	fmt.Println("PASS: quest - Poisoned Water Supply")
+	return nil
+}
+
+// checkL1QuestOgdensSign validates the implemenation of the dynamic random
+// level generation of Cathedral maps, for dungeon level 4 with the Ogden's Sign
+// quest active.
+func checkL1QuestOgdensSign() error {
+	dinit.Archives()
+	for i := range quests.Quests {
+		quests.Quests[i].ID = quests.QuestID(i)
+		quests.Quests[i].Active = false
+	}
+	*gendung.DLvl = quests.QuestsData[quests.OgdensSign].DLvl
+	*gendung.DType = gendung.Cathedral
+	*gendung.IsQuestLevel = false
+	*multi.MaxPlayers = 1
+	quests.Quests[quests.OgdensSign].Active = true
+	quests.Quests[quests.OgdensSign].DLvl = quests.QuestsData[quests.OgdensSign].DLvl
+	diablo.LoadLevelGraphics()
+	seed := int32(123)
+	l1.CreateDungeon(seed, 0)
+	if err := check(*gendung.TileIDMap, "tiles", seed, "3a54760d2ce39932f556dbb3ae924c8425e5f9ea"); err != nil {
+		path := fmt.Sprintf("testdata_quest_ogdens_sign/l1_tiles_%08X.bin", seed)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
+		}
+		defer f.Close()
+		var tiles [40][40]uint8
+		if err := binary.Read(f, binary.LittleEndian, &tiles); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.TileIDMap)
+		pretty.Println("want:", tiles)
+		return errors.WithStack(err)
+	}
+	if err := check(*gendung.PieceIDMap, "pieces", seed, "f6fcf0461dfad18da42b3d25dde5e60cdc7b4daf"); err != nil {
+		path := fmt.Sprintf("testdata_quest_ogdens_sign/l1_pieces_%08X.bin", seed)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
+		}
+		defer f.Close()
+		var pieces [112][112]int32
+		if err := binary.Read(f, binary.LittleEndian, &pieces); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.PieceIDMap)
+		pretty.Println("want:", pieces)
+		return errors.WithStack(err)
+	}
+	if err := check(*gendung.ArchNumMap, "arches", seed, "7e97023f45d78a37dffb569111762018e6b0c93f"); err != nil {
+		path := fmt.Sprintf("testdata_quest_ogdens_sign/l1_arches_%08X.bin", seed)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
+		}
+		defer f.Close()
+		var arches [112][112]int8
+		if err := binary.Read(f, binary.LittleEndian, &arches); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.ArchNumMap)
+		pretty.Println("want:", arches)
+		return errors.WithStack(err)
+	}
+	if err := check(*gendung.TransparencyMap, "transparency", seed, "10156f455d85c0c4be6d26be23fc540776253aa9"); err != nil {
+		path := fmt.Sprintf("testdata_quest_ogdens_sign/l1_transparency_%08X.bin", seed)
+		f, e := os.Open(path)
+		if e != nil {
+			return errors.WithStack(e)
+		}
+		defer f.Close()
+		var trans [112][112]int8
+		if err := binary.Read(f, binary.LittleEndian, &trans); err != nil {
+			return errors.WithStack(err)
+		}
+		pretty.Println("got:", *gendung.TransparencyMap)
+		pretty.Println("want:", trans)
+		return errors.WithStack(err)
+	}
+	fmt.Println("PASS: quest - Ogden's Sign")
 	return nil
 }
 
