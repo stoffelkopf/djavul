@@ -1,4 +1,19 @@
 // The l1 tool provides dynamic random level generation of Cathedral maps.
+//
+// Usage:
+//
+//    l1 [OPTION]...
+//
+// Flags:
+//
+//    -dlvl int
+//          dungeon level (1-16) (default 1)
+//    -quest string
+//          active quest
+//    -raw
+//          raw output format
+//    -seed int
+//          initial seed
 package main
 
 import (
