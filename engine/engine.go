@@ -44,7 +44,7 @@ func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWid
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 	const screenHeight = 480
 	x := float64(screenX - 64)
-	y := screenHeight - float64(screenY-160)
+	y := screenHeight - float64(screenY-160) - 1
 	sprite.Draw(Win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(x, y))))
 }
 

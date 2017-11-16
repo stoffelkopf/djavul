@@ -23,7 +23,8 @@ func Init() {
 //
 //    0 = left  (  0, 0, 320, 480)
 //    1 = right (320, 0, 320, 480)
-//    2 = max   (  0, 0, 640, 480)
+//    2 = none  (  0, 0,   0,   0)
+//    3 = max   (  0, 0, 640, 480)
 var winPos int
 
 //export OnKeyPress
@@ -46,6 +47,10 @@ func OnKeyPress(key int) {
 			w32.MoveWindow(*diablo.Window, 320, 0, 320, 480, true)
 			winPos++
 		case 2:
+			fmt.Println("window position: none")
+			w32.MoveWindow(*diablo.Window, 0, 0, 0, 0, true)
+			winPos++
+		case 3:
 			fmt.Println("window position: max")
 			w32.MoveWindow(*diablo.Window, 0, 0, 640, 480, true)
 			winPos = 0
