@@ -11,6 +11,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/scrollrt"
 	"golang.org/x/image/colornames"
 )
 
@@ -33,10 +34,14 @@ func run() {
 	win.Clear(colornames.Skyblue)
 	for !win.Closed() {
 		win.Update()
+		<-scrollrt.DrawSignal
+		fmt.Println("draw signal received")
 	}
 }
 
 // ### [ Exports ] #############################################################
+
+// --- [ engine ] --------------------------------------------------------------
 
 //export CelDecodeFrame
 func CelDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
@@ -46,4 +51,11 @@ func CelDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWid
 //export MemLoadFile
 func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 	return engine.MemLoadFile(path, size)
+}
+
+// --- [ scrollrt ] ------------------------------------------------------------
+
+//export DrawMainW
+func DrawMainW() {
+	scrollrt.DrawMainW()
 }

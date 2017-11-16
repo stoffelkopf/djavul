@@ -8,9 +8,16 @@ package scrollrt
 // }
 import "C"
 
+import (
+	"github.com/sanctuary/djavul/engine"
+)
+
 // DrawMainW renders the UI and the game world on screen.
 //
 // ref: 0x4564F9
 func DrawMainW() {
+	if engine.UseGUI {
+		drawMainW()
+	}
 	C.scrollrt_draw_main_W()
 }
