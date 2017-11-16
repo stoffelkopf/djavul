@@ -35,6 +35,8 @@ var Win *pixelgl.Window
 //    y = screenY - 160
 //    frameNum = frame - 1
 //
+// Note, the coordinates specify the bottom left corner.
+//
 // ref: 0x416274
 func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
 	file := getFile(celBuf)
