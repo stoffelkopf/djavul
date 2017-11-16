@@ -4,10 +4,19 @@
 
 package diablo
 
-import "unsafe"
+import (
+	"unsafe"
+
+	"github.com/AllenDang/w32"
+)
 
 // Global variables.
 var (
+	// address: 0x525518
+	//
+	// Window is the window handle of the game.
+	Window = (*w32.HWND)(unsafe.Pointer(uintptr(0x525518)))
+
 	// LightingFlag4 specifies flags used for light effects.
 	//
 	// PSX ref: 0x8011B797

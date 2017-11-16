@@ -2,7 +2,13 @@
 
 package engine
 
+// #include <stdio.h>
 // #include <stdint.h>
+//
+// static void __fastcall engine_cel_decode_frame(int screen_x, int screen_y, uint8_t *cel_buf, int frame, int frame_width) {
+//    void (__fastcall *f)(int, int, uint8_t *, int, int) = (void *)0x416274;
+//    f(screen_x, screen_y, cel_buf, frame, frame_width);
+// }
 //
 // static void __fastcall engine_set_seed(int32_t x) {
 //    void (__fastcall *f)(int32_t) = (void *)0x417518;
@@ -31,11 +37,37 @@ package engine
 import "C"
 
 import (
+	"fmt"
+	"log"
+	"path/filepath"
 	"unsafe"
+
+	"github.com/faiface/pixel"
+	"github.com/pkg/errors"
+	"github.com/sanctuary/formats/image/cel"
+	"github.com/sanctuary/formats/image/cel/config"
 )
 
-// useGo specifies whether to use the Go implementation.
-const useGo = true
+const (
+	// useGo specifies whether to use the Go implementation.
+	useGo = true
+	// UseGUI specifies whether to use the Go GUI implementation.
+	UseGUI = true
+)
+
+// CelDecodeFrame decodes the given frame to the specified screen coordinate.
+//
+//    x = screenX - 64
+//    y = screenY - 160
+//    frameNum = frame - 1
+//
+// ref: 0x416274
+func CelDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
+	if UseGUI {
+		celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
+	}
+	C.engine_cel_decode_frame(C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth))
+}
 
 // SetSeed sets the global seed to x.
 //
@@ -99,11 +131,55 @@ func MemFree(ptr unsafe.Pointer) {
 // PSX def: unsigned char* GRL_LoadFileInMemSig__FPCcPUl(char *Name, unsigned long *Len)
 //
 // ref: 0x417618
-func MemLoadFile(path unsafe.Pointer, size *int32) *uint8 {
+func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
+	var addr unsafe.Pointer
 	if useGo {
-		return memLoadFile(path, size)
+		addr = memLoadFile(path, size)
 	} else {
 		buf := C.engine_mem_load_file((*C.char)(path), (*C.int32_t)(unsafe.Pointer(size)))
-		return (*uint8)(unsafe.Pointer(buf))
+		addr = unsafe.Pointer(buf)
 	}
+	file := goPath(path)
+	files[addr] = file
+	if UseGUI {
+		switch filepath.Ext(file) {
+		case ".cel":
+			if err := loadPics(file); err != nil {
+				log.Fatalf("+%v", err)
+			}
+		}
+	}
+	return addr
+}
+
+// ### [ Helper functions ] ####################################################
+
+// loadPics loads the frames of the given CEL image.
+func loadPics(relPath string) error {
+	name := filepath.Base(relPath)
+	conf, err := config.Get(name)
+	if err != nil {
+		return errors.Errorf("unable to locate image config for %q; %v", name, err)
+	}
+	fmt.Println("decoding CEL image:", relPath)
+	palPath := "levels/towndata/town.pal"
+	if len(conf.Pals) > 0 {
+		// TODO: Figure out how to handle multiple palettes.
+		palPath = conf.Pals[0]
+	}
+	pal, err := cel.ParsePal(absPath(palPath))
+	if err != nil {
+		return errors.Errorf("unable to parse palette %q; %v", palPath, err)
+	}
+	imgs, err := cel.DecodeAll(absPath(relPath), pal)
+	if err != nil {
+		return errors.Errorf("unable to decode CEL image %q; %v", relPath, err)
+	}
+	var pics []pixel.Picture
+	for _, img := range imgs {
+		pic := pixel.PictureDataFromImage(img)
+		pics = append(pics, pic)
+	}
+	pictures[relPath] = pics
+	return nil
 }

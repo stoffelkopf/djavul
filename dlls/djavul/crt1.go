@@ -19,31 +19,40 @@ import "C"
 import (
 	"flag"
 	"fmt"
-	"log"
-	"os"
 	"strings"
 
 	"github.com/AllenDang/w32"
+	"github.com/faiface/pixel/pixelgl"
 	"github.com/sanctuary/djavul/diablo"
+	"github.com/sanctuary/djavul/engine"
 )
 
 //export Start
 func Start() {
 	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
+	if engine.UseGUI {
+		pixelgl.Run(run)
+	} else {
+		winGUI()
+	}
 	//l1.UseGo = false
 	//dumpL1Maps()
 	//if err := compareL1(); err != nil {
 	//	log.Fatalf("+%v", err)
 	//}
-	if err := checkL1Regular(); err != nil {
-		log.Fatalf("%+v", err)
-	}
-	if err := checkL1Quest(); err != nil {
-		log.Fatalf("%+v", err)
-	}
-	os.Exit(0)
-	return
+	//if err := checkL1Regular(); err != nil {
+	//	log.Fatalf("%+v", err)
+	//}
+	//if err := checkL1Quest(); err != nil {
+	//	log.Fatalf("%+v", err)
+	//}
+	//os.Exit(0)
+	//return
+}
+
+// winGUI initializes the Windows GUI.
+func winGUI() {
 	inst := w32.GetModuleHandle("")
 	// Parse arguments from command line.
 	var s int64

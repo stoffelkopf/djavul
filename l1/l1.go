@@ -199,15 +199,15 @@ func loadSinglePlayerQuestDun() {
 	*SinglePlayerQuestDunLoaded = false
 	switch {
 	case quests.IsActive(quests.TheButcher):
-		*SinglePlayerQuestDun = engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\rnd6.DUN`)), nil)
+		*SinglePlayerQuestDun = (*uint8)(engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\rnd6.DUN`)), nil))
 		*SinglePlayerQuestDunLoaded = true
 	case quests.IsActive(quests.TheCurseOfKingLeoric):
 		if *multi.MaxPlayers == 1 {
-			*SinglePlayerQuestDun = engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\SKngDO.DUN`)), nil)
+			*SinglePlayerQuestDun = (*uint8)(engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\SKngDO.DUN`)), nil))
 			*SinglePlayerQuestDunLoaded = true
 		}
 	case quests.IsActive(quests.OgdensSign):
-		*SinglePlayerQuestDun = engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\Banner2.DUN`)), nil)
+		*SinglePlayerQuestDun = (*uint8)(engine.MemLoadFile(unsafe.Pointer(C.CString(`Levels\L1Data\Banner2.DUN`)), nil))
 		*SinglePlayerQuestDunLoaded = true
 	}
 }

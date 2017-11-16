@@ -58,6 +58,8 @@ func MemFree(ptr unsafe.Pointer) {
 // PSX def: unsigned char* GRL_LoadFileInMemSig__FPCcPUl(char *Name, unsigned long *Len)
 //
 // ref: 0x417618
-func MemLoadFile(path unsafe.Pointer, size *int32) *uint8 {
-	return memLoadFile(path, size)
+func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
+	addr := memLoadFile(path, size)
+	files[addr] = goPath(path)
+	return addr
 }

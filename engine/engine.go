@@ -2,17 +2,51 @@
 // functions.
 package engine
 
+// #include <stdint.h>
+// #include <stdlib.h>
+// #include <string.h>
+//
+// uint8_t * copy(uint8_t *src, int n) {
+//    uint8_t *dst = malloc(n);
+//    memcpy(dst, src, n);
+//    return dst;
+// }
 import "C"
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"path/filepath"
 	"strings"
 	"unsafe"
 
+	"github.com/faiface/pixel"
+	"github.com/faiface/pixel/pixelgl"
 	"github.com/pkg/errors"
 )
+
+// Win is the Pixel window handler.
+var Win *pixelgl.Window
+
+// celDecodeFrame decodes the given frame to the specified screen coordinate.
+//
+//    x = screenX - 64
+//    y = screenY - 160
+//    frameNum = frame - 1
+//
+// ref: 0x416274
+func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
+	file := getFile(celBuf)
+	pics := getPictures(file)
+	frameNum := frame - 1
+	pic := pics[frameNum]
+	sprite := pixel.NewSprite(pic, pic.Bounds())
+	const screenHeight = 480
+	x := float64(screenX - 64)
+	y := screenHeight - float64(screenY-160)
+	sprite.Draw(Win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(x, y))))
+}
 
 // setSeed sets the global seed to x.
 //
@@ -65,14 +99,9 @@ func randCap(max int32) int32 {
 // PSX def: unsigned char* GRL_LoadFileInMemSig__FPCcPUl(char *Name, unsigned long *Len)
 //
 // ref: 0x417618
-func memLoadFile(path unsafe.Pointer, size *int32) *uint8 {
-	// mpqDir specifies a directory containing an extracted copy of the files
-	// contained within DIABDAT.MPQ. Note that the extracted files should have
-	// lowercase names.
-	const mpqDir = "diabdat"
-	p := C.GoString((*C.char)(path))
-	p = strings.Replace(p, "\\", "/", -1)
-	p = filepath.Join(mpqDir, strings.ToLower(p))
+func memLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
+	p := absPath(goPath(path))
+	fmt.Println("engine.MemLoadFile:", p)
 	buf, err := ioutil.ReadFile(p)
 	if err != nil {
 		log.Fatalf("unable to load file %q; %v", p, errors.WithStack(err))
@@ -80,10 +109,51 @@ func memLoadFile(path unsafe.Pointer, size *int32) *uint8 {
 	if size != nil {
 		*size = int32(len(buf))
 	}
-	return (*uint8)(unsafe.Pointer(&buf[0]))
+	return unsafe.Pointer(C.copy((*C.uint8_t)(unsafe.Pointer(&buf[0])), C.int(len(buf))))
 }
 
 // ### [ Helper functions ] ####################################################
+
+// pictures maps from relative file path to decoded image frames.
+var pictures = make(map[string][]pixel.Picture)
+
+// getPictures returns the pictures associated with the given file path.
+func getPictures(relPath string) []pixel.Picture {
+	pics, ok := pictures[relPath]
+	if !ok {
+		panic(fmt.Errorf("unable to locate decoded image frames of %q", relPath))
+	}
+	return pics
+}
+
+// files maps from file contents pointer to file path.
+var files = make(map[unsafe.Pointer]string)
+
+// getFile returns the file path of the given file contents pointer.
+func getFile(addr unsafe.Pointer) string {
+	file, ok := files[addr]
+	if !ok {
+		panic(fmt.Errorf("unable to locate file path for address 0x%08X", uintptr(addr)))
+	}
+	return file
+}
+
+// absPath returns the absolute path to the given file, relative to the MPQ
+// directory.
+func absPath(relPath string) string {
+	// mpqDir specifies a directory containing an extracted copy of the files
+	// contained within DIABDAT.MPQ. Note that the extracted files should have
+	// lowercase names.
+	const mpqDir = "diabdat"
+	return filepath.Join(mpqDir, relPath)
+}
+
+// goPath returns an equivalent Go string of the given file path.
+func goPath(path unsafe.Pointer) string {
+	p := C.GoString((*C.char)(path))
+	p = strings.Replace(p, "\\", "/", -1)
+	return strings.ToLower(p)
+}
 
 // abs returns the absolute value of x.
 func abs(x int32) int32 {
