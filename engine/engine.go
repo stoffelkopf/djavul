@@ -50,6 +50,24 @@ func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWid
 	sprite.Draw(Win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(x, y))))
 }
 
+// celDecodeFrameWithHeader decodes the given CEL frame to the specified screen
+// coordinate.
+//
+//    x = screen_x - 64
+//    y = screen_y - 160
+//    frameNum = frame - 1
+//
+// Note, the coordinates specify the bottom left corner.
+//
+// Note, this function is only used to decode CEL images with frame headers
+// (objects, item drops, objcurs.cel, towners).
+//
+// ref: 0x4162DE
+func celDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
+	// TODO: Handle light tables for celDecodeFrameWithHeader.
+	celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
+}
+
 // setSeed sets the global seed to x.
 //
 // PSX ref: 0x8003DACC

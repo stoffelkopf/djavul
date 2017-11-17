@@ -168,10 +168,14 @@ func CelDecodeFrameIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth int)
 //
 // Note, the coordinates specify the bottom left corner.
 //
-// Note, this function is only used to decode CEL images with frame headers.
+// Note, this function is only used to decode CEL images with frame headers
+// (objects, item drops, objcurs.cel, towners).
 //
 // ref: 0x4162DE
 func CelDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeader(screenX, screenY, celBuf, frame, frameWidth, always0, direction)
+	}
 	C.engine_cel_decode_frame_with_header(C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(always0), C.int(direction))
 }
 
