@@ -112,16 +112,10 @@ package engine
 import "C"
 
 import (
-	"fmt"
 	"log"
-	"path/filepath"
 	"unsafe"
 
-	"github.com/faiface/pixel"
-	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/internal/proto"
-	"github.com/sanctuary/formats/image/cel"
-	"github.com/sanctuary/formats/image/cel/config"
 )
 
 const (
@@ -506,68 +500,5 @@ func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 	for i := start; i < end; i++ {
 		files[unsafe.Pointer(i)] = file
 	}
-
-	if UseGUI {
-		switch filepath.Ext(file) {
-		case ".cel":
-			if err := loadPics(file); err != nil {
-				log.Fatalf("+%v", err)
-			}
-		}
-	}
 	return addr
-}
-
-// ### [ Helper functions ] ####################################################
-
-// loadPics loads the frames of the given CEL image.
-func loadPics(relPath string) error {
-	name := filepath.Base(relPath)
-	conf, err := config.Get(name)
-	if err != nil {
-		return errors.Errorf("unable to locate image config for %q; %v", name, err)
-	}
-	fmt.Println("decoding CEL image:", relPath)
-	palPath := "levels/towndata/town.pal"
-	if len(conf.Pals) > 0 {
-		// TODO: Figure out how to handle multiple palettes.
-		palPath = conf.Pals[0]
-	}
-	pal, err := cel.ParsePal(absPath(palPath))
-	if err != nil {
-		return errors.Errorf("unable to parse palette %q; %v", palPath, err)
-	}
-	path := absPath(relPath)
-
-	// CEL archive.
-	if conf.Nimgs != 0 {
-		archiveImgs, err := cel.DecodeArchive(path, pal)
-		if err != nil {
-			return errors.Errorf("unable to parse CEL archive %q; %v", relPath, err)
-		}
-		var dirPics [][]pixel.Picture
-		for _, archiveImg := range archiveImgs {
-			var pics []pixel.Picture
-			for _, img := range archiveImg {
-				pic := pixel.PictureDataFromImage(img)
-				pics = append(pics, pic)
-			}
-			dirPics = append(dirPics, pics)
-		}
-		dirPictures[relPath] = dirPics
-		return nil
-	}
-
-	// CEL image.
-	imgs, err := cel.DecodeAll(path, pal)
-	if err != nil {
-		return errors.Errorf("unable to decode CEL image %q; %v", relPath, err)
-	}
-	var pics []pixel.Picture
-	for _, img := range imgs {
-		pic := pixel.PictureDataFromImage(img)
-		pics = append(pics, pic)
-	}
-	pictures[relPath] = pics
-	return nil
 }
