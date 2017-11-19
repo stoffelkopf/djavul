@@ -9,6 +9,7 @@ import (
 
 	"github.com/sanctuary/djavul/engine"
 	"github.com/sanctuary/djavul/scrollrt"
+	"github.com/sanctuary/djavul/world"
 )
 
 // ### [ Exports ] #############################################################
@@ -105,4 +106,16 @@ func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 //export DrawMainW
 func DrawMainW() {
 	scrollrt.DrawMainW()
+}
+
+// --- [ world ] ---------------------------------------------------------------
+
+//export DrawUpperScreen
+func DrawUpperScreen(dstBuf unsafe.Pointer) {
+	world.DrawUpperScreen(dstBuf)
+}
+
+//export DrawLowerScreen
+func DrawLowerScreen(dstBuf unsafe.Pointer) {
+	world.DrawLowerScreen(dstBuf)
 }

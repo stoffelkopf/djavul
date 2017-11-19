@@ -54,7 +54,7 @@ func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWid
 //
 // ref: 0x4162B8
 func celDecodeFrameIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth int) {
-	screenX, screenY := calcScreenCoords(dstBuf)
+	screenX, screenY := CalcScreenCoords(dstBuf)
 	celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
 }
 
@@ -90,7 +90,7 @@ func celDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame
 //
 // ref: 0x416359
 func celDecodeFrameWithHeaderIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
-	screenX, screenY := calcScreenCoords(dstBuf)
+	screenX, screenY := CalcScreenCoords(dstBuf)
 	celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
 }
 
@@ -136,7 +136,7 @@ func celDecodeFrameWithHeaderAndLight(screenX, screenY int, celBuf unsafe.Pointe
 //
 // ref: 0x41664B
 func celDecodeFrameWithHeaderLightAndTransparencyIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
-	screenX, screenY := calcScreenCoords(dstBuf)
+	screenX, screenY := CalcScreenCoords(dstBuf)
 	celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
 }
 
@@ -184,7 +184,7 @@ func celDecodeFrameWithHeader2(screenX, screenY int, celBuf unsafe.Pointer, fram
 //
 // ref: 0x4168D5
 func celDecodeFrameWithHeaderIntoBuf2(dstBuf, celBuf unsafe.Pointer, frame, frameWidth, a5, direction int) {
-	screenX, screenY := calcScreenCoords(dstBuf)
+	screenX, screenY := CalcScreenCoords(dstBuf)
 	celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
 }
 
@@ -217,7 +217,7 @@ func celDecodeFrameWithHeaderAndLight2(screenX, screenY int, celBuf unsafe.Point
 //
 // ref: 0x416BA9
 func celDecodeFrameWithHeaderLightAndTransparencyIntoBuf2(dstBuf, celBuf unsafe.Pointer, frame, frameWidth, a5, direction int) {
-	screenX, screenY := calcScreenCoords(dstBuf)
+	screenX, screenY := CalcScreenCoords(dstBuf)
 	celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
 }
 
@@ -353,9 +353,9 @@ func memLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 
 // ### [ Helper functions ] ####################################################
 
-// calcScreenCoords returns the screen x and y-coordinates based on the given
+// CalcScreenCoords returns the screen x and y-coordinates based on the given
 // destination buffer.
-func calcScreenCoords(dstBuf unsafe.Pointer) (screenX, screenY int) {
+func CalcScreenCoords(dstBuf unsafe.Pointer) (screenX, screenY int) {
 	addr := uintptr(dstBuf)
 	start := uintptr(unsafe.Pointer(*dx.ScreenBuf))
 	offset := int(addr - start)
