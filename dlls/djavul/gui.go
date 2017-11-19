@@ -28,7 +28,6 @@ func run() {
 	if err != nil {
 		panic(fmt.Errorf("unable to create new Pixel Window; %v", err))
 	}
-	engine.Win = win
 
 	// Draw loop.
 	win.Clear(colornames.Skyblue)

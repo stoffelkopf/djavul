@@ -22,15 +22,10 @@ import (
 	"unsafe"
 
 	"github.com/faiface/pixel"
-	"github.com/faiface/pixel/pixelgl"
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/dx"
 	"github.com/sanctuary/djavul/internal/proto"
-	"github.com/sanctuary/formats/image/cel/config"
 )
-
-// Win is the Pixel window handler.
-var Win *pixelgl.Window
 
 // celDecodeFrame decodes the given frame to the specified screen coordinate.
 //
@@ -43,17 +38,13 @@ var Win *pixelgl.Window
 // ref: 0x416274
 func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
 	file := getFile(celBuf)
-	pics := getPictures(file)
 	frameNum := frame - 1
-	pic := pics[frameNum]
-	sprite := pixel.NewSprite(pic, pic.Bounds())
 	const screenHeight = 480
 	x := float64(screenX - 64)
 	y := screenHeight - float64(screenY-160) - 1
 	if err := proto.SendDrawImage(file, x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
-	sprite.Draw(Win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(x, y))))
 }
 
 // celDecodeFrameIntoBuf decodes the given CEL frame into the specified buffer.
@@ -82,27 +73,13 @@ func celDecodeFrameIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth int)
 // ref: 0x4162DE
 func celDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
 	relPath := getFile(celBuf)
-	name := filepath.Base(relPath)
-	conf, err := config.Get(name)
-	if err != nil {
-		log.Fatalf("unable to locate config for %q; %v", relPath, err)
-	}
-	var pics []pixel.Picture
-	if conf.Nimgs != 0 {
-		pics = getPicturesForDir(relPath, direction)
-	} else {
-		pics = getPictures(relPath)
-	}
 	frameNum := frame - 1
-	pic := pics[frameNum]
-	sprite := pixel.NewSprite(pic, pic.Bounds())
 	const screenHeight = 480
 	x := float64(screenX - 64)
 	y := screenHeight - float64(screenY-160) - 1
 	if err := proto.SendDrawImage(relPath, x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
-	sprite.Draw(Win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(x, y))))
 }
 
 // celDecodeFrameWithHeaderIntoBuf decodes the given CEL frame into the
