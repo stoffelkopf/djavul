@@ -24,6 +24,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"github.com/pkg/errors"
+	"github.com/sanctuary/formats/image/cel/config"
 )
 
 // Win is the Pixel window handler.
@@ -64,8 +65,25 @@ func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWid
 //
 // ref: 0x4162DE
 func celDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
-	// TODO: Handle light tables for celDecodeFrameWithHeader.
-	celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
+	relPath := getFile(celBuf)
+	name := filepath.Base(relPath)
+	conf, err := config.Get(name)
+	if err != nil {
+		log.Fatalf("unable to locate config for %q; %v", relPath, err)
+	}
+	var pics []pixel.Picture
+	if conf.Nimgs != 0 {
+		pics = getPicturesForDir(relPath, direction)
+	} else {
+		pics = getPictures(relPath)
+	}
+	frameNum := frame - 1
+	pic := pics[frameNum]
+	sprite := pixel.NewSprite(pic, pic.Bounds())
+	const screenHeight = 480
+	x := float64(screenX - 64)
+	y := screenHeight - float64(screenY-160) - 1
+	sprite.Draw(Win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(x, y))))
 }
 
 // setSeed sets the global seed to x.
@@ -144,6 +162,26 @@ func getPictures(relPath string) []pixel.Picture {
 		panic(fmt.Errorf("unable to locate decoded image frames of %q", relPath))
 	}
 	return pics
+}
+
+// dirPictures maps from relative file path to decoded image frames based on
+// direction.
+var dirPictures = make(map[string][][]pixel.Picture)
+
+// getPicturesForDir returns the pictures associated with the given file path
+// and direction.
+func getPicturesForDir(relPath string, direction int) []pixel.Picture {
+	dirPics, ok := dirPictures[relPath]
+	if !ok {
+		panic(fmt.Errorf("unable to locate decoded image frames of %q", relPath))
+	}
+	if direction == 8 {
+		direction = 0
+	}
+	if len(dirPics) <= direction {
+		panic(fmt.Errorf("invalid direction for %q; expected < %d, got %d", relPath, len(dirPics), direction))
+	}
+	return dirPics[direction]
 }
 
 // files maps from file contents pointer to file path.

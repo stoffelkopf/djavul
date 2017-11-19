@@ -441,14 +441,26 @@ func MemFree(ptr unsafe.Pointer) {
 // ref: 0x417618
 func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 	var addr unsafe.Pointer
+	var n int32
 	if useGo {
-		addr = memLoadFile(path, size)
+		addr = memLoadFile(path, &n)
 	} else {
-		buf := C.engine_mem_load_file((*C.char)(path), (*C.int32_t)(unsafe.Pointer(size)))
+		buf := C.engine_mem_load_file((*C.char)(path), (*C.int32_t)(unsafe.Pointer(&n)))
 		addr = unsafe.Pointer(buf)
+	}
+	if size != nil {
+		*size = n
 	}
 	file := goPath(path)
 	files[addr] = file
+
+	// TODO: Repace with binary search.
+	start := uintptr(addr)
+	end := start + uintptr(n)
+	for i := start; i < end; i++ {
+		files[unsafe.Pointer(i)] = file
+	}
+
 	if UseGUI {
 		switch filepath.Ext(file) {
 		case ".cel":
@@ -479,7 +491,29 @@ func loadPics(relPath string) error {
 	if err != nil {
 		return errors.Errorf("unable to parse palette %q; %v", palPath, err)
 	}
-	imgs, err := cel.DecodeAll(absPath(relPath), pal)
+	path := absPath(relPath)
+
+	// CEL archive.
+	if conf.Nimgs != 0 {
+		archiveImgs, err := cel.DecodeArchive(path, pal)
+		if err != nil {
+			return errors.Errorf("unable to parse CEL archive %q; %v", relPath, err)
+		}
+		var dirPics [][]pixel.Picture
+		for _, archiveImg := range archiveImgs {
+			var pics []pixel.Picture
+			for _, img := range archiveImg {
+				pic := pixel.PictureDataFromImage(img)
+				pics = append(pics, pic)
+			}
+			dirPics = append(dirPics, pics)
+		}
+		dirPictures[relPath] = dirPics
+		return nil
+	}
+
+	// CEL image.
+	imgs, err := cel.DecodeAll(path, pal)
 	if err != nil {
 		return errors.Errorf("unable to decode CEL image %q; %v", relPath, err)
 	}
