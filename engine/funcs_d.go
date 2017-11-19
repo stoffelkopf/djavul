@@ -157,6 +157,9 @@ func CelDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWid
 //
 // ref: 0x4162B8
 func CelDecodeFrameIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth int) {
+	if UseGUI {
+		celDecodeFrameIntoBuf(dstBuf, celBuf, frame, frameWidth)
+	}
 	C.engine_cel_decode_frame_into_buf((*C.uint8_t)(dstBuf), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth))
 }
 
@@ -188,6 +191,9 @@ func CelDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame
 //
 // ref: 0x416359
 func CelDecodeFrameWithHeaderIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeaderIntoBuf(dstBuf, celBuf, frame, frameWidth, always0, direction)
+	}
 	C.engine_cel_decode_frame_with_header_into_buf((*C.uint8_t)(dstBuf), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(always0), C.int(direction))
 }
 
@@ -225,6 +231,9 @@ func CelDecodeFrameWithLight(screenX, screenY int, celBuf unsafe.Pointer, frame,
 //
 // ref: 0x4165BD
 func CelDecodeFrameWithHeaderAndLight(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeaderAndLight(screenX, screenY, celBuf, frame, frameWidth, always0, direction)
+	}
 	C.engine_cel_decode_frame_with_header_and_light(C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(always0), C.int(direction))
 }
 
@@ -236,6 +245,9 @@ func CelDecodeFrameWithHeaderAndLight(screenX, screenY int, celBuf unsafe.Pointe
 //
 // ref: 0x41664B
 func CelDecodeFrameWithHeaderLightAndTransparencyIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeaderLightAndTransparencyIntoBuf(dstBuf, celBuf, frame, frameWidth, always0, direction)
+	}
 	C.engine_cel_decode_frame_with_header_light_and_transparency_into_buf((*C.uint8_t)(dstBuf), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(always0), C.int(direction))
 }
 
@@ -253,6 +265,9 @@ func CelDecodeFrameWithHeaderLightAndTransparencyIntoBuf(dstBuf, celBuf unsafe.P
 //
 // ref: 0x4166BF
 func CelDecodeFrameWithHeaderAndLightNotEquipable(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int, always1 int8) {
+	if UseGUI {
+		celDecodeFrameWithHeaderAndLightNotEquipable(screenX, screenY, celBuf, frame, frameWidth, always0, direction, always1)
+	}
 	C.engine_cel_decode_frame_with_header_and_light_not_equipable(C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(always0), C.int(direction), C.int8_t(always1))
 }
 
@@ -272,6 +287,9 @@ func CelDecodeFrameWithHeaderAndLightNotEquipable(screenX, screenY int, celBuf u
 //
 // ref: 0x41685A
 func CelDecodeFrameWithHeader2(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, a6, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeader2(screenX, screenY, celBuf, frame, frameWidth, a6, direction)
+	}
 	C.engine_cel_decode_frame_with_header2(C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(a6), C.int(direction))
 }
 
@@ -283,6 +301,9 @@ func CelDecodeFrameWithHeader2(screenX, screenY int, celBuf unsafe.Pointer, fram
 //
 // ref: 0x4168D5
 func CelDecodeFrameWithHeaderIntoBuf2(dstBuf, celBuf unsafe.Pointer, frame, frameWidth, a5, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeaderIntoBuf2(dstBuf, celBuf, frame, frameWidth, a5, direction)
+	}
 	C.engine_cel_decode_frame_with_header_into_buf2((*C.uint8_t)(dstBuf), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(a5), C.int(direction))
 }
 
@@ -302,6 +323,9 @@ func CelDecodeFrameWithHeaderIntoBuf2(dstBuf, celBuf unsafe.Pointer, frame, fram
 //
 // ref: 0x416B19
 func CelDecodeFrameWithHeaderAndLight2(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, a6, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeaderAndLight2(screenX, screenY, celBuf, frame, frameWidth, a6, direction)
+	}
 	C.engine_cel_decode_frame_with_header_and_light2(C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(a6), C.int(direction))
 }
 
@@ -315,6 +339,9 @@ func CelDecodeFrameWithHeaderAndLight2(screenX, screenY int, celBuf unsafe.Point
 //
 // ref: 0x416BA9
 func CelDecodeFrameWithHeaderLightAndTransparencyIntoBuf2(dstBuf, celBuf unsafe.Pointer, frame, frameWidth, a5, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeaderLightAndTransparencyIntoBuf2(dstBuf, celBuf, frame, frameWidth, a5, direction)
+	}
 	C.engine_cel_decode_frame_with_header_light_and_transparency_into_buf2((*C.uint8_t)(dstBuf), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(a5), C.int(direction))
 }
 
@@ -331,6 +358,9 @@ func CelDecodeFrameWithHeaderLightAndTransparencyIntoBuf2(dstBuf, celBuf unsafe.
 //
 // ref: 0x416C1B
 func CelDecodeFrameWithHeaderAndLightNotEquipable2(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int, always1 int8) {
+	if UseGUI {
+		celDecodeFrameWithHeaderAndLightNotEquipable2(screenX, screenY, celBuf, frame, frameWidth, always0, direction, always1)
+	}
 	C.engine_cel_decode_frame_with_header_and_light_not_equipable2(C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(always0), C.int(direction), C.int8_t(always1))
 }
 
@@ -342,6 +372,9 @@ func CelDecodeFrameWithHeaderAndLightNotEquipable2(screenX, screenY int, celBuf 
 //
 // ref: 0x416D3C
 func CelDecodeFrameIntoRectOfBuf(dstBuf unsafe.Pointer, always0, dstHeight, dstWidth int, celBuf unsafe.Pointer, frame, frameWidth int) {
+	if UseGUI {
+		celDecodeFrameIntoRectOfBuf(dstBuf, always0, dstHeight, dstWidth, celBuf, frame, frameWidth)
+	}
 	C.engine_cel_decode_frame_into_rect_of_buf((*C.uint8_t)(dstBuf), C.int(always0), C.int(dstHeight), C.int(dstWidth), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth))
 }
 
@@ -359,6 +392,9 @@ func CelDecodeFrameIntoRectOfBuf(dstBuf unsafe.Pointer, always0, dstHeight, dstW
 //
 // ref: 0x416DC6
 func CelDecodeFrameWithColour(colour uint8, screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, a7, direction int) {
+	if UseGUI {
+		celDecodeFrameWithColour(colour, screenX, screenY, celBuf, frame, frameWidth, a7, direction)
+	}
 	C.engine_cel_decode_frame_with_colour(C.uint8_t(colour), C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(a7), C.int(direction))
 }
 
@@ -378,6 +414,9 @@ func CelDecodeFrameWithColour(colour uint8, screenX, screenY int, celBuf unsafe.
 //
 // ref: 0x416EC0
 func CelDecodeFrameWithHeaderAndColourHighlight(colour uint8, screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, a7, direction int) {
+	if UseGUI {
+		celDecodeFrameWithHeaderAndColourHighlight(colour, screenX, screenY, celBuf, frame, frameWidth, a7, direction)
+	}
 	C.engine_cel_decode_frame_with_header_and_colour_highlight(C.uint8_t(colour), C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(a7), C.int(direction))
 }
 

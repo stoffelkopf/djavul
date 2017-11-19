@@ -2,7 +2,6 @@
 package scrollrt
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/sanctuary/djavul/internal/proto"
@@ -12,7 +11,7 @@ import (
 //
 // ref: 0x4564F9
 func drawMainW() {
-	fmt.Println("draw signal sent")
+	//fmt.Println("draw signal sent")
 	if err := proto.SendUpdateScreen(); err != nil {
 		log.Fatalf("%+v", err)
 	}
