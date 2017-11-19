@@ -23,9 +23,7 @@ import (
 	"strings"
 
 	"github.com/AllenDang/w32"
-	"github.com/faiface/pixel/pixelgl"
 	"github.com/sanctuary/djavul/diablo"
-	"github.com/sanctuary/djavul/engine"
 )
 
 //export Start
@@ -35,11 +33,7 @@ func Start() {
 	if err := initFrontConn(); err != nil {
 		log.Fatalf("%+v", err)
 	}
-	if engine.UseGUI {
-		pixelgl.Run(run)
-	} else {
-		winGUI()
-	}
+	winGUI()
 	//l1.UseGo = false
 	//dumpL1Maps()
 	//if err := compareL1(); err != nil {

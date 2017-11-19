@@ -15,8 +15,4 @@ func drawMainW() {
 	if err := proto.SendUpdateScreen(); err != nil {
 		log.Fatalf("%+v", err)
 	}
-	DrawSignal <- struct{}{}
 }
-
-// DrawSignal signals when to draw.
-var DrawSignal = make(chan struct{})
