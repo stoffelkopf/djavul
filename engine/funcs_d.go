@@ -119,6 +119,7 @@ import (
 
 	"github.com/faiface/pixel"
 	"github.com/pkg/errors"
+	"github.com/sanctuary/djavul/internal/proto"
 	"github.com/sanctuary/formats/image/cel"
 	"github.com/sanctuary/formats/image/cel/config"
 )
@@ -204,6 +205,9 @@ func CelDecodeFrameWithHeaderIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frame
 //
 // ref: 0x416565
 func CelDecodeFrameWithLight(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
+	if UseGUI {
+		celDecodeFrameWithLight(screenX, screenY, celBuf, frame, frameWidth)
+	}
 	C.engine_cel_decode_frame_with_light(C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth))
 }
 
@@ -452,6 +456,9 @@ func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 		*size = n
 	}
 	file := goPath(path)
+	if err := proto.SendLoadFile(file); err != nil {
+		log.Fatalf("%+v", err)
+	}
 	files[addr] = file
 
 	// TODO: Repace with binary search.

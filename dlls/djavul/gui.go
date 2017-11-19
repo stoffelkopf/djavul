@@ -53,6 +53,11 @@ func CelDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame
 	engine.CelDecodeFrameWithHeader(screenX, screenY, celBuf, frame, frameWidth, always0, direction)
 }
 
+//export CelDecodeFrameWithLight
+func CelDecodeFrameWithLight(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
+	engine.CelDecodeFrameWithLight(screenX, screenY, celBuf, frame, frameWidth)
+}
+
 //export MemLoadFile
 func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 	return engine.MemLoadFile(path, size)

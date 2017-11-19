@@ -19,6 +19,7 @@ import "C"
 import (
 	"flag"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/AllenDang/w32"
@@ -31,6 +32,9 @@ import (
 func Start() {
 	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
+	if err := initFrontConn(); err != nil {
+		log.Fatalf("%+v", err)
+	}
 	if engine.UseGUI {
 		pixelgl.Run(run)
 	} else {

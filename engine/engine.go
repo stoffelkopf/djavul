@@ -24,6 +24,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"github.com/pkg/errors"
+	"github.com/sanctuary/djavul/internal/proto"
 	"github.com/sanctuary/formats/image/cel/config"
 )
 
@@ -48,6 +49,9 @@ func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWid
 	const screenHeight = 480
 	x := float64(screenX - 64)
 	y := screenHeight - float64(screenY-160) - 1
+	if err := proto.SendDrawImage(file, x, y, frameNum); err != nil {
+		log.Fatalf("%+v", err)
+	}
 	sprite.Draw(Win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(x, y))))
 }
 
@@ -83,7 +87,27 @@ func celDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame
 	const screenHeight = 480
 	x := float64(screenX - 64)
 	y := screenHeight - float64(screenY-160) - 1
+	if err := proto.SendDrawImage(relPath, x, y, frameNum); err != nil {
+		log.Fatalf("%+v", err)
+	}
 	sprite.Draw(Win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(x, y))))
+}
+
+// celDecodeFrameWithLight decodes the given CEL frame to the specified screen
+// coordinate, adding lighting if applicable.
+//
+//    x = screen_x - 64
+//    y = screen_y - 160
+//    frameNum = frame - 1
+//
+// Note, the coordinates specify the bottom left corner.
+//
+// Note, this function is only used to decode CEL images without frame headers
+// (bigtgold.cel).
+//
+// ref: 0x416565
+func celDecodeFrameWithLight(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
+	celDecodeFrame(screenX, screenY, celBuf, frame, frameWidth)
 }
 
 // setSeed sets the global seed to x.
