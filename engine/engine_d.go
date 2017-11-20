@@ -9,6 +9,7 @@ import (
 
 	"github.com/faiface/pixel"
 	"github.com/sanctuary/djavul/dx"
+	"github.com/sanctuary/djavul/internal/proto"
 )
 
 // celDecodeFrame decodes the given frame to the specified screen coordinate.
