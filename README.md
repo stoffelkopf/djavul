@@ -17,6 +17,19 @@ To achieve this aim, the following objectives have been identified.
 5. Implement a set of tools around these modules which through interaction provide the functionality of the original Diablo 1 game engine.
 6. Validate that - given a deterministic seed - the re-implementation achieve pixel perfection, by mirroring the mouse and keyboard input and comparing the graphic and audio output against the original Diablo 1 game.
 
+## Progress
+
+2017-11-22
+
+* Mirror output using Pixel.
+
+![Screenshot from 2017-11-22](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-11-22.png)
+
+2017-11-13
+
+* Dungeon generation for Cathedral.
+    - [cmd/l1](cmd/l1)
+
 ## Public domain
 
 The source code and any original content of this repository is hereby released into the [public domain].
