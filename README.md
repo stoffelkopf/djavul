@@ -21,6 +21,12 @@ To achieve this aim, the following objectives have been identified.
 
 2017-11-22
 
+* Correct rendering of Tristram.
+
+![Screenshot from 2017-11-24](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-11-24.png)
+
+2017-11-22
+
 * Mirror output using Pixel.
 
 ![Screenshot from 2017-11-22](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-11-22.png)
