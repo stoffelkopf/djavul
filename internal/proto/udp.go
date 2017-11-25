@@ -1,3 +1,5 @@
+// Stateless connection.
+
 package proto
 
 import (
@@ -18,6 +20,7 @@ import (
 //
 // Spoofing doesn't matter.
 
+// PacketUDP represents a UDP packet.
 type PacketUDP struct {
 	Cmd  CommandUDP
 	Data []byte
@@ -30,13 +33,18 @@ var (
 	DecUDP *gob.Decoder
 )
 
+// CommandUDP specifies a UDP command to send to front-end.
 type CommandUDP uint8
 
+// UDP commands.
 const (
+	// CmdDrawImage specifies an image to draw.
 	CmdDrawImage CommandUDP = iota + 1
+	// CmdUpdateScreen specifies that the screen should be updated.
 	CmdUpdateScreen
 )
 
+// String returns the string representation of the UDP command.
 func (cmd CommandUDP) String() string {
 	m := map[CommandUDP]string{
 		CmdDrawImage:    "CmdDrawImage",
@@ -48,6 +56,7 @@ func (cmd CommandUDP) String() string {
 	return fmt.Sprintf("unknown CommandTCP(%d)", uint(cmd))
 }
 
+// DrawImage specifies an image to draw at a given coordinate.
 type DrawImage struct {
 	Path     string
 	X        float64
@@ -55,31 +64,32 @@ type DrawImage struct {
 	FrameNum int
 }
 
+// drawImages is a buffer of images to draw at each frame update.
+var drawImages []DrawImage
+
+// SendDrawImage send a draw image command to the front-end.
 func SendDrawImage(path string, x, y float64, frameNum int) error {
-	buf := &bytes.Buffer{}
 	data := DrawImage{
 		Path:     path,
 		X:        x,
 		Y:        y,
 		FrameNum: frameNum,
 	}
-	enc := gob.NewEncoder(buf)
-	if err := enc.Encode(&data); err != nil {
-		return errors.WithStack(err)
-	}
-	pkg := PacketUDP{
-		Cmd:  CmdDrawImage,
-		Data: buf.Bytes(),
-	}
-	if err := EncUDP.Encode(&pkg); err != nil {
-		return errors.WithStack(err)
-	}
+	drawImages = append(drawImages, data)
 	return nil
 }
 
+// SendUpdateScreen send an update screen command to the front-end.
 func SendUpdateScreen() error {
+	buf := &bytes.Buffer{}
+	enc := gob.NewEncoder(buf)
+	if err := enc.Encode(&drawImages); err != nil {
+		return errors.WithStack(err)
+	}
+	drawImages = drawImages[:0]
 	pkg := PacketUDP{
-		Cmd: CmdUpdateScreen,
+		Cmd:  CmdUpdateScreen,
+		Data: buf.Bytes(),
 	}
 	if err := EncUDP.Encode(&pkg); err != nil {
 		return errors.WithStack(err)

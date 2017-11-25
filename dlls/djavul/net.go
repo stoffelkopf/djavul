@@ -3,7 +3,8 @@ package main
 import (
 	"encoding/gob"
 	"fmt"
-	"net"
+	"os"
+	"path/filepath"
 
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/internal/proto"
@@ -12,28 +13,34 @@ import (
 // initFrontConn initializes the connection to the front-end.
 func initFrontConn() error {
 	// Initialize TCP connection.
-	tcpConn, err := net.Dial("tcp", "localhost:6667")
+	const tmpDir = "/tmp/djavul"
+	tcpRPath := filepath.Join(tmpDir, "tcp_r")
+	tcpR, err := os.OpenFile(tcpRPath, os.O_RDWR, 0644)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Println("Connected to:", tcpConn.RemoteAddr())
-	proto.EncTCP = gob.NewEncoder(tcpConn)
-	proto.DecTCP = gob.NewDecoder(tcpConn)
+	//tcpWPath := filepath.Join(tmpDir, "tcp_w")
+	//tcpW, err := os.Open(tcpWPath)
+	//if err != nil {
+	//	return errors.WithStack(err)
+	//}
+	fmt.Printf("Connected to %q.\n", tcpRPath)
+	proto.EncTCP = gob.NewEncoder(tcpR)
+	//proto.DecTCP = gob.NewDecoder(tcpW)
+
 	// Initialize UDP connection.
-	laddr, err := net.ResolveUDPAddr("udp", "localhost:12345")
+	udpRPath := filepath.Join(tmpDir, "udp_r")
+	udpR, err := os.OpenFile(udpRPath, os.O_RDWR, 0644)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	raddr, err := net.ResolveUDPAddr("udp", "localhost:6666")
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	udpConn, err := net.DialUDP("udp", laddr, raddr)
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	fmt.Println("Connected to:", udpConn.RemoteAddr())
-	proto.EncUDP = gob.NewEncoder(udpConn)
-	proto.DecUDP = gob.NewDecoder(udpConn)
+	//udpWPath := filepath.Join(tmpDir, "udp_w")
+	//udpW, err := os.Open(udpWPath)
+	//if err != nil {
+	//	return errors.WithStack(err)
+	//}
+	fmt.Printf("Connected to %q.\n", udpRPath)
+	proto.EncUDP = gob.NewEncoder(udpR)
+	//proto.DecUDP = gob.NewDecoder(udpW)
 	return nil
 }

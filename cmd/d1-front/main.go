@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"net"
+	"os"
 	"path/filepath"
+	"syscall"
+	"time"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
@@ -16,6 +18,7 @@ import (
 	"github.com/sanctuary/djavul/internal/proto"
 	"github.com/sanctuary/formats/image/cel"
 	"github.com/sanctuary/formats/image/cel/config"
+	"golang.org/x/image/colornames"
 )
 
 func main() {
@@ -37,58 +40,84 @@ func loadImage(path string) (pixel.Picture, error) {
 	return pixel.PictureDataFromImage(img), nil
 }
 
-func listenTCP() {
-	l, err := net.Listen("tcp", "127.0.0.1:6667")
+func listenTCP(tmpDir string) {
+	// Open pipe for writing.
+	//wpath := filepath.Join(tmpDir, "tcp_w")
+	//if err := syscall.Mkfifo(wpath, 0666); err != nil {
+	//	log.Fatalf("%+v", errors.WithStack(err))
+	//}
+	//w, err := os.OpenFile(wpath, os.O_WRONLY, 0666)
+	//if err != nil {
+	//	log.Fatalf("%+v", errors.WithStack(err))
+	//}
+	//defer w.Close()
+	// Open pipe for reading.
+	rpath := filepath.Join(tmpDir, "tcp_r")
+	if err := syscall.Mkfifo(rpath, 0666); err != nil {
+		log.Fatalf("%+v", errors.WithStack(err))
+	}
+	r, err := os.OpenFile(rpath, os.O_RDONLY, 0666)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
-	fmt.Println("Listening on TCP")
+	defer r.Close()
+
+	fmt.Printf("Listening on %q.\n", rpath)
+	dec := gob.NewDecoder(r)
 	for {
-		conn, err := l.Accept()
-		if err != nil {
-			log.Printf("unable to accept connection; %v", err)
-			continue
+		var cmd proto.CommandTCP
+		if err := dec.Decode(&cmd); err != nil {
+			if errors.Cause(err) == io.EOF {
+				fmt.Println("disconnected")
+				dec = gob.NewDecoder(r)
+				continue
+			}
+			log.Fatalf("%+v", errors.WithStack(err))
 		}
-		dec := gob.NewDecoder(conn)
-		for {
-			var cmd proto.CommandTCP
-			if err := dec.Decode(&cmd); err != nil {
-				if errors.Cause(err) == io.EOF {
-					fmt.Println("disconnected")
-					break
-				}
+		switch cmd {
+		case proto.CmdLoadFile:
+			var data proto.LoadFile
+			if err := dec.Decode(&data); err != nil {
 				log.Fatalf("%+v", errors.WithStack(err))
 			}
-			switch cmd {
-			case proto.CmdLoadFile:
-				var data proto.LoadFile
-				if err := dec.Decode(&data); err != nil {
-					log.Fatalf("%+v", errors.WithStack(err))
-				}
-				fmt.Println("recv pkg:", data)
-				ExecLoadFile(&data)
-			}
+			fmt.Println("recv pkg:", data)
+			ExecLoadFile(&data)
 		}
 	}
 }
 
-func listenUDP(win *pixelgl.Window) {
-	addr, err := net.ResolveUDPAddr("udp", "127.0.0.1:6666")
+func listenUDP(win *pixelgl.Window, tmpDir string) {
+	// Open pipe for writing.
+	//wpath := filepath.Join(tmpDir, "udp_w")
+	//if err := syscall.Mkfifo(wpath, 0666); err != nil {
+	//	log.Fatalf("%+v", errors.WithStack(err))
+	//}
+	//w, err := os.OpenFile(wpath, os.O_WRONLY, 0666)
+	//if err != nil {
+	//	log.Fatalf("%+v", errors.WithStack(err))
+	//}
+	//defer w.Close()
+	// Open pipe for reading.
+	rpath := filepath.Join(tmpDir, "udp_r")
+	if err := syscall.Mkfifo(rpath, 0666); err != nil {
+		log.Fatalf("%+v", errors.WithStack(err))
+	}
+	r, err := os.OpenFile(rpath, os.O_RDONLY, 0666)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
-	conn, err := net.ListenUDP("udp", addr)
-	if err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
-	fmt.Println("Listening on UDP")
-	dec := gob.NewDecoder(conn)
+	defer r.Close()
+
+	fmt.Printf("Listening on %q.\n", rpath)
+	dec := gob.NewDecoder(r)
+	frames := 0
+	var start time.Time
 	for {
 		var pkg proto.PacketUDP
 		if err := dec.Decode(&pkg); err != nil {
 			if errors.Cause(err) == io.EOF {
 				fmt.Println("disconnected")
-				dec = gob.NewDecoder(conn)
+				dec = gob.NewDecoder(r)
 				continue
 			}
 			log.Printf("unable to decode UDP packet; %+v", errors.WithStack(err))
@@ -96,10 +125,17 @@ func listenUDP(win *pixelgl.Window) {
 		}
 		fmt.Println("recv cmd:", pkg.Cmd)
 		switch pkg.Cmd {
-		case proto.CmdDrawImage:
-			ExecDrawImage(win, pkg.Data)
 		case proto.CmdUpdateScreen:
 			fmt.Println("recv cmd: UpdateScreen")
+			win.Clear(colornames.Black)
+			ExecDrawImages(win, pkg.Data)
+			if start == (time.Time{}) {
+				start = time.Now()
+			} else {
+				frames++
+				fps := float64(frames) / (float64(time.Since(start)) / float64(time.Second))
+				win.SetTitle(fmt.Sprintf("FPS: %.02f", fps))
+			}
 			win.Update()
 		}
 	}
@@ -123,8 +159,17 @@ func front() error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	go listenUDP(win)
-	listenTCP()
+	// Init temporary directory.
+	const tmpDir = "/tmp/djavul"
+	if err := os.RemoveAll(tmpDir); err != nil {
+		log.Fatalf("%+v", errors.WithStack(err))
+	}
+	if err := os.MkdirAll(tmpDir, 0755); err != nil {
+		log.Fatalf("%+v", errors.WithStack(err))
+	}
+	// Listen on TCP and UDP.
+	go listenUDP(win, tmpDir)
+	listenTCP(tmpDir)
 	return nil
 }
 
@@ -137,33 +182,59 @@ func ExecLoadFile(cmd *proto.LoadFile) {
 	}
 }
 
-func ExecDrawImage(win *pixelgl.Window, data []byte) {
-	var cmd proto.DrawImage
+func ExecDrawImages(win *pixelgl.Window, data []byte) {
+	var cmds []proto.DrawImage
 	dec := gob.NewDecoder(bytes.NewReader(data))
-	if err := dec.Decode(&cmd); err != nil {
-		log.Printf("unable to parse body of LoadFile; %v", errors.WithStack(err))
+	if err := dec.Decode(&cmds); err != nil {
+		log.Printf("unable to parse body of DrawImages; %v", errors.WithStack(err))
 		return
 	}
+	for _, cmd := range cmds {
+		ExecDrawImage(win, cmd)
+	}
+}
+
+func ExecDrawImage(win *pixelgl.Window, cmd proto.DrawImage) {
 	fmt.Println("recv pkg:", cmd)
-	pics := getPictures(cmd.Path)
-	pic := pics[cmd.FrameNum]
-	sprite := pixel.NewSprite(pic, pic.Bounds())
+	sprite := getSprite(cmd.Path, cmd.FrameNum)
 	const screenHeight = 480
-	sprite.Draw(win, pixel.IM.Moved(pic.Bounds().Center().Add(pixel.V(cmd.X, cmd.Y))))
+	frame := sprite.Frame()
+	bounds := pixel.R(0, 0, frame.W(), frame.H())
+	sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixel.V(cmd.X, cmd.Y))))
 }
 
 // ### [ Helper functions ] ####################################################
 
-// pictures maps from relative file path to decoded image frames.
-var pictures = make(map[string][]pixel.Picture)
+// sprites maps from relative file path to sprites, one per frame.
+var sprites = make(map[string][]*pixel.Sprite)
 
-// getPictures returns the pictures associated with the given file path.
-func getPictures(relPath string) []pixel.Picture {
-	pics, ok := pictures[relPath]
+// getSprite returns a sprite of the picture associated with the given file path
+// and frame number.
+func getSprite(relPath string, frameNum int) *pixel.Sprite {
+	name := filepath.Base(relPath)
+	switch name {
+	case "l1.cel":
+		const (
+			frameWidth  = 32
+			frameHeight = 32
+		)
+		pic := l1Sprite.Picture()
+		picBounds := pic.Bounds()
+		frame := l1Sprite.Frame()
+		k := int(picBounds.W() / frameWidth)
+		fmt.Println("k:", k)
+		x := float64(frameWidth * (frameNum % k))
+		y := picBounds.H() - frameHeight - float64(frameHeight*(frameNum/k))
+		frame = pixel.R(x, y, x+frameWidth, y+frameHeight)
+		l1Sprite.Set(pic, frame)
+		return l1Sprite
+	}
+	ss, ok := sprites[relPath]
 	if !ok {
 		panic(fmt.Errorf("unable to locate decoded image frames of %q", relPath))
 	}
-	return pics
+	sprite := ss[frameNum]
+	return sprite
 }
 
 // dirPictures maps from relative file path to decoded image frames based on
@@ -196,9 +267,27 @@ func absPath(relPath string) string {
 	return filepath.Join(mpqDir, relPath)
 }
 
+// l1.cel sprite
+var l1Sprite *pixel.Sprite
+
 // loadPics loads the frames of the given CEL image.
 func loadPics(relPath string) error {
 	name := filepath.Base(relPath)
+	switch name {
+	case "l1.cel":
+		img, err := imgutil.ReadFile("l1.png")
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		pic := pixel.PictureDataFromImage(img)
+		const (
+			frameWidth  = 32
+			frameHeight = 32
+		)
+		frame := pixel.R(0, 0, frameWidth, frameHeight)
+		l1Sprite = pixel.NewSprite(pic, frame)
+		return nil
+	}
 	conf, err := config.Get(name)
 	if err != nil {
 		return errors.Errorf("unable to locate image config for %q; %v", name, err)
@@ -239,11 +328,12 @@ func loadPics(relPath string) error {
 	if err != nil {
 		return errors.Errorf("unable to decode CEL image %q; %v", relPath, err)
 	}
-	var pics []pixel.Picture
+	var ss []*pixel.Sprite
 	for _, img := range imgs {
 		pic := pixel.PictureDataFromImage(img)
-		pics = append(pics, pic)
+		sprite := pixel.NewSprite(pic, pic.Bounds())
+		ss = append(ss, sprite)
 	}
-	pictures[relPath] = pics
+	sprites[relPath] = ss
 	return nil
 }

@@ -1,3 +1,5 @@
+// Stateful connection.
+
 package proto
 
 import (
@@ -24,12 +26,16 @@ var (
 	DecTCP *gob.Decoder
 )
 
+// CommandTCP specifies a TCP command to send to front-end.
 type CommandTCP uint8
 
+// TCP commands.
 const (
+	// CmdLoadFile specifies a file to load.
 	CmdLoadFile CommandTCP = iota + 1
 )
 
+// String returns the string representation of the TCP command.
 func (cmd CommandTCP) String() string {
 	m := map[CommandTCP]string{
 		CmdLoadFile: "CmdLoadFile",
@@ -40,10 +46,12 @@ func (cmd CommandTCP) String() string {
 	return fmt.Sprintf("unknown CommandTCP(%d)", uint(cmd))
 }
 
+// LoadFile specifies a file to load.
 type LoadFile struct {
 	Path string
 }
 
+// SendLoadFile send a load file command to the front-end.
 func SendLoadFile(path string) error {
 	cmd := CmdLoadFile
 	if err := EncTCP.Encode(&cmd); err != nil {

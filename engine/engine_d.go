@@ -285,6 +285,15 @@ func CalcScreenCoords(dstBuf unsafe.Pointer) (screenX, screenY int) {
 	return screenX, screenY
 }
 
+// CalcXY returns the x and y-coordinates based on the given destination buffer.
+func CalcXY(dstBuf unsafe.Pointer) (x, y int) {
+	screenX, screenY := CalcScreenCoords(dstBuf)
+	const screenHeight = 480
+	x = screenX - 64
+	y = screenHeight - 1 - (screenY - 160)
+	return x, y
+}
+
 // pictures maps from relative file path to decoded image frames.
 var pictures = make(map[string][]pixel.Picture)
 
