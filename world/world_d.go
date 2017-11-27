@@ -36,7 +36,7 @@ func drawTopArchesUpperScreen(dstBuf unsafe.Pointer) {
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
-	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+	if err := proto.SendDrawImage(celPathFromDType(), x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
 }
@@ -66,7 +66,7 @@ func drawBottomArchesUpperScreen(dstBuf unsafe.Pointer, drawMasks *uint32) {
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
-	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+	if err := proto.SendDrawImage(celPathFromDType(), x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
 }
@@ -120,7 +120,7 @@ func drawUpperScreen(dstBuf unsafe.Pointer) {
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
-	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+	if err := proto.SendDrawImage(celPathFromDType(), x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
 }
@@ -149,7 +149,7 @@ func drawTopArchesLowerScreen(dstBuf unsafe.Pointer) {
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
-	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+	if err := proto.SendDrawImage(celPathFromDType(), x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
 }
@@ -179,7 +179,7 @@ func drawBottomArchesLowerScreen(dstBuf unsafe.Pointer, drawMasks *uint32) {
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
-	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+	if err := proto.SendDrawImage(celPathFromDType(), x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
 }
@@ -233,7 +233,7 @@ func drawLowerScreen(dstBuf unsafe.Pointer) {
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
-	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+	if err := proto.SendDrawImage(celPathFromDType(), x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
 }

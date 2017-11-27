@@ -4,6 +4,9 @@ package world
 
 import "unsafe"
 
+// TODO: Move global variables to their dedicated source files, based on
+// address.
+
 var (
 	// TileDrawMasks specifies the draw masks used to render transparency of
 	// tiles.

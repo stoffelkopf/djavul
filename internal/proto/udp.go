@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
+	"image"
 
 	"github.com/pkg/errors"
 )
@@ -59,8 +60,8 @@ func (cmd CommandUDP) String() string {
 // DrawImage specifies an image to draw at a given coordinate.
 type DrawImage struct {
 	Path     string
-	X        float64
-	Y        float64
+	Dp       image.Point
+	Sr       image.Rectangle
 	FrameNum int
 }
 
@@ -68,11 +69,23 @@ type DrawImage struct {
 var drawImages []DrawImage
 
 // SendDrawImage send a draw image command to the front-end.
-func SendDrawImage(path string, x, y float64, frameNum int) error {
+func SendDrawImage(path string, x, y int, frameNum int) error {
 	data := DrawImage{
 		Path:     path,
-		X:        x,
-		Y:        y,
+		Dp:       image.Pt(x, y),
+		FrameNum: frameNum,
+	}
+	drawImages = append(drawImages, data)
+	return nil
+}
+
+// SendDrawSubimage send a draw image command to the front-end, for the
+// specified subimage.
+func SendDrawSubimage(path string, x, y int, sr image.Rectangle, frameNum int) error {
+	data := DrawImage{
+		Path:     path,
+		Dp:       image.Pt(x, y),
+		Sr:       sr,
 		FrameNum: frameNum,
 	}
 	drawImages = append(drawImages, data)

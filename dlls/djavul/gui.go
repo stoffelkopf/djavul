@@ -7,12 +7,20 @@ import "C"
 import (
 	"unsafe"
 
+	"github.com/sanctuary/djavul/control"
 	"github.com/sanctuary/djavul/engine"
 	"github.com/sanctuary/djavul/scrollrt"
 	"github.com/sanctuary/djavul/world"
 )
 
 // ### [ Exports ] #############################################################
+
+// --- [ control ] -------------------------------------------------------------
+
+//export DrawPanel
+func DrawPanel(panelX, panelY, width, height, screenX, screenY int) {
+	control.DrawPanel(panelX, panelY, width, height, screenX, screenY)
+}
 
 // --- [ engine ] --------------------------------------------------------------
 

@@ -12,9 +12,9 @@ import (
 
 // Global variables.
 var (
-	// address: 0x525518
-	//
 	// Window is the window handle of the game.
+	//
+	// ref: 0x525518
 	Window = (*w32.HWND)(unsafe.Pointer(uintptr(0x525518)))
 
 	// LightingFlag4 specifies flags used for light effects.

@@ -25,8 +25,8 @@ func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWid
 	file := getFile(celBuf)
 	frameNum := frame - 1
 	const screenHeight = 480
-	x := float64(screenX - 64)
-	y := screenHeight - float64(screenY-160) - 1
+	x := screenX - 64
+	y := screenHeight - (screenY - 160) - 1
 	if err := proto.SendDrawImage(file, x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
@@ -60,8 +60,8 @@ func celDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame
 	relPath := getFile(celBuf)
 	frameNum := frame - 1
 	const screenHeight = 480
-	x := float64(screenX - 64)
-	y := screenHeight - float64(screenY-160) - 1
+	x := screenX - 64
+	y := screenHeight - (screenY - 160) - 1
 	if err := proto.SendDrawImage(relPath, x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
@@ -274,7 +274,7 @@ func celDecodeFrameWithHeaderAndColourHighlight(colour uint8, screenX, screenY i
 
 // ### [ Helper functions ] ####################################################
 
-// CalcScreenCoords returns the screen x and y-coordinates based on the given
+// CalcScreenCoords returns the screen x- and y-coordinates based on the given
 // destination buffer.
 func CalcScreenCoords(dstBuf unsafe.Pointer) (screenX, screenY int) {
 	addr := uintptr(dstBuf)
@@ -285,9 +285,16 @@ func CalcScreenCoords(dstBuf unsafe.Pointer) (screenX, screenY int) {
 	return screenX, screenY
 }
 
-// CalcXY returns the x and y-coordinates based on the given destination buffer.
+// CalcXY returns the x- and y-coordinates based on the given destination
+// buffer.
 func CalcXY(dstBuf unsafe.Pointer) (x, y int) {
 	screenX, screenY := CalcScreenCoords(dstBuf)
+	return XYFromScreenCoords(screenX, screenY)
+}
+
+// XYFromScreenCoords returns the x- and y-coordinates based on the given screen
+// x- and y-coordinates.
+func XYFromScreenCoords(screenX, screenY int) (x, y int) {
 	const screenHeight = 480
 	x = screenX - 64
 	y = screenHeight - 1 - (screenY - 160)

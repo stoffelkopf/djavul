@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
+	"image"
 	"io"
 	"log"
 	"os"
@@ -198,12 +199,38 @@ func ExecDrawImage(win *pixelgl.Window, cmd proto.DrawImage) {
 	fmt.Println("recv pkg:", cmd)
 	sprite := getSprite(cmd.Path, cmd.FrameNum)
 	const screenHeight = 480
-	frame := sprite.Frame()
-	bounds := pixel.R(0, 0, frame.W(), frame.H())
-	sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixel.V(cmd.X, cmd.Y))))
+	if cmd.Sr != image.ZR {
+		pic := sprite.Picture()
+		picBounds := pic.Bounds()
+		frame := pixelRect(picBounds, cmd.Sr)
+		sprite.Set(pic, frame)
+		bounds := pixel.R(0, 0, frame.W(), frame.H())
+		dp := cmd.Dp
+		dp.Y -= int(frame.H()) - 1
+		sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixelVec(dp))))
+	} else {
+		frame := sprite.Frame()
+		bounds := pixel.R(0, 0, frame.W(), frame.H())
+		sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixelVec(cmd.Dp))))
+	}
 }
 
 // ### [ Helper functions ] ####################################################
+
+// pixelRect returns the Pixel rectangle corresponding to the given Go image
+// rectangle.
+func pixelRect(picBounds pixel.Rect, r image.Rectangle) pixel.Rect {
+	frameWidth := float64(r.Dx())
+	frameHeight := float64(r.Dy())
+	x := float64(r.Min.X)
+	y := picBounds.H() - frameHeight - float64(r.Min.Y)
+	return pixel.R(x, y, x+frameWidth, y+frameHeight)
+}
+
+// pixelVec returns the Pixel vector corresponding to the given Go image point.
+func pixelVec(pt image.Point) pixel.Vec {
+	return pixel.V(float64(pt.X), float64(pt.Y))
+}
 
 // sprites maps from relative file path to sprites, one per frame.
 var sprites = make(map[string][]*pixel.Sprite)
