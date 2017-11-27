@@ -41,6 +41,36 @@ func drawTopArchesUpperScreen(dstBuf unsafe.Pointer) {
 	}
 }
 
+// drawBottomArchesUpperScreen draws arches on the upper screen, with added
+// transparency.
+//
+// ref: 0x46468D
+func drawBottomArchesUpperScreen(dstBuf unsafe.Pointer, drawMasks *uint32) {
+	// TODO: Figure out how to handle drawMasks.
+	x, y := engine.CalcXY(dstBuf)
+	var frameNum int
+	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
+		if *LevelCelBlock&0x8000 != 0 {
+			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+			// TODO: Figure out how to handle light index.
+			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+		} else {
+			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			// TODO: Figure out how to handle light index.
+			//lightEntry := &LightTable[256*LightTableIndex]
+		}
+	} else {
+		block := *LevelCelBlock
+		if block&0x8000 != 0 {
+			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+		}
+		frameNum = int(block&0xFFF) - 1
+	}
+	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+		log.Fatalf("%+v", err)
+	}
+}
+
 // ref: 0x4652C5
 func drawUpperScreen(dstBuf unsafe.Pointer) {
 	if *CelTransparencyActive != 0 {
@@ -55,8 +85,7 @@ func drawUpperScreen(dstBuf unsafe.Pointer) {
 				//
 				//     /
 				//    /
-				// TODO: uncomment
-				//drawBottomArchesUpperScreen(dstBuf, &dword_4B32FD[31])
+				drawBottomArchesUpperScreen(dstBuf, &TileDrawMasks[63])
 				return
 			}
 		case 2:
@@ -66,8 +95,7 @@ func drawUpperScreen(dstBuf unsafe.Pointer) {
 				//
 				//     \
 				//      \
-				// TODO: uncomment
-				//drawBottomArchesUpperScreen(dstBuf, &dword_4B327D[31])
+				drawBottomArchesUpperScreen(dstBuf, &TileDrawMasks[31])
 				return
 			}
 		}
@@ -97,13 +125,71 @@ func drawUpperScreen(dstBuf unsafe.Pointer) {
 	}
 }
 
+// drawTopArchesLowerScreen draws arches on the lower screen, with added
+// transparency.
+//
+// ref: 0x465F38
+func drawTopArchesLowerScreen(dstBuf unsafe.Pointer) {
+	x, y := engine.CalcXY(dstBuf)
+	var frameNum int
+	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
+		if *LevelCelBlock&0x8000 != 0 {
+			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+			// TODO: Figure out how to handle light index.
+			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+		} else {
+			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			// TODO: Figure out how to handle light index.
+			//lightEntry := &LightTable[256*LightTableIndex]
+		}
+	} else {
+		block := *LevelCelBlock
+		if block&0x8000 != 0 {
+			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+		}
+		frameNum = int(block&0xFFF) - 1
+	}
+	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+		log.Fatalf("%+v", err)
+	}
+}
+
+// drawBottomArchesLowerScreen draws arches on the lower screen, with added
+// transparency.
+//
+// ref: 0x467949
+func drawBottomArchesLowerScreen(dstBuf unsafe.Pointer, drawMasks *uint32) {
+	// TODO: Figure out how to handle drawMasks.
+	x, y := engine.CalcXY(dstBuf)
+	var frameNum int
+	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
+		if *LevelCelBlock&0x8000 != 0 {
+			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+			// TODO: Figure out how to handle light index.
+			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+		} else {
+			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			// TODO: Figure out how to handle light index.
+			//lightEntry := &LightTable[256*LightTableIndex]
+		}
+	} else {
+		block := *LevelCelBlock
+		if block&0x8000 != 0 {
+			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+		}
+		frameNum = int(block&0xFFF) - 1
+	}
+	if err := proto.SendDrawImage(celPathFromDType(), float64(x), float64(y), frameNum); err != nil {
+		log.Fatalf("%+v", err)
+	}
+}
+
 // ref: 0x46886B
 func drawLowerScreen(dstBuf unsafe.Pointer) {
 	if *CelTransparencyActive != 0 {
 		switch *LevelArchTypeSomething {
 		case 0:
-			// TODO: Uncomment.
-			//drawTopArchesLowerScreen(dstBuf)
+			drawTopArchesLowerScreen(dstBuf)
 			return
 		case 1:
 			solid := Solid_0x10_0x20_0x40_FromPieceID[*LevelPieceID]
@@ -112,8 +198,7 @@ func drawLowerScreen(dstBuf unsafe.Pointer) {
 				//
 				//     /
 				//    /
-				// TODO: Uncomment.
-				//drawBottomArchesLowerScreen(dst_buf, &dword_4B32FD[31])
+				drawBottomArchesLowerScreen(dstBuf, &TileDrawMasks[63])
 				return
 			}
 		case 2:
@@ -123,8 +208,7 @@ func drawLowerScreen(dstBuf unsafe.Pointer) {
 				//
 				//    \
 				//     \
-				// TODO: Uncomment.
-				//drawBottomArchesLowerScreen(dst_buf, &dword_4B327D[31])
+				drawBottomArchesLowerScreen(dstBuf, &TileDrawMasks[31])
 				return
 			}
 		}

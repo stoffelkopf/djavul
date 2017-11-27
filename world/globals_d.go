@@ -5,6 +5,12 @@ package world
 import "unsafe"
 
 var (
+	// TileDrawMasks specifies the draw masks used to render transparency of
+	// tiles.
+	//
+	// ref: 0x4B327D
+	TileDrawMasks = (*[96]uint32)(unsafe.Pointer(uintptr(0x4B327D)))
+
 	// Solid_0x10_0x20_0x40_FromPieceID maps from dungeon piece ID to solidity
 	// with mask 0x70.
 	//
