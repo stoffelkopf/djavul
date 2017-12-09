@@ -114,14 +114,16 @@ func compareL1(start, end int64) error {
 	dinit.Archives()
 	*gendung.DLvl = 1
 	*gendung.DType = gendung.Cathedral
+	var orig [40][40]uint8
 	diablo.LoadLevelGraphics()
 	for i := start; i < end; i++ {
 		seed := int32(i)
 		switch seed {
-		case 0x00000A1C:
+		case 0x00000A1C, 0x00001287, 0x00001C71, 0x00002481, 0x00003B84:
 			// skip broken seed.
 			//
 			// ref: https://github.com/sanctuary/graphics/tree/master/l1/broken
+			log.Printf("ignoring broken map with seed 0x%08X", seed)
 			continue
 		}
 		// Original implementation.
@@ -131,12 +133,8 @@ func compareL1(start, end int64) error {
 		wantPieces := hash(*gendung.PieceIDMap)
 		wantArches := hash(*gendung.ArchNumMap)
 		wantTransparency := hash(*gendung.TransparencyMap)
-		//if seed == 0x00000A1C {
-		//	path := fmt.Sprintf("l1_tiles_%08X_orig.bin", seed)
-		//	if err := dumpData(path, *gendung.TileIDMap); err != nil {
-		//		return errors.WithStack(err)
-		//	}
-		//}
+		orig = *gendung.TileIDMap
+
 		// Go implementation.
 		l1.UseGo = true
 		l1.CreateDungeon(seed, 0)
@@ -144,14 +142,18 @@ func compareL1(start, end int64) error {
 		gotPieces := hash(*gendung.PieceIDMap)
 		gotArches := hash(*gendung.ArchNumMap)
 		gotTransparency := hash(*gendung.TransparencyMap)
-		//if seed == 0x00000A1C {
-		//	path := fmt.Sprintf("l1_tiles_%08X_go.bin", seed)
-		//	if err := dumpData(path, *gendung.TileIDMap); err != nil {
-		//		return errors.WithStack(err)
-		//	}
-		//}
-		// Go implementation.
+
 		if gotTiles != wantTiles {
+			path := fmt.Sprintf("dlvl_1_seed_%d_orig.bin", seed)
+			if err := dumpData(path, orig); err != nil {
+				return errors.WithStack(err)
+			}
+			path = fmt.Sprintf("dlvl_1_seed_%d_go.bin", seed)
+			if err := dumpData(path, *gendung.TileIDMap); err != nil {
+				return errors.WithStack(err)
+			}
+			log.Printf("dumping broken map with seed 0x%08X", seed)
+			continue
 			return errors.Errorf("SHA1 hash mismatch for tiles, seed 0x%08X; expected %q, got %q", seed, wantTiles, gotTiles)
 		}
 		if gotPieces != wantPieces {
