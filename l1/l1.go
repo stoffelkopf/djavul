@@ -755,7 +755,13 @@ func generateFirstRoom() {
 func addRoom(xxStart, yyStart, xxCount, yyCount int) {
 	for yyDelta := 0; yyDelta < yyCount; yyDelta++ {
 		for xxDelta := 0; xxDelta < xxCount; xxDelta++ {
-			gendung.TileIDMap[xxStart+xxDelta][yyStart+yyDelta] = uint8(WallSw)
+			xx := xxStart + xxDelta
+			yy := yyStart + yyDelta
+			// NOTE: The original implementation contains an out-of-bounds access
+			// invoked from GenerateRoom.
+			if xx >= 0 && xx < 40 && yy >= 0 && yy < 40 {
+				gendung.TileIDMap[xx][yy] = uint8(WallSw)
+			}
 		}
 	}
 }
