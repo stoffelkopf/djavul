@@ -121,6 +121,9 @@ import (
 const (
 	// useGo specifies whether to use the Go implementation.
 	useGo = true
+)
+
+var (
 	// UseGUI specifies whether to use the Go GUI implementation.
 	UseGUI = true
 )
@@ -488,17 +491,19 @@ func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 	if size != nil {
 		*size = n
 	}
-	file := goPath(path)
-	if err := proto.SendLoadFile(file); err != nil {
-		log.Fatalf("%+v", err)
-	}
-	files[addr] = file
+	if UseGUI {
+		file := goPath(path)
+		if err := proto.SendLoadFile(file); err != nil {
+			log.Fatalf("%+v", err)
+		}
+		files[addr] = file
 
-	// TODO: Repace with binary search.
-	start := uintptr(addr)
-	end := start + uintptr(n)
-	for i := start; i < end; i++ {
-		files[unsafe.Pointer(i)] = file
+		// TODO: Repace with binary search.
+		start := uintptr(addr)
+		end := start + uintptr(n)
+		for i := start; i < end; i++ {
+			files[unsafe.Pointer(i)] = file
+		}
 	}
 	return addr
 }

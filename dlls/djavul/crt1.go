@@ -20,25 +20,41 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/AllenDang/w32"
 	"github.com/sanctuary/djavul/diablo"
+	"github.com/sanctuary/djavul/engine"
 )
 
 //export Start
 func Start() {
 	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
-	if err := initFrontConn(); err != nil {
-		log.Fatalf("%+v", err)
-	}
-	winGUI()
+
+	// Parse command line flags.
+	var (
+		start, end int64
+	)
+	flag.Int64Var(&start, "start", 0, "first seed")
+	flag.Int64Var(&end, "end", 256, "last seed")
+	flag.Parse()
+
+	//if err := initFrontConn(); err != nil {
+	//	log.Fatalf("%+v", err)
+	//}
+	//winGUI()
+
 	//l1.UseGo = false
 	//dumpL1Maps()
-	//if err := compareL1(); err != nil {
-	//	log.Fatalf("+%v", err)
-	//}
+
+	engine.UseGUI = false
+	if err := compareL1(start, end); err != nil {
+		log.Fatalf("+%v", err)
+	}
+	os.Exit(0)
+
 	//if err := checkL1Regular(); err != nil {
 	//	log.Fatalf("%+v", err)
 	//}

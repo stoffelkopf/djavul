@@ -110,12 +110,13 @@ func dumpData(path string, data interface{}) error {
 
 // compareL1 compares the original and the Go implementation of the dynamic
 // random level generation of Cathedral maps against one another.
-func compareL1() error {
+func compareL1(start, end int64) error {
 	dinit.Archives()
 	*gendung.DLvl = 1
 	*gendung.DType = gendung.Cathedral
 	diablo.LoadLevelGraphics()
-	for seed := int32(0); seed <= 255; seed++ {
+	for i := start; i < end; i++ {
+		seed := int32(i)
 		// Original implementation.
 		l1.UseGo = false
 		l1.CreateDungeon(seed, 0)
@@ -143,7 +144,7 @@ func compareL1() error {
 			return errors.Errorf("SHA1 hash mismatch for transparency, seed 0x%08X; expected %q, got %q", seed, wantTransparency, gotTransparency)
 		}
 	}
-	fmt.Println("PASS")
+	fmt.Printf("PASS %08X - %08X\n", start, end)
 	return nil
 }
 

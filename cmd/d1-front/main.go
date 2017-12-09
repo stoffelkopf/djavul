@@ -160,6 +160,7 @@ func front() error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
+	//win.Clear(colornames.Black)
 	// Init temporary directory.
 	const tmpDir = "/tmp/djavul"
 	if err := os.RemoveAll(tmpDir); err != nil {

@@ -177,7 +177,7 @@ var (
 	PatternLookup = new([16]TileID)
 
 	// TileBitMap represents a tile ID map of twice the size, repeating each tile
-	// of the original map in blocks of 4.
+	// of the original map in blocks of 2x2.
 	//
 	// PSX ref: 0x8013A3B0
 	// PSX def: unsigned char L5dungeon[80][80]
