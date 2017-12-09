@@ -51,7 +51,7 @@ func Start() {
 
 	engine.UseGUI = false
 	if err := compareL1(start, end); err != nil {
-		log.Fatalf("+%v", err)
+		log.Fatalf("%+v", err)
 	}
 	os.Exit(0)
 
