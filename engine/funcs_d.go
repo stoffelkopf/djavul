@@ -85,9 +85,9 @@ package engine
 //    f(colour, screen_x, screen_y, cel_buf, frame, frame_width, a7, direction);
 // }
 //
-// static void __fastcall engine_set_seed(int32_t x) {
+// static void __fastcall engine_set_seed(int32_t s) {
 //    void (__fastcall *f)(int32_t) = (void *)0x417518;
-//    f(x);
+//    f(s);
 // }
 //
 // static int32_t engine_rand() {
@@ -417,17 +417,17 @@ func CelDecodeFrameWithHeaderAndColourHighlight(colour uint8, screenX, screenY i
 	C.engine_cel_decode_frame_with_header_and_colour_highlight(C.uint8_t(colour), C.int(screenX), C.int(screenY), (*C.uint8_t)(celBuf), C.int(frame), C.int(frameWidth), C.int(a7), C.int(direction))
 }
 
-// SetSeed sets the global seed to x.
+// SetSeed sets the global seed to s.
 //
 // PSX ref: 0x8003DACC
 // PSX def: void SetRndSeed__Fl(long s)
 //
 // ref: 0x417518
-func SetSeed(x int32) {
+func SetSeed(s int32) {
 	if useGo {
-		setSeed(x)
+		setSeed(s)
 	} else {
-		C.engine_set_seed(C.int32_t(x))
+		C.engine_set_seed(C.int32_t(s))
 	}
 }
 

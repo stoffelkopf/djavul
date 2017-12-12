@@ -24,16 +24,16 @@ import (
 	"github.com/pkg/errors"
 )
 
-// setSeed sets the global seed to x.
+// setSeed sets the global seed to s.
 //
 // PSX ref: 0x8003DACC
 // PSX def: void SetRndSeed__Fl(long s)
 //
 // ref: 0x417518
-func setSeed(x int32) {
+func setSeed(s int32) {
 	*SeedCount = 0
-	*Seed = x
-	*InitialSeed = x
+	*Seed = s
+	*InitialSeed = s
 }
 
 // rand returns a non-negative pseudo-random integer in [0, 2^31), using the
@@ -119,11 +119,11 @@ func goPath(path unsafe.Pointer) string {
 	return strings.ToLower(p)
 }
 
-// abs returns the absolute value of x.
-func abs(x int32) int32 {
+// abs returns the absolute value of v.
+func abs(v int32) int32 {
 	// TODO: Figure out how to handle the most negative value.
-	if x < 0 {
-		return -x
+	if v < 0 {
+		return -v
 	}
-	return x
+	return v
 }
