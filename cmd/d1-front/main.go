@@ -200,20 +200,18 @@ func ExecDrawImage(win *pixelgl.Window, cmd proto.DrawImage) {
 	fmt.Println("recv pkg:", cmd)
 	sprite := getSprite(cmd.Path, cmd.FrameNum)
 	const screenHeight = 480
+	dp := cmd.Dp
+	dp.Y = screenHeight - 1 - dp.Y
+	frame := sprite.Frame()
 	if cmd.Sr != image.ZR {
 		pic := sprite.Picture()
 		picBounds := pic.Bounds()
-		frame := pixelRect(picBounds, cmd.Sr)
+		frame = pixelRect(picBounds, cmd.Sr)
 		sprite.Set(pic, frame)
-		bounds := pixel.R(0, 0, frame.W(), frame.H())
-		dp := cmd.Dp
-		dp.Y -= int(frame.H()) - 1
-		sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixelVec(dp))))
-	} else {
-		frame := sprite.Frame()
-		bounds := pixel.R(0, 0, frame.W(), frame.H())
-		sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixelVec(cmd.Dp))))
+		dp.Y -= int(frame.H())
 	}
+	bounds := pixel.R(0, 0, frame.W(), frame.H())
+	sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixelVec(dp))))
 }
 
 // ### [ Helper functions ] ####################################################

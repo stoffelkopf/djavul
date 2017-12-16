@@ -24,9 +24,7 @@ import (
 func celDecodeFrame(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth int) {
 	file := getFile(celBuf)
 	frameNum := frame - 1
-	const screenHeight = 480
-	x := screenX - 64
-	y := screenHeight - (screenY - 160) - 1
+	x, y := XYFromScreenCoords(screenX, screenY)
 	if err := proto.SendDrawImage(file, x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
@@ -59,9 +57,7 @@ func celDecodeFrameIntoBuf(dstBuf, celBuf unsafe.Pointer, frame, frameWidth int)
 func celDecodeFrameWithHeader(screenX, screenY int, celBuf unsafe.Pointer, frame, frameWidth, always0, direction int) {
 	relPath := getFile(celBuf)
 	frameNum := frame - 1
-	const screenHeight = 480
-	x := screenX - 64
-	y := screenHeight - (screenY - 160) - 1
+	x, y := XYFromScreenCoords(screenX, screenY)
 	if err := proto.SendDrawImage(relPath, x, y, frameNum); err != nil {
 		log.Fatalf("%+v", err)
 	}
@@ -295,9 +291,8 @@ func CalcXY(dstBuf unsafe.Pointer) (x, y int) {
 // XYFromScreenCoords returns the x- and y-coordinates based on the given screen
 // x- and y-coordinates.
 func XYFromScreenCoords(screenX, screenY int) (x, y int) {
-	const screenHeight = 480
 	x = screenX - 64
-	y = screenHeight - 1 - (screenY - 160)
+	y = screenY - 160
 	return x, y
 }
 

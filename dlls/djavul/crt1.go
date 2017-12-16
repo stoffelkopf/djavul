@@ -25,7 +25,6 @@ import (
 
 	"github.com/AllenDang/w32"
 	"github.com/sanctuary/djavul/diablo"
-	"github.com/sanctuary/djavul/engine"
 )
 
 //export Start
@@ -34,26 +33,24 @@ func Start() {
 	cinit()
 
 	// Parse command line flags.
-	var (
-		start, end int64
-	)
-	flag.Int64Var(&start, "start", 0, "first seed")
-	flag.Int64Var(&end, "end", 256, "last seed")
-	flag.Parse()
-
-	//if err := initFrontConn(); err != nil {
+	//var (
+	//	start, end int64
+	//)
+	//flag.Int64Var(&start, "start", 0, "first seed")
+	//flag.Int64Var(&end, "end", 256, "last seed")
+	//flag.Parse()
+	//engine.UseGUI = false
+	//if err := compareL1(start, end); err != nil {
 	//	log.Fatalf("%+v", err)
 	//}
-	//winGUI()
+
+	if err := initFrontConn(); err != nil {
+		log.Fatalf("%+v", err)
+	}
+	winGUI()
 
 	//l1.UseGo = false
 	//dumpL1Maps()
-
-	engine.UseGUI = false
-	if err := compareL1(start, end); err != nil {
-		log.Fatalf("%+v", err)
-	}
-	os.Exit(0)
 
 	//if err := checkL1Regular(); err != nil {
 	//	log.Fatalf("%+v", err)
@@ -61,8 +58,7 @@ func Start() {
 	//if err := checkL1Quest(); err != nil {
 	//	log.Fatalf("%+v", err)
 	//}
-	//os.Exit(0)
-	//return
+	os.Exit(0)
 }
 
 // winGUI initializes the Windows GUI.
