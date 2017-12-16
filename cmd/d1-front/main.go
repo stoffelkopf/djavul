@@ -19,7 +19,6 @@ import (
 	"github.com/sanctuary/djavul/internal/proto"
 	"github.com/sanctuary/formats/image/cel"
 	"github.com/sanctuary/formats/image/cel/config"
-	"golang.org/x/image/colornames"
 )
 
 func main() {
@@ -128,7 +127,7 @@ func listenUDP(win *pixelgl.Window, tmpDir string) {
 		switch pkg.Cmd {
 		case proto.CmdUpdateScreen:
 			fmt.Println("recv cmd: UpdateScreen")
-			win.Clear(colornames.Black)
+			//win.Clear(colornames.Black)
 			ExecDrawImages(win, pkg.Data)
 			if start == (time.Time{}) {
 				start = time.Now()

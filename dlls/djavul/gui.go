@@ -111,9 +111,9 @@ func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 
 // --- [ scrollrt ] ------------------------------------------------------------
 
-//export DrawMainW
-func DrawMainW() {
-	scrollrt.DrawMainW()
+//export DrawMain
+func DrawMain(height int, updateDescriptionBox, updateLifeOrb, updateManaOrb, updateBelt, updateControlButtons bool) {
+	scrollrt.DrawMain(height, updateDescriptionBox, updateLifeOrb, updateManaOrb, updateBelt, updateControlButtons)
 }
 
 // --- [ world ] ---------------------------------------------------------------
