@@ -19,6 +19,12 @@ To achieve this aim, the following objectives have been identified.
 
 ## Progress
 
+2017-12-16
+
+* Render control panel.
+
+![Screenshot from 2017-12-16](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-12-16.png)
+
 2017-11-22
 
 * Correct rendering of Tristram.
