@@ -9,6 +9,7 @@ import (
 
 	"github.com/sanctuary/djavul/control"
 	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/multi"
 	"github.com/sanctuary/djavul/scrollrt"
 	"github.com/sanctuary/djavul/world"
 )
@@ -107,6 +108,13 @@ func CelDecodeFrameWithHeaderAndColourHighlight(colour uint8, screenX, screenY i
 //export MemLoadFile
 func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 	return engine.MemLoadFile(path, size)
+}
+
+// --- [ multi ] ---------------------------------------------------------------
+
+//export ProcessNetworkPackets
+func ProcessNetworkPackets() {
+	multi.ProcessNetworkPackets()
 }
 
 // --- [ scrollrt ] ------------------------------------------------------------

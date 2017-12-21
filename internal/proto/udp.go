@@ -39,10 +39,21 @@ type CommandUDP uint8
 
 // UDP commands.
 const (
+	// Engine events.
+
 	// CmdDrawImage specifies an image to draw.
 	CmdDrawImage CommandUDP = iota + 1
 	// CmdUpdateScreen specifies that the screen should be updated.
 	CmdUpdateScreen
+
+	// Front-end actions.
+
+	// CmdButtonPressedAction specifies a mouse button or keyboard key pressed on
+	// the front-end.
+	CmdButtonPressedAction
+	// CmdButtonPressedAction specifies a mouse button or keyboard key released
+	// on the front-end.
+	CmdButtonReleasedAction
 )
 
 // String returns the string representation of the UDP command.
