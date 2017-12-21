@@ -4,6 +4,7 @@ package multi
 
 import (
 	"fmt"
+	"image"
 	"time"
 
 	"github.com/AllenDang/w32"
@@ -21,13 +22,14 @@ func processNetworkPackets() {
 	for {
 		select {
 		case <-timer.C:
-			//fmt.Println("timeout")
+			//dbg.Println("timeout")
 			return
 		case action := <-proto.Actions:
 			switch action := action.(type) {
 			case proto.ButtonPressedAction:
 				button := pixelgl.Button(action.Button)
-				fmt.Printf("button pressed: %v at %dx%d\n", button, action.X, action.Y)
+				pos := image.Pt(int(action.X), int(action.Y))
+				dbg.Printf("button pressed: %v at %v", button, pos)
 				if isMouseButton(button) {
 					// handle mouse button click.
 					*diablo.MouseX = action.X
@@ -41,13 +43,13 @@ func processNetworkPackets() {
 					}
 				} else if keysym, ok := keyboardKey(button); ok {
 					// handle key press.
-					fmt.Println("   key press:", keysym)
 					diablo.OnKeyPress(keysym)
 					diablo.OnCharPress(keysym)
 				}
 			case proto.ButtonReleasedAction:
 				button := pixelgl.Button(action.Button)
-				fmt.Printf("button released: %v at %dx%d\n", button, action.X, action.Y)
+				pos := image.Pt(int(action.X), int(action.Y))
+				dbg.Printf("button released: %v at %v", button, pos)
 				if isMouseButton(button) {
 					// handle mouse button click.
 					*diablo.MouseX = action.X
