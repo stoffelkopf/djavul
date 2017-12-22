@@ -19,6 +19,12 @@ To achieve this aim, the following objectives have been identified.
 
 ## Progress
 
+2017-12-22
+
+* Play sounds using Beep.
+
+![Screenshot from 2017-12-22](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-12-22.png)
+
 2017-12-21
 
 * Forward mouse and keyboard input from Djavul front-end to Diablo 1 game engine.
