@@ -11,7 +11,7 @@ go get github.com/sanctuary/djavul/cmd/sv
 ## Usage
 
 ```bash
-# Decode the contents of the `game` save file.
+# Decode the contents of a single player `game` save file.
 $ sv game | hexdump -C
 
 00000000  52 45 54 4c 00 00 00 00  00 00 00 00 00 00 00 00  |RETL............|
@@ -23,10 +23,10 @@ $ sv game | hexdump -C
 ```
 
 ```bash
-# Decode the contents of the `hero` save file.
-$ sv hero | hexdump -C
+# Decode the contents of a multi player `hero` save file.
+$ sv -p szqnlsk1 hero | hexdump -C
 
-00000000  00 00 00 00 00 00 00 00  ff 00 00 00 4b 44 4b 44  |............KDKD|
-00000010  61 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |a...............|
+00000000  00 00 00 00 00 00 00 00  ff 00 00 00 49 41 49 41  |............IAIA|
+00000010  66 6f 6f 62 61 72 00 00  00 00 00 00 00 00 00 00  |foobar..........|
 ...
 ```
