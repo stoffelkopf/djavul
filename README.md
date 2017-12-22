@@ -19,37 +19,42 @@ To achieve this aim, the following objectives have been identified.
 
 ## Progress
 
-2017-12-22
+### 2017-12-23
+
+* Decode legacy Diablo 1 save files.
+    - [cmd/sv](cmd/sv)
+
+### 2017-12-22
 
 * Play sounds using Beep.
 
 ![Screenshot from 2017-12-22](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-12-22.png)
 
-2017-12-21
+### 2017-12-21
 
 * Forward mouse and keyboard input from Djavul front-end to Diablo 1 game engine.
 
 ![Screenshot from 2017-12-21](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-12-21.png)
 
-2017-12-16
+### 2017-12-16
 
 * Render control panel.
 
 ![Screenshot from 2017-12-16](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-12-16.png)
 
-2017-11-24
+### 2017-11-24
 
 * Correct rendering of Tristram.
 
 ![Screenshot from 2017-11-24](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-11-24.png)
 
-2017-11-22
+### 2017-11-22
 
 * Mirror output using Pixel.
 
 ![Screenshot from 2017-11-22](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-11-22.png)
 
-2017-11-13
+### 2017-11-13
 
 * Dungeon generation for Cathedral.
     - [cmd/l1](cmd/l1)
