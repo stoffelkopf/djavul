@@ -130,6 +130,12 @@ type HeroItem struct { // size = 0x13
 // PlayerClass specifies the class of a player.
 type PlayerClass uint8
 
+// MarshalText encodes the receiver into UTF-8-encoded text and returns the
+// result.
+func (c PlayerClass) MarshalText() ([]byte, error) {
+	return []byte(c.String()), nil
+}
+
 // Player classes.
 const (
 	PlayerClassWarrior  PlayerClass = 0 // Warrior
@@ -140,7 +146,13 @@ const (
 //go:generate stringer -linecomment -type ItemID
 
 // ItemID represents the set of items.
-type ItemID uint16
+type ItemID int16
+
+// MarshalText encodes the receiver into UTF-8-encoded text and returns the
+// result.
+func (i ItemID) MarshalText() ([]byte, error) {
+	return []byte(i.String()), nil
+}
 
 // Item IDs.
 const (
@@ -301,6 +313,7 @@ const (
 	ItemIDBaseAmuletQlvl8              ItemID = 154 // Amulet Qlvl 8 (base item)
 	ItemIDBaseAmuletQlvl16             ItemID = 155 // Amulet Qlvl 16 (base item)
 	ItemIDNull14                       ItemID = 156 // Null 14
+	ItemIDNone                         ItemID = -1  // None
 )
 
 // ### [ Helper functions ] ####################################################
