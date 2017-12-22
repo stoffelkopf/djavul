@@ -45,7 +45,7 @@ $ sv -json hero
     "TargetX": 75,
     "TargetY": 68,
     "Name": "a",
-    "PlayerClass": 0,
+    "PlayerClass": "Warrior",
     "StrBase": 30,
     "MagBase": 10,
     "DexBase": 20,
@@ -69,7 +69,7 @@ $ sv -json hero
         {
             "Seed": 1217677573,
             "CF": 0,
-            "ItemID": 1,
+            "ItemID": "Short Sword",
             "IdentifiedAndItemQuality": 0,
             "DurabilityCur": 20,
             "DurabilityMax": 20,
@@ -81,7 +81,7 @@ $ sv -json hero
         {
             "Seed": 441146358,
             "CF": 0,
-            "ItemID": 2,
+            "ItemID": "Buckler",
             "IdentifiedAndItemQuality": 0,
             "DurabilityCur": 10,
             "DurabilityMax": 10,
@@ -95,7 +95,7 @@ $ sv -json hero
         {
             "Seed": 1306853907,
             "CF": 0,
-            "ItemID": 3,
+            "ItemID": "Club",
             "IdentifiedAndItemQuality": 0,
             "DurabilityCur": 20,
             "DurabilityMax": 20,
@@ -107,7 +107,7 @@ $ sv -json hero
         {
             "Seed": 808692058,
             "CF": 0,
-            "ItemID": 0,
+            "ItemID": "Gold",
             "IdentifiedAndItemQuality": 0,
             "DurabilityCur": 0,
             "DurabilityMax": 0,
@@ -126,7 +126,7 @@ $ sv -json hero
         {
             "Seed": 1262929936,
             "CF": 0,
-            "ItemID": 24,
+            "ItemID": "Potion of Healing",
             "IdentifiedAndItemQuality": 0,
             "DurabilityCur": 0,
             "DurabilityMax": 0,
@@ -138,7 +138,7 @@ $ sv -json hero
         {
             "Seed": 1942205617,
             "CF": 0,
-            "ItemID": 24,
+            "ItemID": "Potion of Healing",
             "IdentifiedAndItemQuality": 0,
             "DurabilityCur": 0,
             "DurabilityMax": 0,
