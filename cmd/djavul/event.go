@@ -12,6 +12,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/faiface/beep/speaker"
+	"github.com/faiface/beep/wav"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"github.com/pkg/errors"
@@ -262,6 +264,9 @@ func relayEngineUnstableEvents(tmpDir string, win *pixelgl.Window, gameEvents ch
 				win.SetTitle(fmt.Sprintf("FPS: %.02f", fps))
 			}
 			win.Update()
+		case proto.CmdPlaySound:
+			//fmt.Println("recv cmd: PlaySound")
+			ExecPlaySound(pkg.Data)
 		}
 	}
 }
@@ -305,6 +310,34 @@ func ExecDrawImage(win *pixelgl.Window, cmd proto.DrawImage) {
 	}
 	bounds := pixel.R(0, 0, frame.W(), frame.H())
 	sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixelVec(dp))))
+}
+
+func ExecPlaySound(data []byte) {
+	var cmd proto.PlaySound
+	dec := gob.NewDecoder(bytes.NewReader(data))
+	if err := dec.Decode(&cmd); err != nil {
+		log.Printf("unable to parse body of PlaySound; %v", errors.WithStack(err))
+		return
+	}
+	dbg.Println("play sound:", cmd.Path)
+	playSound(cmd.Path)
+}
+
+func playSound(relPath string) {
+	// TODO: Refactor such that the sound system is only initialized once, and
+	// that files are closed once the sound is done playing (perhaps using a Seq
+	// with Close in the Callback function.)
+	path := absPath(relPath)
+	f, err := os.Open(path)
+	if err != nil {
+		die(err)
+	}
+	s, format, err := wav.Decode(f)
+	if err != nil {
+		die(err)
+	}
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+	speaker.Play(s)
 }
 
 // ### [ Helper functions ] ####################################################

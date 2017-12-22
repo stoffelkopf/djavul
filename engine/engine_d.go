@@ -7,7 +7,6 @@ import (
 	"log"
 	"unsafe"
 
-	"github.com/faiface/pixel"
 	"github.com/sanctuary/djavul/dx"
 	"github.com/sanctuary/djavul/internal/proto"
 )
@@ -294,36 +293,4 @@ func XYFromScreenCoords(screenX, screenY int) (x, y int) {
 	x = screenX - 64
 	y = screenY - 160
 	return x, y
-}
-
-// pictures maps from relative file path to decoded image frames.
-var pictures = make(map[string][]pixel.Picture)
-
-// getPictures returns the pictures associated with the given file path.
-func getPictures(relPath string) []pixel.Picture {
-	pics, ok := pictures[relPath]
-	if !ok {
-		panic(fmt.Errorf("unable to locate decoded image frames of %q", relPath))
-	}
-	return pics
-}
-
-// dirPictures maps from relative file path to decoded image frames based on
-// direction.
-var dirPictures = make(map[string][][]pixel.Picture)
-
-// getPicturesForDir returns the pictures associated with the given file path
-// and direction.
-func getPicturesForDir(relPath string, direction int) []pixel.Picture {
-	dirPics, ok := dirPictures[relPath]
-	if !ok {
-		panic(fmt.Errorf("unable to locate decoded image frames of %q", relPath))
-	}
-	if direction == 8 {
-		direction = 0
-	}
-	if len(dirPics) <= direction {
-		panic(fmt.Errorf("invalid direction for %q; expected < %d, got %d", relPath, len(dirPics), direction))
-	}
-	return dirPics[direction]
 }

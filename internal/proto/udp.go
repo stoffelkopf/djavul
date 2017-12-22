@@ -45,6 +45,8 @@ const (
 	CmdDrawImage CommandUDP = iota + 1
 	// CmdUpdateScreen specifies that the screen should be updated.
 	CmdUpdateScreen
+	// CmdPlaySound specifies a sound to play.
+	CmdPlaySound
 
 	// Front-end actions.
 
@@ -113,6 +115,35 @@ func SendUpdateScreen() error {
 	drawImages = drawImages[:0]
 	pkg := PacketUDP{
 		Cmd:  CmdUpdateScreen,
+		Data: buf.Bytes(),
+	}
+	if err := EncUDP.Encode(&pkg); err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
+// PlaySound specifies a sound to play with a given volume and panning.
+type PlaySound struct {
+	Path        string
+	VolumeDelta int
+	Pan         int
+}
+
+// SendPlaySound send a play sound command to the front-end.
+func SendPlaySound(path string, volumeDelta, pan int) error {
+	buf := &bytes.Buffer{}
+	enc := gob.NewEncoder(buf)
+	data := PlaySound{
+		Path:        path,
+		VolumeDelta: volumeDelta,
+		Pan:         pan,
+	}
+	if err := enc.Encode(&data); err != nil {
+		return errors.WithStack(err)
+	}
+	pkg := PacketUDP{
+		Cmd:  CmdPlaySound,
 		Data: buf.Bytes(),
 	}
 	if err := EncUDP.Encode(&pkg); err != nil {
