@@ -17,6 +17,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/sha1"
@@ -39,30 +40,49 @@ Flags:
 func main() {
 	// Parse command line flags.
 	var (
-		// password for decoding save files.
+		// Output in JSON format.
+		jsonOutput bool
+		// Password for decoding save files.
 		password string
 	)
+	flag.BoolVar(&jsonOutput, "json", false, "output in JSON format")
 	flag.StringVar(&password, "p", "xrgyrkj1", `password (multi: "szqnlsk1" or computer name)`)
 	flag.Usage = usage
 	flag.Parse()
 	for _, path := range flag.Args() {
-		if err := decodeFile(path, password); err != nil {
+		data, err := decodeFile(path, password)
+		if err != nil {
 			log.Fatalf("%+v", err)
+		}
+		switch {
+		case jsonOutput:
+			// Output in JSON format.
+			name := filepath.Base(path)
+			switch name {
+			case "hero":
+				if err := outputHero(data); err != nil {
+					log.Fatalf("%+v", err)
+				}
+			default:
+				panic(fmt.Errorf("support for presenting %q in JSON format not yet implemented", name))
+			}
+		default:
+			// Raw output.
+			if _, err := os.Stdout.Write(data); err != nil {
+				log.Fatalf("%+v", err)
+			}
 		}
 	}
 }
 
 // decodeFile decodes the given save file.
-func decodeFile(path, password string) error {
+func decodeFile(path, password string) ([]byte, error) {
 	enc, err := ioutil.ReadFile(path)
 	if err != nil {
-		return errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 	dec := decode(enc, password)
-	if _, err := os.Stdout.Write(dec); err != nil {
-		return errors.WithStack(err)
-	}
-	return nil
+	return dec, nil
 }
 
 // decode decodes the given save file buffer.
