@@ -24,7 +24,7 @@ $ sv game | hexdump -C
 
 ```bash
 # Decode the contents of a multi player `hero` save file.
-$ sv -p szqnlsk1 hero | hexdump -C
+$ sv -p "szqnlsk1" hero | hexdump -C
 
 00000000  00 00 00 00 00 00 00 00  ff 00 00 00 49 41 49 41  |............IAIA|
 00000010  66 6f 6f 62 61 72 00 00  00 00 00 00 00 00 00 00  |foobar..........|
