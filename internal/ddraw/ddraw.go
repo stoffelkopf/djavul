@@ -1,4 +1,4 @@
-//+build ddraw
+//+build djavul
 
 // Package ddraw provides access to DirectDraw functions.
 package ddraw

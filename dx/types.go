@@ -1,4 +1,4 @@
-//+build ddraw
+//+build djavul
 
 package dx
 

@@ -1,3 +1,5 @@
+//+build djavul
+
 // Package dsound provides access to DirectSound functions.
 package dsound
 

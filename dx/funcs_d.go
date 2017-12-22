@@ -1,4 +1,4 @@
-//+build ddraw
+//+build djavul
 
 // Function wrappers for dx.cpp
 

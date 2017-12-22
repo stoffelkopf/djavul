@@ -1,4 +1,4 @@
-//+build ddraw
+//+build djavul
 
 // Global variable wrappers for dx.cpp
 

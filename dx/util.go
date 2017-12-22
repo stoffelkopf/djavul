@@ -1,4 +1,4 @@
-//+build ddraw
+//+build djavul
 
 // Utility functions for interacting with dx.cpp.
 

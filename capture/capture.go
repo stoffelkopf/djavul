@@ -1,4 +1,4 @@
-//+build ddraw
+//+build djavul
 
 // Package capture implements screenshot capturing.
 package capture
