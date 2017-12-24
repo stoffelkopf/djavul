@@ -19,12 +19,13 @@ import "C"
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
 	"github.com/AllenDang/w32"
 	"github.com/sanctuary/djavul/diablo"
+	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/sound"
 )
 
 //export Start
@@ -44,9 +45,11 @@ func Start() {
 	//	log.Fatalf("%+v", err)
 	//}
 
-	if err := initFrontConn(); err != nil {
-		log.Fatalf("%+v", err)
-	}
+	engine.UseGUI = false
+	sound.UseSound = false
+	//if err := initFrontConn(); err != nil {
+	//	log.Fatalf("%+v", err)
+	//}
 	winGUI()
 
 	//l1.UseGo = false
