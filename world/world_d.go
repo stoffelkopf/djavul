@@ -10,6 +10,8 @@ import (
 	"github.com/sanctuary/djavul/engine"
 	"github.com/sanctuary/djavul/gendung"
 	"github.com/sanctuary/djavul/internal/proto"
+	"github.com/sanctuary/djavul/lighting"
+	"github.com/sanctuary/djavul/scrollrt"
 )
 
 // drawTopArchesUpperScreen draws arches on the upper screen, with added
@@ -19,20 +21,20 @@ import (
 func drawTopArchesUpperScreen(dstBuf unsafe.Pointer) {
 	x, y := engine.CalcXY(dstBuf)
 	var frameNum int
-	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
-		if *LevelCelBlock&0x8000 != 0 {
-			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+	if 0 < *scrollrt.LightTableIndex && *scrollrt.LightTableIndex < int32(*lighting.Max) {
+		if *scrollrt.LevelCelBlock&0x8000 != 0 {
+			frameNum = int(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][0]) - 1
 			// TODO: Figure out how to handle light index.
-			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+			//frameContent = speed_cels + scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][scrollrt.LightTableIndex]
 		} else {
-			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			frameNum = int(*scrollrt.LevelCelBlock&0xFFF) - 1
 			// TODO: Figure out how to handle light index.
-			//lightEntry := &LightTable[256*LightTableIndex]
+			//lightEntry := &LightTable[256*scrollrt.LightTableIndex]
 		}
 	} else {
-		block := *LevelCelBlock
+		block := *scrollrt.LevelCelBlock
 		if block&0x8000 != 0 {
-			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+			block = uint32(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
@@ -49,20 +51,20 @@ func drawBottomArchesUpperScreen(dstBuf unsafe.Pointer, drawMasks *uint32) {
 	// TODO: Figure out how to handle drawMasks.
 	x, y := engine.CalcXY(dstBuf)
 	var frameNum int
-	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
-		if *LevelCelBlock&0x8000 != 0 {
-			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+	if 0 < *scrollrt.LightTableIndex && *scrollrt.LightTableIndex < int32(*lighting.Max) {
+		if *scrollrt.LevelCelBlock&0x8000 != 0 {
+			frameNum = int(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][0]) - 1
 			// TODO: Figure out how to handle light index.
-			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+			//frameContent = speed_cels + scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][scrollrt.LightTableIndex]
 		} else {
-			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			frameNum = int(*scrollrt.LevelCelBlock&0xFFF) - 1
 			// TODO: Figure out how to handle light index.
-			//lightEntry := &LightTable[256*LightTableIndex]
+			//lightEntry := &LightTable[256*scrollrt.LightTableIndex]
 		}
 	} else {
-		block := *LevelCelBlock
+		block := *scrollrt.LevelCelBlock
 		if block&0x8000 != 0 {
-			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+			block = uint32(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
@@ -73,13 +75,13 @@ func drawBottomArchesUpperScreen(dstBuf unsafe.Pointer, drawMasks *uint32) {
 
 // ref: 0x4652C5
 func drawUpperScreen(dstBuf unsafe.Pointer) {
-	if *CelTransparencyActive != 0 {
-		switch *LevelArchTypeSomething {
+	if *scrollrt.CelTransparencyActive != 0 {
+		switch *scrollrt.ArchDrawType {
 		case 0:
 			drawTopArchesUpperScreen(dstBuf)
 			return
 		case 1:
-			solid := Solid_0x10_0x20_0x40_FromPieceID[*LevelPieceID]
+			solid := gendung.Solid_0x10_0x20_0x40_FromPieceID[*scrollrt.LevelPieceID]
 			if solid == 1 || solid == 3 {
 				// if sw wall
 				//
@@ -89,7 +91,7 @@ func drawUpperScreen(dstBuf unsafe.Pointer) {
 				return
 			}
 		case 2:
-			solid := Solid_0x10_0x20_0x40_FromPieceID[*LevelPieceID]
+			solid := gendung.Solid_0x10_0x20_0x40_FromPieceID[*scrollrt.LevelPieceID]
 			if solid == 2 || solid == 3 {
 				// if se wall
 				//
@@ -103,20 +105,20 @@ func drawUpperScreen(dstBuf unsafe.Pointer) {
 
 	x, y := engine.CalcXY(dstBuf)
 	var frameNum int
-	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
-		if *LevelCelBlock&0x8000 != 0 {
-			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+	if 0 < *scrollrt.LightTableIndex && *scrollrt.LightTableIndex < int32(*lighting.Max) {
+		if *scrollrt.LevelCelBlock&0x8000 != 0 {
+			frameNum = int(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][0]) - 1
 			// TODO: Figure out how to handle light index.
-			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+			//frameContent = speed_cels + scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][scrollrt.LightTableIndex]
 		} else {
-			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			frameNum = int(*scrollrt.LevelCelBlock&0xFFF) - 1
 			// TODO: Figure out how to handle light index.
-			//lightEntry := &LightTable[256*LightTableIndex]
+			//lightEntry := &LightTable[256*scrollrt.LightTableIndex]
 		}
 	} else {
-		block := *LevelCelBlock
+		block := *scrollrt.LevelCelBlock
 		if block&0x8000 != 0 {
-			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+			block = uint32(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
@@ -132,20 +134,20 @@ func drawUpperScreen(dstBuf unsafe.Pointer) {
 func drawTopArchesLowerScreen(dstBuf unsafe.Pointer) {
 	x, y := engine.CalcXY(dstBuf)
 	var frameNum int
-	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
-		if *LevelCelBlock&0x8000 != 0 {
-			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+	if 0 < *scrollrt.LightTableIndex && *scrollrt.LightTableIndex < int32(*lighting.Max) {
+		if *scrollrt.LevelCelBlock&0x8000 != 0 {
+			frameNum = int(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][0]) - 1
 			// TODO: Figure out how to handle light index.
-			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+			//frameContent = speed_cels + scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][scrollrt.LightTableIndex]
 		} else {
-			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			frameNum = int(*scrollrt.LevelCelBlock&0xFFF) - 1
 			// TODO: Figure out how to handle light index.
-			//lightEntry := &LightTable[256*LightTableIndex]
+			//lightEntry := &LightTable[256*scrollrt.LightTableIndex]
 		}
 	} else {
-		block := *LevelCelBlock
+		block := *scrollrt.LevelCelBlock
 		if block&0x8000 != 0 {
-			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+			block = uint32(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
@@ -162,20 +164,20 @@ func drawBottomArchesLowerScreen(dstBuf unsafe.Pointer, drawMasks *uint32) {
 	// TODO: Figure out how to handle drawMasks.
 	x, y := engine.CalcXY(dstBuf)
 	var frameNum int
-	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
-		if *LevelCelBlock&0x8000 != 0 {
-			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+	if 0 < *scrollrt.LightTableIndex && *scrollrt.LightTableIndex < int32(*lighting.Max) {
+		if *scrollrt.LevelCelBlock&0x8000 != 0 {
+			frameNum = int(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][0]) - 1
 			// TODO: Figure out how to handle light index.
-			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+			//frameContent = speed_cels + scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][scrollrt.LightTableIndex]
 		} else {
-			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			frameNum = int(*scrollrt.LevelCelBlock&0xFFF) - 1
 			// TODO: Figure out how to handle light index.
-			//lightEntry := &LightTable[256*LightTableIndex]
+			//lightEntry := &LightTable[256*scrollrt.LightTableIndex]
 		}
 	} else {
-		block := *LevelCelBlock
+		block := *scrollrt.LevelCelBlock
 		if block&0x8000 != 0 {
-			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+			block = uint32(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
 		}
 		frameNum = int(block&0xFFF) - 1
 	}
@@ -186,13 +188,13 @@ func drawBottomArchesLowerScreen(dstBuf unsafe.Pointer, drawMasks *uint32) {
 
 // ref: 0x46886B
 func drawLowerScreen(dstBuf unsafe.Pointer) {
-	if *CelTransparencyActive != 0 {
-		switch *LevelArchTypeSomething {
+	if *scrollrt.CelTransparencyActive != 0 {
+		switch *scrollrt.ArchDrawType {
 		case 0:
 			drawTopArchesLowerScreen(dstBuf)
 			return
 		case 1:
-			solid := Solid_0x10_0x20_0x40_FromPieceID[*LevelPieceID]
+			solid := gendung.Solid_0x10_0x20_0x40_FromPieceID[*scrollrt.LevelPieceID]
 			if solid == 1 || solid == 3 {
 				// if sw wall
 				//
@@ -202,7 +204,7 @@ func drawLowerScreen(dstBuf unsafe.Pointer) {
 				return
 			}
 		case 2:
-			solid := Solid_0x10_0x20_0x40_FromPieceID[*LevelPieceID]
+			solid := gendung.Solid_0x10_0x20_0x40_FromPieceID[*scrollrt.LevelPieceID]
 			if solid == 2 || solid == 3 {
 				// if se wall
 				//
@@ -216,20 +218,20 @@ func drawLowerScreen(dstBuf unsafe.Pointer) {
 
 	x, y := engine.CalcXY(dstBuf)
 	var frameNum int
-	if 0 < *LightTableIndex && *LightTableIndex < int32(*LightingMax) {
-		if *LevelCelBlock&0x8000 != 0 {
-			frameNum = int(SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][0]) - 1
+	if 0 < *scrollrt.LightTableIndex && *scrollrt.LightTableIndex < int32(*lighting.Max) {
+		if *scrollrt.LevelCelBlock&0x8000 != 0 {
+			frameNum = int(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][0]) - 1
 			// TODO: Figure out how to handle light index.
-			//frameContent = speed_cels + SpeedCelFrameNumFromLightIndexFrameNum[*LevelCelBlock&0xFFF][LightTableIndex]
+			//frameContent = speed_cels + scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[*scrollrt.LevelCelBlock&0xFFF][scrollrt.LightTableIndex]
 		} else {
-			frameNum = int(*LevelCelBlock&0xFFF) - 1
+			frameNum = int(*scrollrt.LevelCelBlock&0xFFF) - 1
 			// TODO: Figure out how to handle light index.
-			//lightEntry := &LightTable[256*LightTableIndex]
+			//lightEntry := &LightTable[256*scrollrt.LightTableIndex]
 		}
 	} else {
-		block := *LevelCelBlock
+		block := *scrollrt.LevelCelBlock
 		if block&0x8000 != 0 {
-			block = uint32(SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
+			block = uint32(scrollrt.SpeedCelFrameNumFromLightIndexFrameNum[block&0xFFF][0]) + block&0xF000
 		}
 		frameNum = int(block&0xFFF) - 1
 	}

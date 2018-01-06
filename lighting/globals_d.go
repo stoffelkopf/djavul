@@ -13,7 +13,7 @@ var (
 	// ref: 0x646A28
 	Disabled = (*bool)(unsafe.Pointer(uintptr(0x646A28)))
 
-	// Max specifies the maximum light effects.
+	// Max specifies the maximum number of light effects.
 	//
 	// PSX ref: 0x8011B918
 	// PSX def: char lightmax

@@ -82,6 +82,12 @@ var (
 	// ref: 0x5B70E0
 	DPieceDefs = (**min.Block)(unsafe.Pointer(uintptr(0x5B70E0)))
 
+	// Solid_0x10_0x20_0x40_FromPieceID maps from dungeon piece ID to solidity
+	// with mask 0x70.
+	//
+	// ref: 0x5B70E8
+	Solid_0x10_0x20_0x40_FromPieceID = (*[2049]int8)(unsafe.Pointer(uintptr(0x5B70E8)))
+
 	// TransparencyMap specifies the transparency at each coordinate of the map.
 	//
 	// PSX ref: 0x800E7A28
