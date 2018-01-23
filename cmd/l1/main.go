@@ -30,6 +30,7 @@ import (
 	"github.com/sanctuary/djavul/l1"
 	"github.com/sanctuary/djavul/multi"
 	"github.com/sanctuary/djavul/quests"
+	"github.com/sanctuary/formats/level/til"
 )
 
 func usage() {
@@ -51,6 +52,8 @@ func main() {
 	var (
 		// Dungeon level.
 		dlvl uint8
+		// Output dungeon pieces instead of tiles.
+		outputDPieces bool
 		// Active quest ID.
 		questID quests.QuestID
 		// Store output in raw binary format.
@@ -61,6 +64,7 @@ func main() {
 	var d, s int64
 	var q string
 	flag.Int64Var(&d, "dlvl", 1, "dungeon level (1-16)")
+	flag.BoolVar(&outputDPieces, "dpieces", false, "output dungeon pieces instead of tiles")
 	flag.StringVar(&q, "quest", "", "active quest")
 	flag.BoolVar(&raw, "raw", false, "raw output format")
 	flag.Int64Var(&s, "seed", 0, "initial seed")
@@ -97,20 +101,41 @@ func main() {
 	l1.CreateDungeon(seed, 0)
 
 	// Dump dungeon.
-	if err := dump(*gendung.TileIDMap, raw); err != nil {
+	if err := dump(*gendung.TileIDMap, raw, outputDPieces); err != nil {
 		log.Fatalf("%+v", err)
 	}
 }
 
 // dump dumps the map to standard output.
-func dump(tiles [40][40]uint8, raw bool) error {
+func dump(tiles [40][40]uint8, raw, outputDPieces bool) error {
+	var data interface{} = tiles
+	if outputDPieces {
+		tileDefs, err := til.Parse("diabdat/levels/l1data/l1.til")
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		var dpieces [80][80]uint16
+		for x := 0; x < 40; x++ {
+			for y := 0; y < 40; y++ {
+				tile := tiles[y][x] // TODO: figure out why x and y are swapped.
+				if tile != 0 {
+					tileDef := tileDefs[tile-1]
+					dpieces[2*x][2*y] = tileDef.Top + 1
+					dpieces[2*x][2*y+1] = tileDef.Right + 1
+					dpieces[2*x+1][2*y] = tileDef.Left + 1
+					dpieces[2*x+1][2*y+1] = tileDef.Bottom + 1
+				}
+			}
+		}
+		data = dpieces
+	}
 	if raw {
-		if err := binary.Write(os.Stdout, binary.LittleEndian, tiles); err != nil {
+		if err := binary.Write(os.Stdout, binary.LittleEndian, data); err != nil {
 			return errors.WithStack(err)
 		}
 		return nil
 	}
-	buf, err := json.Marshal(tiles)
+	buf, err := json.Marshal(data)
 	if err != nil {
 		return errors.WithStack(err)
 	}
