@@ -6,6 +6,8 @@
 //
 // Flags:
 //
+//    -dpieces
+//          output dungeon pieces in CSV format
 //    -dlvl int
 //          dungeon level (1-16) (default 1)
 //    -quest string
@@ -64,7 +66,7 @@ func main() {
 	var d, s int64
 	var q string
 	flag.Int64Var(&d, "dlvl", 1, "dungeon level (1-16)")
-	flag.BoolVar(&outputDPieces, "dpieces", false, "output dungeon pieces instead of tiles")
+	flag.BoolVar(&outputDPieces, "dpieces", false, "output dungeon pieces in CSV format")
 	flag.StringVar(&q, "quest", "", "active quest")
 	flag.BoolVar(&raw, "raw", false, "raw output format")
 	flag.Int64Var(&s, "seed", 0, "initial seed")
@@ -100,42 +102,74 @@ func main() {
 	}
 	l1.CreateDungeon(seed, 0)
 
-	// Dump dungeon.
-	if err := dump(*gendung.TileIDMap, raw, outputDPieces); err != nil {
+	// Dump dungeon pieces.
+	tiles := *gendung.TileIDMap
+	if outputDPieces {
+		if err := dumpDungeonPieces(tiles); err != nil {
+			log.Fatalf("%+v", err)
+		}
+		return
+	}
+	// Dump tiles.
+	if err := dumpTiles(tiles, raw); err != nil {
 		log.Fatalf("%+v", err)
 	}
 }
 
-// dump dumps the map to standard output.
-func dump(tiles [40][40]uint8, raw, outputDPieces bool) error {
-	var data interface{} = tiles
-	if outputDPieces {
-		tileDefs, err := til.Parse("diabdat/levels/l1data/l1.til")
-		if err != nil {
-			return errors.WithStack(err)
+// dumpDungeonPieces dumps the dungeon pieces of the map to standard output.
+func dumpDungeonPieces(tiles [40][40]uint8) error {
+	dpieces, err := getDPieces(tiles)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	var vals []uint16
+	for x := 0; x < 80; x++ {
+		for y := 0; y < 80; y++ {
+			vals = append(vals, dpieces[x][y])
 		}
-		var dpieces [80][80]uint16
-		for x := 0; x < 40; x++ {
-			for y := 0; y < 40; y++ {
-				tile := tiles[y][x] // TODO: figure out why x and y are swapped.
-				if tile != 0 {
-					tileDef := tileDefs[tile-1]
-					dpieces[2*x][2*y] = tileDef.Top + 1
-					dpieces[2*x][2*y+1] = tileDef.Right + 1
-					dpieces[2*x+1][2*y] = tileDef.Left + 1
-					dpieces[2*x+1][2*y+1] = tileDef.Bottom + 1
-				}
+	}
+	for i, v := range vals {
+		if i != 0 {
+			fmt.Print(",")
+		}
+		fmt.Print(v)
+	}
+	fmt.Println()
+	return nil
+}
+
+// getDPieces converts the given tile map to a corresponding map of dungeon
+// pieces.
+func getDPieces(tiles [40][40]uint8) ([80][80]uint16, error) {
+	tileDefs, err := til.Parse("diabdat/levels/l1data/l1.til")
+	if err != nil {
+		return [80][80]uint16{}, errors.WithStack(err)
+	}
+	var dpieces [80][80]uint16
+	for x := 0; x < 40; x++ {
+		for y := 0; y < 40; y++ {
+			tile := tiles[y][x] // TODO: figure out why x and y are swapped.
+			if tile != 0 {
+				tileDef := tileDefs[tile-1]
+				dpieces[2*x][2*y] = tileDef.Top + 1
+				dpieces[2*x][2*y+1] = tileDef.Right + 1
+				dpieces[2*x+1][2*y] = tileDef.Left + 1
+				dpieces[2*x+1][2*y+1] = tileDef.Bottom + 1
 			}
 		}
-		data = dpieces
 	}
+	return dpieces, nil
+}
+
+// dumpTiles dumps the tiles of the map to standard output.
+func dumpTiles(tiles [40][40]uint8, raw bool) error {
 	if raw {
-		if err := binary.Write(os.Stdout, binary.LittleEndian, data); err != nil {
+		if err := binary.Write(os.Stdout, binary.LittleEndian, tiles); err != nil {
 			return errors.WithStack(err)
 		}
 		return nil
 	}
-	buf, err := json.Marshal(data)
+	buf, err := json.Marshal(tiles)
 	if err != nil {
 		return errors.WithStack(err)
 	}
