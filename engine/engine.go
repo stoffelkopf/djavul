@@ -17,11 +17,22 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 	"unsafe"
 
+	"github.com/mewkiz/pkg/term"
 	"github.com/pkg/errors"
+)
+
+var (
+	// dbg represents a logger with the "engine:" prefix, which logs debug
+	// messages to standard error.
+	dbg = log.New(os.Stderr, term.BlueBold("engine:")+" ", 0)
+	// warn represents a logger with the "engine:" prefix, which logs warnings to
+	// standard error.
+	warn = log.New(os.Stderr, term.RedBold("engine:")+" ", 0)
 )
 
 // setSeed sets the global seed to s.
@@ -77,7 +88,7 @@ func randCap(max int32) int32 {
 // ref: 0x417618
 func memLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 	p := absPath(goPath(path))
-	fmt.Println("engine.MemLoadFile:", p)
+	dbg.Println("engine.MemLoadFile:", p)
 	buf, err := ioutil.ReadFile(p)
 	if err != nil {
 		log.Fatalf("unable to load file %q; %v", p, errors.WithStack(err))
