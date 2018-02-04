@@ -867,6 +867,9 @@ func generateRoom(xxStart, yyStart, xxCount, yyCount int, dirVert bool) {
 //
 // ref: 0x40BFA4
 func isAreaEmpty(xxStart, yyStart, xxCount, yyCount int) bool {
+	if xxCount <= 0 || yyCount <= 0 {
+		return true
+	}
 	for yy := yyStart; yy < yyStart+yyCount; yy++ {
 		if yy < 0 || yy >= 40 {
 			return false
