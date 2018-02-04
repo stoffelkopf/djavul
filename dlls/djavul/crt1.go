@@ -41,13 +41,16 @@ func Start() {
 	//flag.Int64Var(&start, "start", 0, "first seed")
 	//flag.Int64Var(&end, "end", 256, "last seed")
 	//flag.Parse()
+
 	//engine.UseGUI = false
+	//sound.UseSound = false
 	//if err := compareL1(start, end); err != nil {
 	//	log.Fatalf("%+v", err)
 	//}
+	//os.Exit(0)
 
 	engine.UseGUI = true
-	sound.UseSound = true
+	sound.UseSound = false
 	if err := initFrontConn(); err != nil {
 		log.Fatalf("%+v", err)
 	}
