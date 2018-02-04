@@ -56,7 +56,7 @@ To achieve this aim, the following objectives have been identified.
 
 ### 2017-11-13
 
-* Dungeon generation for Cathedral.
+* Dungeon generation of Cathedral.
     - [cmd/l1](cmd/l1)
 
 ## Public domain
