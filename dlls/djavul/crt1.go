@@ -19,7 +19,6 @@ import "C"
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -49,11 +48,11 @@ func Start() {
 	//}
 	//os.Exit(0)
 
-	engine.UseGUI = true
+	engine.UseGUI = false
 	sound.UseSound = false
-	if err := initFrontConn(); err != nil {
-		log.Fatalf("%+v", err)
-	}
+	//if err := initFrontConn(); err != nil {
+	//	log.Fatalf("%+v", err)
+	//}
 	winGUI()
 
 	//l1.UseGo = false
