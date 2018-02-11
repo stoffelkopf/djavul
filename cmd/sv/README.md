@@ -5,7 +5,7 @@ The sv tool decodes Diablo 1 save files.
 ## Installation
 
 ```bash
-go get github.com/sanctuary/djavul/cmd/sv
+go get -u github.com/sanctuary/djavul/cmd/sv
 ```
 
 ## Usage

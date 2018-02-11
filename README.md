@@ -17,6 +17,35 @@ To achieve this aim, the following objectives have been identified.
 5. Implement a set of tools around these modules which through interaction provide the functionality of the original Diablo 1 game engine.
 6. Validate that - given a deterministic seed - the re-implementation achieve pixel perfection, by mirroring the mouse and keyboard input and comparing the graphic and audio output against the original Diablo 1 game.
 
+## Installation
+
+1. Install [Go](https://golang.org/doc/install).
+2. Install [mingw-w64-gcc](https://aur.archlinux.org/packages/mingw-w64-gcc/) for cross-compilation to 32-bit Windows.
+
+Install the [Djavul frontend](https://github.com/sanctuary/djavul/tree/master/cmd/djavul) executable.
+
+```bash
+go get -u github.com/sanctuary/djavul/...
+```
+
+Install the [Djavul backend](https://github.com/sanctuary/djavul/tree/master/dlls/djavul) library.
+
+```bash
+$ cd $GOPATH/src/github.com/sanctuary
+$ make -C dlls/djavul
+```
+
+Install Djavul backend executable `djavul.exe` by applying the patch file [djavul.patch](https://github.com/sanctuary/djavul-patch) to `diablo.exe` (v1.09b).
+
+```bash
+# Download the patch file djavul.patch.
+wget https://github.com/sanctuary/djavul-patch/raw/master/djavul.patch
+# Install binpatch.
+go get github.com/mewkiz/cmd/binpatch
+# Apply djavul.patch to diablo.exe to produce djavul.exe.
+binpatch -o djavul.exe diablo.exe < djavul.patch
+```
+
 ## Progress
 
 ### 2017-12-23

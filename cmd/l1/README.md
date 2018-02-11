@@ -5,7 +5,7 @@ The l1 tool provides dynamic random level generation of Cathedral maps.
 ## Installation
 
 ```bash
-go get github.com/sanctuary/djavul/cmd/l1
+go get -u github.com/sanctuary/djavul/cmd/l1
 ```
 
 ### Game assets
