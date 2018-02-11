@@ -35,7 +35,7 @@ $ cd $GOPATH/src/github.com/sanctuary
 $ make -C dlls/djavul
 ```
 
-Install Djavul backend executable `djavul.exe` by applying the patch file [djavul.patch](https://github.com/sanctuary/djavul-patch) to `diablo.exe` (v1.09b).
+Install the Djavul backend executable `djavul.exe` by applying the patch file [djavul.patch](https://github.com/sanctuary/djavul-patch) to `diablo.exe` (v1.09b).
 
 ```bash
 # Download the patch file djavul.patch.
