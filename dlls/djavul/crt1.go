@@ -31,6 +31,16 @@ import (
 
 //export Start
 func Start() {
+	// Store standard output in djavul.log. For trouble-shooting on Windows.
+	f, err := os.Create("djavul.log")
+	if err != nil {
+		log.Fatalf("%+v", err)
+	}
+	defer f.Close()
+	os.Stdout = f
+	os.Stderr = f
+	log.SetOutput(f)
+
 	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
 
@@ -49,7 +59,7 @@ func Start() {
 	//}
 	//os.Exit(0)
 
-	engine.UseGUI = true
+	engine.UseGUI = false
 	sound.UseSound = false
 	if err := initFrontConn(); err != nil {
 		log.Fatalf("%+v", err)

@@ -19,7 +19,10 @@ import (
 // initFrontConn initializes the connection to the front-end.
 func initFrontConn() error {
 	// Initialize TCP connection.
-	const tmpDir = "/tmp/djavul"
+	const tmpDir = `C:\temp\djavul`
+	if err := os.MkdirAll(tmpDir, 0755); err != nil {
+		return errors.WithStack(err)
+	}
 	tcpRPath := filepath.Join(tmpDir, "tcp_r")
 	tcpR, err := os.OpenFile(tcpRPath, os.O_RDWR, 0644)
 	if err != nil {
