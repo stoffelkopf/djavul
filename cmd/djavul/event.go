@@ -345,7 +345,7 @@ func playSound(relPath string) {
 // initTmpDir initializes the temporary directory used by Djavul to store Unix
 // sockets for communication with the Diablo 1 game engine.
 func initTmpDir() string {
-	const tmpDir = "/tmp/djavul"
+	const tmpDir = `C:\djavul`
 	if err := os.RemoveAll(tmpDir); err != nil {
 		die(err)
 	}
