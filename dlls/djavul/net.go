@@ -9,9 +9,8 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
-	"path/filepath"
 
+	"github.com/natefinch/npipe"
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/internal/proto"
 )
@@ -19,38 +18,39 @@ import (
 // initFrontConn initializes the connection to the front-end.
 func initFrontConn() error {
 	// Initialize TCP connection.
-	const tmpDir = `C:\temp\djavul`
-	if err := os.MkdirAll(tmpDir, 0755); err != nil {
-		return errors.WithStack(err)
-	}
-	tcpRPath := filepath.Join(tmpDir, "tcp_r")
-	tcpR, err := os.OpenFile(tcpRPath, os.O_RDWR, 0644)
+	fmt.Printf("Connecting to %q.\n", proto.TCPReadPipe)
+	tcpR, err := npipe.Dial(proto.TCPReadPipe)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	//tcpWPath := filepath.Join(tmpDir, "tcp_w")
-	//tcpW, err := os.Open(tcpWPath)
+	fmt.Printf("Writing to %q.\n", proto.TCPReadPipe)
+	proto.EncTCP = gob.NewEncoder(tcpR)
+
+	//fmt.Printf("Connecting to %q.\n", proto.TCPWritePipe)
+	//tcpW, err := npipe.Dial(proto.TCPWritePipe)
 	//if err != nil {
 	//	return errors.WithStack(err)
 	//}
-	fmt.Printf("Connected to %q.\n", tcpRPath)
-	proto.EncTCP = gob.NewEncoder(tcpR)
+	//fmt.Printf("Reading from %q.\n", proto.TCPWritePipe)
 	//proto.DecTCP = gob.NewDecoder(tcpW)
 
 	// Initialize UDP connection.
-	udpRPath := filepath.Join(tmpDir, "udp_r")
-	udpR, err := os.OpenFile(udpRPath, os.O_RDWR, 0644)
+	fmt.Printf("Connecting to %q.\n", proto.UDPReadPipe)
+	udpR, err := npipe.Dial(proto.UDPReadPipe)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	udpWPath := filepath.Join(tmpDir, "udp_w")
-	udpW, err := os.Open(udpWPath)
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	fmt.Printf("Connected to %q.\n", udpRPath)
+	fmt.Printf("Writing to %q.\n", proto.UDPReadPipe)
 	proto.EncUDP = gob.NewEncoder(udpR)
+
+	fmt.Printf("Connecting to %q.\n", proto.UDPWritePipe)
+	udpW, err := npipe.Dial(proto.UDPWritePipe)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	fmt.Printf("Reading from %q.\n", proto.UDPWritePipe)
 	proto.DecUDP = gob.NewDecoder(udpW)
+
 	go recvActions()
 	return nil
 }

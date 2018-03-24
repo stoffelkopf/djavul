@@ -127,32 +127,32 @@ func (ButtonReleasedEvent) isWindowEvent() {}
 
 // relayEngineEvents relays events to and from the Diablo 1 game engine.
 func relayEngineEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
-	tmpDir := initTmpDir()
 	// Relay events on unstable connection to the Diablo 1 game engine.
-	go relayEngineUnstableEvents(tmpDir, win, gameEvents, gameActions)
-	go relayEngineUnstableActions(tmpDir, win, gameActions)
+	go relayEngineUnstableEvents(win, gameEvents, gameActions)
+	go relayEngineUnstableActions(win, gameActions)
 	// Relay events on stable connection to the Diablo 1 game engine.
-	//go relayEngineStableActions(tmpDir, win, gameActions)
-	relayEngineStableEvents(tmpDir, win, gameEvents, gameActions)
+	//go relayEngineStableActions(win, gameActions)
+	relayEngineStableEvents(win, gameEvents, gameActions)
 }
 
 // relayEngineStableActions relays actions on stable connection to the Diablo 1
 // game engine.
-func relayEngineStableActions(tmpDir string, win *pixelgl.Window, gameActions chan proto.EngineAction) {
+func relayEngineStableActions(win *pixelgl.Window, gameActions chan proto.EngineAction) {
 	// Open pipe for writing.
-	wpath := filepath.Join(tmpDir, "tcp_w")
-	l, err := npipe.Listen(wpath)
+	fmt.Printf("Listening on %q.\n", proto.TCPWritePipe)
+	l, err := npipe.Listen(proto.TCPWritePipe)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
+	defer l.Close()
 	for {
-		conn, err := l.Accept()
+		tpcW, err := l.Accept()
 		if err != nil {
 			log.Fatalf("%+v", errors.WithStack(err))
 		}
-		defer conn.Close()
-		fmt.Printf("Writing to %q.\n", wpath)
-		enc := gob.NewEncoder(conn)
+		defer tpcW.Close()
+		fmt.Printf("Writing to %q.\n", proto.TCPWritePipe)
+		enc := gob.NewEncoder(tpcW)
 		_ = enc
 		for {
 			action := <-gameActions
@@ -166,21 +166,21 @@ func relayEngineStableActions(tmpDir string, win *pixelgl.Window, gameActions ch
 
 // relayEngineUnstableActions relays actions on unstable connection to the
 // Diablo 1 game engine.
-func relayEngineUnstableActions(tmpDir string, win *pixelgl.Window, gameActions chan proto.EngineAction) {
+func relayEngineUnstableActions(win *pixelgl.Window, gameActions chan proto.EngineAction) {
 	// Open pipe for writing.
-	wpath := filepath.Join(tmpDir, "udp_w")
-	l, err := npipe.Listen(wpath)
+	fmt.Printf("Listening on %q.\n", proto.UDPWritePipe)
+	l, err := npipe.Listen(proto.UDPWritePipe)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
 	for {
-		conn, err := l.Accept()
+		udpW, err := l.Accept()
 		if err != nil {
 			log.Fatalf("%+v", errors.WithStack(err))
 		}
-		defer conn.Close()
-		fmt.Printf("Writing to %q.\n", wpath)
-		enc := gob.NewEncoder(conn)
+		defer udpW.Close()
+		fmt.Printf("Writing to %q.\n", proto.UDPWritePipe)
+		enc := gob.NewEncoder(udpW)
 		for {
 			action := <-gameActions
 			pkt := proto.NewAction(action)
@@ -193,80 +193,94 @@ func relayEngineUnstableActions(tmpDir string, win *pixelgl.Window, gameActions 
 
 // relayEngineStableEvents relays events on stable connection to the Diablo 1
 // game engine.
-func relayEngineStableEvents(tmpDir string, win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
+func relayEngineStableEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
 	// Open pipe for reading.
-	rpath := filepath.Join(tmpDir, "tcp_r")
-	conn, err := npipe.Dial(rpath)
+	fmt.Printf("Listening on %q.\n", proto.TCPReadPipe)
+	l, err := npipe.Listen(proto.TCPReadPipe)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
-	defer conn.Close()
-	fmt.Printf("Listening on %q.\n", rpath)
-	dec := gob.NewDecoder(conn)
+	defer l.Close()
 	for {
-		var cmd proto.CommandTCP
-		if err := dec.Decode(&cmd); err != nil {
-			if errors.Cause(err) == io.EOF {
-				//fmt.Println("disconnected")
-				dec = gob.NewDecoder(conn)
-				continue
-			}
+		tcpR, err := l.Accept()
+		if err != nil {
 			log.Fatalf("%+v", errors.WithStack(err))
 		}
-		switch cmd {
-		case proto.CmdLoadFile:
-			var data proto.LoadFile
-			if err := dec.Decode(&data); err != nil {
+		defer tcpR.Close()
+		fmt.Printf("Reading from %q.\n", proto.TCPReadPipe)
+		dec := gob.NewDecoder(tcpR)
+		for {
+			var cmd proto.CommandTCP
+			if err := dec.Decode(&cmd); err != nil {
+				if errors.Cause(err) == io.EOF {
+					//fmt.Println("disconnected")
+					dec = gob.NewDecoder(tcpR)
+					continue
+				}
 				log.Fatalf("%+v", errors.WithStack(err))
 			}
-			//fmt.Println("recv pkg:", data)
-			ExecLoadFile(&data)
+			switch cmd {
+			case proto.CmdLoadFile:
+				var data proto.LoadFile
+				if err := dec.Decode(&data); err != nil {
+					log.Fatalf("%+v", errors.WithStack(err))
+				}
+				//fmt.Println("recv pkg:", data)
+				ExecLoadFile(&data)
+			}
 		}
 	}
 }
 
 // relayEngineUnstableEvents relays events on unstable connection to the Diablo
 // 1 game engine.
-func relayEngineUnstableEvents(tmpDir string, win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
+func relayEngineUnstableEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
 	// Open pipe for reading.
-	rpath := filepath.Join(tmpDir, "udp_r")
-	conn, err := npipe.Dial(rpath)
+	fmt.Printf("Listening on %q.\n", proto.UDPReadPipe)
+	l, err := npipe.Listen(proto.UDPReadPipe)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
-	defer conn.Close()
-	fmt.Printf("Listening on %q.\n", rpath)
-	dec := gob.NewDecoder(conn)
-	frames := 0
-	var start time.Time
+	defer l.Close()
 	for {
-		var pkg proto.PacketUDP
-		if err := dec.Decode(&pkg); err != nil {
-			if errors.Cause(err) == io.EOF {
-				//fmt.Println("disconnected")
-				dec = gob.NewDecoder(conn)
+		udpR, err := l.Accept()
+		if err != nil {
+			log.Fatalf("%+v", errors.WithStack(err))
+		}
+		defer udpR.Close()
+		fmt.Printf("Reading from %q.\n", proto.UDPReadPipe)
+		dec := gob.NewDecoder(udpR)
+		frames := 0
+		var start time.Time
+		for {
+			var pkg proto.PacketUDP
+			if err := dec.Decode(&pkg); err != nil {
+				if errors.Cause(err) == io.EOF {
+					//fmt.Println("disconnected")
+					dec = gob.NewDecoder(udpR)
+					continue
+				}
+				log.Printf("unable to decode UDP packet; %+v", errors.WithStack(err))
 				continue
 			}
-			log.Printf("unable to decode UDP packet; %+v", errors.WithStack(err))
-			continue
-		}
-		//fmt.Println("recv cmd:", pkg.Cmd)
-		switch pkg.Cmd {
-		case proto.CmdUpdateScreen:
-			//fmt.Println("recv cmd: UpdateScreen")
-			//win.Clear(colornames.Black)
-			ExecDrawImages(win, pkg.Data)
-			if start == (time.Time{}) {
-				start = time.Now()
-			} else {
-				frames++
-				fps := float64(frames) / (float64(time.Since(start)) / float64(time.Second))
-				win.SetTitle(fmt.Sprintf("FPS: %.02f", fps))
+			//fmt.Println("recv cmd:", pkg.Cmd)
+			switch pkg.Cmd {
+			case proto.CmdUpdateScreen:
+				//fmt.Println("recv cmd: UpdateScreen")
+				//win.Clear(colornames.Black)
+				ExecDrawImages(win, pkg.Data)
+				if start == (time.Time{}) {
+					start = time.Now()
+				} else {
+					frames++
+					fps := float64(frames) / (float64(time.Since(start)) / float64(time.Second))
+					win.SetTitle(fmt.Sprintf("FPS: %.02f", fps))
+				}
+				win.Update()
+			case proto.CmdPlaySound:
+				//fmt.Println("recv cmd: PlaySound")
+				ExecPlaySound(pkg.Data)
 			}
-			win.Update()
-		case proto.CmdPlaySound:
-			//fmt.Println("recv cmd: PlaySound")
-			ExecPlaySound(pkg.Data)
 		}
 	}
 }
@@ -295,7 +309,7 @@ func ExecDrawImages(win *pixelgl.Window, data []byte) {
 }
 
 func ExecDrawImage(win *pixelgl.Window, cmd proto.DrawImage) {
-	//fmt.Println("recv pkg:", cmd)
+	fmt.Println("recv pkg:", cmd)
 	sprite := getSprite(cmd.Path, cmd.FrameNum)
 	const screenHeight = 480
 	dp := cmd.Dp
@@ -338,19 +352,4 @@ func playSound(relPath string) {
 	}
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 	speaker.Play(s)
-}
-
-// ### [ Helper functions ] ####################################################
-
-// initTmpDir initializes the temporary directory used by Djavul to store Unix
-// sockets for communication with the Diablo 1 game engine.
-func initTmpDir() string {
-	const tmpDir = `C:\temp\djavul`
-	if err := os.RemoveAll(tmpDir); err != nil {
-		die(err)
-	}
-	if err := os.MkdirAll(tmpDir, 0755); err != nil {
-		die(err)
-	}
-	return tmpDir
 }

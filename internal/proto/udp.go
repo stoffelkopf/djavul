@@ -21,6 +21,12 @@ import (
 //
 // Spoofing doesn't matter.
 
+// UDP pipes.
+const (
+	UDPReadPipe  = `\\.\pipe\udp_r`
+	UDPWritePipe = `\\.\pipe\udp_w`
+)
+
 // PacketUDP represents a UDP packet.
 type PacketUDP struct {
 	Cmd  CommandUDP

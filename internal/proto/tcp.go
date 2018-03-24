@@ -19,6 +19,12 @@ import (
 //
 // Spoof protection needed.
 
+// TCP pipes.
+const (
+	TCPReadPipe  = `\\.\pipe\tcp_r`
+	TCPWritePipe = `\\.\pipe\tcp_w`
+)
+
 var (
 	// EncTCP holds a Gob encoder for the TCP connection to the front-end.
 	EncTCP *gob.Encoder

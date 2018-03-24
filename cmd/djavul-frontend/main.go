@@ -12,12 +12,12 @@ import (
 )
 
 var (
-	// dbg represents a logger with the "djavul:" prefix, which logs debug
-	// messages to standard error.
-	dbg = log.New(os.Stderr, term.BlueBold("djavul:")+" ", 0)
-	// warn represents a logger with the "djavul:" prefix, which logs warnings to
-	// standard error.
-	warn = log.New(os.Stderr, term.RedBold("djavul:")+" ", 0)
+	// dbg represents a logger with the "djavul-frontend:" prefix, which logs
+	// debug messages to standard error.
+	dbg = log.New(os.Stderr, term.BlueBold("djavul-frontend:")+" ", 0)
+	// warn represents a logger with the "djavul-frontend:" prefix, which logs
+	// warnings to standard error.
+	warn = log.New(os.Stderr, term.RedBold("djavul-frontend:")+" ", 0)
 )
 
 func main() {

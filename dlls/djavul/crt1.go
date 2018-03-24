@@ -59,7 +59,7 @@ func Start() {
 	//}
 	//os.Exit(0)
 
-	engine.UseGUI = false
+	engine.UseGUI = true
 	sound.UseSound = false
 	if err := initFrontConn(); err != nil {
 		log.Fatalf("%+v", err)

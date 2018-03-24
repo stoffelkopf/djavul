@@ -22,13 +22,13 @@ To achieve this aim, the following objectives have been identified.
 1. Install [Go](https://golang.org/doc/install).
 2. Install [mingw-w64-gcc](https://aur.archlinux.org/packages/mingw-w64-gcc/) for cross-compilation to 32-bit Windows.
 
-Install the [Djavul frontend](https://github.com/sanctuary/djavul/tree/master/cmd/djavul) executable.
+Install the [Djavul frontend](https://github.com/sanctuary/djavul/tree/master/cmd/djavul) executable `djavul-frontend.exe`.
 
 ```bash
 go get -u github.com/sanctuary/djavul/...
 ```
 
-Install the [Djavul backend](https://github.com/sanctuary/djavul/tree/master/dlls/djavul) library.
+Install the [Djavul backend](https://github.com/sanctuary/djavul/tree/master/dlls/djavul) library `djavul.dll`.
 
 ```bash
 $ cd $GOPATH/src/github.com/sanctuary
@@ -46,6 +46,32 @@ go get github.com/mewkiz/cmd/binpatch
 binpatch -o djavul.exe diablo.exe < djavul.patch
 ```
 
+Place the `djavul-frontend.exe` binary, the `djavul.dll` library and the `djavul.exe` binary in the game directory (the one containing `diablo.exe`).
+
+Copy `diabdat.mpq` to the game directory and extract its contents to a `diabdat` subdirectory of the game directory.
+
+```bash
+# Extract DIABDAT.MPQ archive.
+go get github.com/sanctuary/mpq
+mpq -dir diabdat -m diabdat.mpq
+```
+
+## Run
+
+Start the Djavul frontend.
+
+```bash
+# Execute from within the game directory.
+wine djavul-frontend.exe
+```
+
+Start the Djavul backend.
+
+```bash
+# Execute from within the game directory.
+wine djavul.exe
+```
+
 ## Progress
 
 ### 2017-12-23
@@ -61,7 +87,7 @@ binpatch -o djavul.exe diablo.exe < djavul.patch
 
 ### 2017-12-21
 
-* Forward mouse and keyboard input from Djavul front-end to Diablo 1 game engine.
+* Forward mouse and keyboard input from Djavul frontend to Diablo 1 game engine.
 
 ![Screenshot from 2017-12-21](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-12-21.png)
 
