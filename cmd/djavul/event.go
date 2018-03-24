@@ -9,13 +9,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"syscall"
 	"time"
 
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/wav"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
+	"github.com/natefinch/npipe"
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/internal/proto"
 )
@@ -141,22 +141,25 @@ func relayEngineEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, g
 func relayEngineStableActions(tmpDir string, win *pixelgl.Window, gameActions chan proto.EngineAction) {
 	// Open pipe for writing.
 	wpath := filepath.Join(tmpDir, "tcp_w")
-	if err := syscall.Mkfifo(wpath, 0666); err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
-	w, err := os.OpenFile(wpath, os.O_WRONLY, 0666)
+	l, err := npipe.Listen(wpath)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
-	defer w.Close()
-	fmt.Printf("Writing to %q.\n", wpath)
-	enc := gob.NewEncoder(w)
-	_ = enc
 	for {
-		action := <-gameActions
-		switch action := action.(type) {
-		default:
-			panic(fmt.Errorf("support for action %T not yet implemented", action))
+		conn, err := l.Accept()
+		if err != nil {
+			log.Fatalf("%+v", errors.WithStack(err))
+		}
+		defer conn.Close()
+		fmt.Printf("Writing to %q.\n", wpath)
+		enc := gob.NewEncoder(conn)
+		_ = enc
+		for {
+			action := <-gameActions
+			switch action := action.(type) {
+			default:
+				panic(fmt.Errorf("support for action %T not yet implemented", action))
+			}
 		}
 	}
 }
@@ -166,21 +169,24 @@ func relayEngineStableActions(tmpDir string, win *pixelgl.Window, gameActions ch
 func relayEngineUnstableActions(tmpDir string, win *pixelgl.Window, gameActions chan proto.EngineAction) {
 	// Open pipe for writing.
 	wpath := filepath.Join(tmpDir, "udp_w")
-	if err := syscall.Mkfifo(wpath, 0666); err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
-	w, err := os.OpenFile(wpath, os.O_WRONLY, 0666)
+	l, err := npipe.Listen(wpath)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
-	defer w.Close()
-	fmt.Printf("Writing to %q.\n", wpath)
-	enc := gob.NewEncoder(w)
 	for {
-		action := <-gameActions
-		pkt := proto.NewAction(action)
-		if err := enc.Encode(pkt); err != nil {
-			die(err)
+		conn, err := l.Accept()
+		if err != nil {
+			log.Fatalf("%+v", errors.WithStack(err))
+		}
+		defer conn.Close()
+		fmt.Printf("Writing to %q.\n", wpath)
+		enc := gob.NewEncoder(conn)
+		for {
+			action := <-gameActions
+			pkt := proto.NewAction(action)
+			if err := enc.Encode(pkt); err != nil {
+				die(err)
+			}
 		}
 	}
 }
@@ -190,22 +196,19 @@ func relayEngineUnstableActions(tmpDir string, win *pixelgl.Window, gameActions 
 func relayEngineStableEvents(tmpDir string, win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
 	// Open pipe for reading.
 	rpath := filepath.Join(tmpDir, "tcp_r")
-	if err := syscall.Mkfifo(rpath, 0666); err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
-	r, err := os.OpenFile(rpath, os.O_RDONLY, 0666)
+	conn, err := npipe.Dial(rpath)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
-	defer r.Close()
+	defer conn.Close()
 	fmt.Printf("Listening on %q.\n", rpath)
-	dec := gob.NewDecoder(r)
+	dec := gob.NewDecoder(conn)
 	for {
 		var cmd proto.CommandTCP
 		if err := dec.Decode(&cmd); err != nil {
 			if errors.Cause(err) == io.EOF {
 				//fmt.Println("disconnected")
-				dec = gob.NewDecoder(r)
+				dec = gob.NewDecoder(conn)
 				continue
 			}
 			log.Fatalf("%+v", errors.WithStack(err))
@@ -227,16 +230,13 @@ func relayEngineStableEvents(tmpDir string, win *pixelgl.Window, gameEvents chan
 func relayEngineUnstableEvents(tmpDir string, win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
 	// Open pipe for reading.
 	rpath := filepath.Join(tmpDir, "udp_r")
-	if err := syscall.Mkfifo(rpath, 0666); err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
-	r, err := os.OpenFile(rpath, os.O_RDONLY, 0666)
+	conn, err := npipe.Dial(rpath)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
-	defer r.Close()
+	defer conn.Close()
 	fmt.Printf("Listening on %q.\n", rpath)
-	dec := gob.NewDecoder(r)
+	dec := gob.NewDecoder(conn)
 	frames := 0
 	var start time.Time
 	for {
@@ -244,7 +244,7 @@ func relayEngineUnstableEvents(tmpDir string, win *pixelgl.Window, gameEvents ch
 		if err := dec.Decode(&pkg); err != nil {
 			if errors.Cause(err) == io.EOF {
 				//fmt.Println("disconnected")
-				dec = gob.NewDecoder(r)
+				dec = gob.NewDecoder(conn)
 				continue
 			}
 			log.Printf("unable to decode UDP packet; %+v", errors.WithStack(err))
