@@ -185,7 +185,7 @@ func relayEngineUnstableActions(win *pixelgl.Window, gameActions chan proto.Engi
 			action := <-gameActions
 			pkt := proto.NewAction(action)
 			if err := enc.Encode(pkt); err != nil {
-				die(err)
+				log.Printf("%v", err)
 			}
 		}
 	}
