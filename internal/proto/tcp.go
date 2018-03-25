@@ -21,8 +21,8 @@ import (
 
 // TCP pipes.
 const (
-	TCPReadPipe  = `\\.\pipe\tcp_r`
-	TCPWritePipe = `\\.\pipe\tcp_w`
+	TCPReadPipe  = ":1668" // `\\.\pipe\tcp_r`
+	TCPWritePipe = ":1669" // `\\.\pipe\tcp_w`
 )
 
 var (

@@ -32,14 +32,14 @@ import (
 //export Start
 func Start() {
 	// Store standard output in djavul.log. For trouble-shooting on Windows.
-	f, err := os.Create("djavul.log")
-	if err != nil {
-		log.Fatalf("%+v", err)
-	}
-	defer f.Close()
-	os.Stdout = f
-	os.Stderr = f
-	log.SetOutput(f)
+	//f, err := os.Create("djavul.log")
+	//if err != nil {
+	//	log.Fatalf("%+v", err)
+	//}
+	//defer f.Close()
+	//os.Stdout = f
+	//os.Stderr = f
+	//log.SetOutput(f)
 
 	fmt.Println("djavul.Start: entry point in Go")
 	cinit()
@@ -52,6 +52,11 @@ func Start() {
 	//flag.Int64Var(&end, "end", 256, "last seed")
 	//flag.Parse()
 
+	// frontend IP-address.
+	var frontendIP string
+	flag.StringVar(&frontendIP, "ip", "192.168.1.3", "frontend IP-address")
+	flag.Parse()
+
 	//engine.UseGUI = false
 	//sound.UseSound = false
 	//if err := compareL1(start, end); err != nil {
@@ -61,7 +66,7 @@ func Start() {
 
 	engine.UseGUI = true
 	sound.UseSound = false
-	if err := initFrontConn(); err != nil {
+	if err := initFrontConn(frontendIP); err != nil {
 		log.Fatalf("%+v", err)
 	}
 	winGUI()

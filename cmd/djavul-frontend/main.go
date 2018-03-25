@@ -36,10 +36,11 @@ func front() error {
 	// Create window.
 	icons := loadIcon()
 	cfg := pixelgl.WindowConfig{
-		Title:  "Djavul",
-		Icon:   icons,
-		Bounds: pixel.R(0, 0, 640, 480),
-		VSync:  true,
+		Title:       "Djavul",
+		Icon:        icons,
+		Bounds:      pixel.R(0, 0, 640, 480),
+		Undecorated: true,
+		VSync:       true,
 	}
 	win, err := pixelgl.NewWindow(cfg)
 	if err != nil {

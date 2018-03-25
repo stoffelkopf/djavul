@@ -10,45 +10,46 @@ import (
 	"io"
 	"log"
 
-	"github.com/natefinch/npipe"
+	npipe "net" //"github.com/natefinch/npipe"
+
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/internal/proto"
 )
 
 // initFrontConn initializes the connection to the front-end.
-func initFrontConn() error {
+func initFrontConn(frontendIP string) error {
 	// Initialize TCP connection.
-	fmt.Printf("Connecting to %q.\n", proto.TCPReadPipe)
-	tcpR, err := npipe.Dial(proto.TCPReadPipe)
+	fmt.Printf("Connecting to %q.\n", frontendIP+proto.TCPReadPipe)
+	tcpR, err := npipe.Dial("tcp", frontendIP+proto.TCPReadPipe)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Printf("Writing to %q.\n", proto.TCPReadPipe)
+	fmt.Printf("Writing to %q.\n", frontendIP+proto.TCPReadPipe)
 	proto.EncTCP = gob.NewEncoder(tcpR)
 
-	//fmt.Printf("Connecting to %q.\n", proto.TCPWritePipe)
-	//tcpW, err := npipe.Dial(proto.TCPWritePipe)
+	//fmt.Printf("Connecting to %q.\n", frontendIP+proto.TCPWritePipe)
+	//tcpW, err := npipe.Dial("tcp", frontendIP+proto.TCPWritePipe)
 	//if err != nil {
 	//	return errors.WithStack(err)
 	//}
-	//fmt.Printf("Reading from %q.\n", proto.TCPWritePipe)
+	//fmt.Printf("Reading from %q.\n", frontendIP+proto.TCPWritePipe)
 	//proto.DecTCP = gob.NewDecoder(tcpW)
 
 	// Initialize UDP connection.
-	fmt.Printf("Connecting to %q.\n", proto.UDPReadPipe)
-	udpR, err := npipe.Dial(proto.UDPReadPipe)
+	fmt.Printf("Connecting to %q.\n", frontendIP+proto.UDPReadPipe)
+	udpR, err := npipe.Dial("tcp", frontendIP+proto.UDPReadPipe)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Printf("Writing to %q.\n", proto.UDPReadPipe)
+	fmt.Printf("Writing to %q.\n", frontendIP+proto.UDPReadPipe)
 	proto.EncUDP = gob.NewEncoder(udpR)
 
-	fmt.Printf("Connecting to %q.\n", proto.UDPWritePipe)
-	udpW, err := npipe.Dial(proto.UDPWritePipe)
+	fmt.Printf("Connecting to %q.\n", frontendIP+proto.UDPWritePipe)
+	udpW, err := npipe.Dial("tcp", frontendIP+proto.UDPWritePipe)
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Printf("Reading from %q.\n", proto.UDPWritePipe)
+	fmt.Printf("Reading from %q.\n", frontendIP+proto.UDPWritePipe)
 	proto.DecUDP = gob.NewDecoder(udpW)
 
 	go recvActions()

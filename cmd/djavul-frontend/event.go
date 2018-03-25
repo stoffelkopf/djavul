@@ -11,11 +11,12 @@ import (
 	"path/filepath"
 	"time"
 
+	npipe "net" //"github.com/natefinch/npipe"
+
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/wav"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
-	"github.com/natefinch/npipe"
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/internal/proto"
 )
@@ -86,6 +87,7 @@ func relayWindowEvents(win *pixelgl.Window, winEvents chan WindowEvent) {
 				}
 			}
 		}
+		time.Sleep(time.Second / 500)
 	}
 }
 
@@ -140,7 +142,7 @@ func relayEngineEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, g
 func relayEngineStableActions(win *pixelgl.Window, gameActions chan proto.EngineAction) {
 	// Open pipe for writing.
 	fmt.Printf("Listening on %q.\n", proto.TCPWritePipe)
-	l, err := npipe.Listen(proto.TCPWritePipe)
+	l, err := npipe.Listen("tcp", proto.TCPWritePipe)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
@@ -169,7 +171,7 @@ func relayEngineStableActions(win *pixelgl.Window, gameActions chan proto.Engine
 func relayEngineUnstableActions(win *pixelgl.Window, gameActions chan proto.EngineAction) {
 	// Open pipe for writing.
 	fmt.Printf("Listening on %q.\n", proto.UDPWritePipe)
-	l, err := npipe.Listen(proto.UDPWritePipe)
+	l, err := npipe.Listen("tcp", proto.UDPWritePipe)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
@@ -196,7 +198,7 @@ func relayEngineUnstableActions(win *pixelgl.Window, gameActions chan proto.Engi
 func relayEngineStableEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
 	// Open pipe for reading.
 	fmt.Printf("Listening on %q.\n", proto.TCPReadPipe)
-	l, err := npipe.Listen(proto.TCPReadPipe)
+	l, err := npipe.Listen("tcp", proto.TCPReadPipe)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}
@@ -237,7 +239,7 @@ func relayEngineStableEvents(win *pixelgl.Window, gameEvents chan proto.EngineEv
 func relayEngineUnstableEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
 	// Open pipe for reading.
 	fmt.Printf("Listening on %q.\n", proto.UDPReadPipe)
-	l, err := npipe.Listen(proto.UDPReadPipe)
+	l, err := npipe.Listen("tcp", proto.UDPReadPipe)
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
 	}

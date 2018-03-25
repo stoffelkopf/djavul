@@ -23,8 +23,8 @@ import (
 
 // UDP pipes.
 const (
-	UDPReadPipe  = `\\.\pipe\udp_r`
-	UDPWritePipe = `\\.\pipe\udp_w`
+	UDPReadPipe  = ":1666" // `\\.\pipe\udp_r`
+	UDPWritePipe = ":1667" // `\\.\pipe\udp_w`
 )
 
 // PacketUDP represents a UDP packet.
