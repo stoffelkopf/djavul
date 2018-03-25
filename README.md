@@ -62,14 +62,15 @@ Start the Djavul frontend.
 
 ```bash
 # Execute from within the game directory.
-wine djavul-frontend.exe
+djavul-frontend
 ```
 
 Start the Djavul backend.
 
 ```bash
 # Execute from within the game directory.
-wine djavul.exe
+# Specify the IP-address of the system running the Djavul frontend.
+wine djavul.exe -ip 192.168.1.100
 ```
 
 ## Progress

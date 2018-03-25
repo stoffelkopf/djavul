@@ -29,23 +29,6 @@ var sprites = make(map[string][]*pixel.Sprite)
 // getSprite returns a sprite of the picture associated with the given file path
 // and frame number.
 func getSprite(relPath string, frameNum int) *pixel.Sprite {
-	name := filepath.Base(relPath)
-	switch name {
-	case "l1.cel":
-		const (
-			frameWidth  = 32
-			frameHeight = 32
-		)
-		pic := l1Sprite.Picture()
-		picBounds := pic.Bounds()
-		frame := l1Sprite.Frame()
-		k := int(picBounds.W() / frameWidth)
-		x := float64(frameWidth * (frameNum % k))
-		y := picBounds.H() - frameHeight - float64(frameHeight*(frameNum/k))
-		frame = pixel.R(x, y, x+frameWidth, y+frameHeight)
-		l1Sprite.Set(pic, frame)
-		return l1Sprite
-	}
 	ss, ok := sprites[relPath]
 	if !ok {
 		panic(fmt.Errorf("unable to locate decoded image frames of %q", relPath))
@@ -90,21 +73,6 @@ var l1Sprite *pixel.Sprite
 // loadPics loads the frames of the given CEL image.
 func loadPics(relPath string) error {
 	name := filepath.Base(relPath)
-	switch name {
-	case "l1.cel":
-		img, err := imgutil.ReadFile("l1.png")
-		if err != nil {
-			return errors.WithStack(err)
-		}
-		pic := pixel.PictureDataFromImage(img)
-		const (
-			frameWidth  = 32
-			frameHeight = 32
-		)
-		frame := pixel.R(0, 0, frameWidth, frameHeight)
-		l1Sprite = pixel.NewSprite(pic, frame)
-		return nil
-	}
 	conf, err := config.Get(name)
 	if err != nil {
 		return errors.Errorf("unable to locate image config for %q; %v", name, err)
