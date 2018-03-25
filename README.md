@@ -74,6 +74,12 @@ wine djavul.exe
 
 ## Progress
 
+### 2018-03-25
+
+* Running the Djavul frontend (`djavul-frontend`) on a Linux host system (left) and the Djavul backend (`djavul.exe`) on a Windows XP VirtualBox guest (right).
+
+![Screenshot from 2018-03-25](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2018-03-25.png)
+
 ### 2017-12-23
 
 * Decode legacy Diablo 1 save files.
