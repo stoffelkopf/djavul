@@ -8,9 +8,9 @@ import (
 	"fmt"
 
 	"github.com/AllenDang/w32"
-	"github.com/sanctuary/djavul/automap"
-	"github.com/sanctuary/djavul/capture"
-	"github.com/sanctuary/djavul/diablo"
+	"github.com/sanctuary/djavul/d1/automap"
+	"github.com/sanctuary/djavul/d1/capture"
+	"github.com/sanctuary/djavul/d1/diablo"
 )
 
 //export Init

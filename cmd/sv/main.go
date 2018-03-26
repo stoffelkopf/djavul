@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 
 	"github.com/pkg/errors"
-	"github.com/sanctuary/djavul/sha1"
+	"github.com/sanctuary/djavul/d1/sha1"
 )
 
 func usage() {

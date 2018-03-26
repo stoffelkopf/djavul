@@ -6,7 +6,7 @@ import (
 	"image"
 	"log"
 
-	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/d1/engine"
 	"github.com/sanctuary/djavul/internal/proto"
 )
 

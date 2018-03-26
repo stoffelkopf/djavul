@@ -7,11 +7,11 @@ import (
 	"log"
 	"unsafe"
 
-	"github.com/sanctuary/djavul/engine"
-	"github.com/sanctuary/djavul/gendung"
+	"github.com/sanctuary/djavul/d1/engine"
+	"github.com/sanctuary/djavul/d1/gendung"
+	"github.com/sanctuary/djavul/d1/lighting"
+	"github.com/sanctuary/djavul/d1/scrollrt"
 	"github.com/sanctuary/djavul/internal/proto"
-	"github.com/sanctuary/djavul/lighting"
-	"github.com/sanctuary/djavul/scrollrt"
 )
 
 // drawTopArchesUpperScreen draws arches on the upper screen, with added

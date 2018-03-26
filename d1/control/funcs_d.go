@@ -11,7 +11,7 @@ package control
 import "C"
 
 import (
-	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/d1/engine"
 )
 
 const (

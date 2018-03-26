@@ -8,12 +8,12 @@ import (
 	"unsafe"
 
 	"github.com/pkg/errors"
-	"github.com/sanctuary/djavul/diablo"
-	"github.com/sanctuary/djavul/engine"
-	"github.com/sanctuary/djavul/gendung"
-	"github.com/sanctuary/djavul/lighting"
-	"github.com/sanctuary/djavul/multi"
-	"github.com/sanctuary/djavul/quests"
+	"github.com/sanctuary/djavul/d1/diablo"
+	"github.com/sanctuary/djavul/d1/engine"
+	"github.com/sanctuary/djavul/d1/gendung"
+	"github.com/sanctuary/djavul/d1/lighting"
+	"github.com/sanctuary/djavul/d1/multi"
+	"github.com/sanctuary/djavul/d1/quests"
 	"github.com/sanctuary/formats/level/til"
 )
 

@@ -18,7 +18,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/d1/engine"
 )
 
 const (

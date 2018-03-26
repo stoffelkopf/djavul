@@ -9,7 +9,7 @@ import (
 
 	"github.com/AllenDang/w32"
 	"github.com/faiface/pixel/pixelgl"
-	"github.com/sanctuary/djavul/diablo"
+	"github.com/sanctuary/djavul/d1/diablo"
 	"github.com/sanctuary/djavul/internal/proto"
 )
 

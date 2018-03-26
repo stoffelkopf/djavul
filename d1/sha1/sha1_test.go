@@ -5,7 +5,7 @@ import (
 	"hash"
 	"testing"
 
-	"github.com/sanctuary/djavul/sha1"
+	"github.com/sanctuary/djavul/d1/sha1"
 )
 
 func TestSum(t *testing.T) {

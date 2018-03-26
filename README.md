@@ -28,11 +28,11 @@ Install the [Djavul frontend](https://github.com/sanctuary/djavul/tree/master/cm
 go get -u github.com/sanctuary/djavul/...
 ```
 
-Install the [Djavul backend](https://github.com/sanctuary/djavul/tree/master/dlls/djavul) library `djavul.dll`.
+Install the [Djavul backend](https://github.com/sanctuary/djavul/tree/master/dll/djavul) library `djavul.dll`.
 
 ```bash
 $ cd $GOPATH/src/github.com/sanctuary
-$ make -C dlls/djavul
+$ make -C dll/djavul
 ```
 
 Install the Djavul backend executable `djavul.exe` by applying the patch file [djavul.patch](https://github.com/sanctuary/djavul-patch) to `diablo.exe` (v1.09b).

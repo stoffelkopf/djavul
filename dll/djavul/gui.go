@@ -7,11 +7,11 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/sanctuary/djavul/control"
-	"github.com/sanctuary/djavul/engine"
-	"github.com/sanctuary/djavul/multi"
-	"github.com/sanctuary/djavul/scrollrt"
-	"github.com/sanctuary/djavul/world"
+	"github.com/sanctuary/djavul/d1/control"
+	"github.com/sanctuary/djavul/d1/engine"
+	"github.com/sanctuary/djavul/d1/multi"
+	"github.com/sanctuary/djavul/d1/scrollrt"
+	"github.com/sanctuary/djavul/d1/world"
 )
 
 // ### [ Exports ] #############################################################

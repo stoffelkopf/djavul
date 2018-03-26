@@ -7,7 +7,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/sanctuary/djavul/sound"
+	"github.com/sanctuary/djavul/d1/sound"
 )
 
 // --- [ sound ] ---------------------------------------------------------------

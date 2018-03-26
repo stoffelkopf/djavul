@@ -12,12 +12,12 @@ import (
 
 	"github.com/kr/pretty"
 	"github.com/pkg/errors"
-	"github.com/sanctuary/djavul/diablo"
-	"github.com/sanctuary/djavul/gendung"
-	dinit "github.com/sanctuary/djavul/init"
-	"github.com/sanctuary/djavul/l1"
-	"github.com/sanctuary/djavul/multi"
-	"github.com/sanctuary/djavul/quests"
+	"github.com/sanctuary/djavul/d1/diablo"
+	"github.com/sanctuary/djavul/d1/gendung"
+	dinit "github.com/sanctuary/djavul/d1/init"
+	"github.com/sanctuary/djavul/d1/l1"
+	"github.com/sanctuary/djavul/d1/multi"
+	"github.com/sanctuary/djavul/d1/quests"
 )
 
 // dumpL1Maps stores the tile ID, dungeon piece ID and arch num maps for the

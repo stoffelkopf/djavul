@@ -24,9 +24,9 @@ import (
 	"strings"
 
 	"github.com/AllenDang/w32"
-	"github.com/sanctuary/djavul/diablo"
-	"github.com/sanctuary/djavul/engine"
-	"github.com/sanctuary/djavul/sound"
+	"github.com/sanctuary/djavul/d1/diablo"
+	"github.com/sanctuary/djavul/d1/engine"
+	"github.com/sanctuary/djavul/d1/sound"
 )
 
 //export Start

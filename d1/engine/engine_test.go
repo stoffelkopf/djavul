@@ -5,7 +5,7 @@ package engine_test
 import (
 	"testing"
 
-	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/d1/engine"
 )
 
 func TestRand(t *testing.T) {

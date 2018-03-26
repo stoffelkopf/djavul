@@ -17,7 +17,7 @@ package scrollrt
 import "C"
 
 import (
-	"github.com/sanctuary/djavul/engine"
+	"github.com/sanctuary/djavul/d1/engine"
 )
 
 // DrawMain renders the specified parts of the UI and the game world on screen.

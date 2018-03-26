@@ -7,7 +7,7 @@ import (
 	"log"
 	"unsafe"
 
-	"github.com/sanctuary/djavul/dx"
+	"github.com/sanctuary/djavul/d1/dx"
 	"github.com/sanctuary/djavul/internal/proto"
 )
 

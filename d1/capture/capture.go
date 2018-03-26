@@ -13,10 +13,10 @@ import (
 	"github.com/mewkiz/pkg/imgutil"
 	"github.com/mewkiz/pkg/osutil"
 	"github.com/pkg/errors"
-	"github.com/sanctuary/djavul/dx"
+	"github.com/sanctuary/djavul/d1/dx"
+	"github.com/sanctuary/djavul/d1/scrollrt"
 	"github.com/sanctuary/djavul/internal/assets"
 	"github.com/sanctuary/djavul/internal/ddraw"
-	"github.com/sanctuary/djavul/scrollrt"
 )
 
 // Screenshot captures a screenshot and stores it within the game directory as

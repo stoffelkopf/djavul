@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/sanctuary/djavul/engine"
-	"github.com/sanctuary/djavul/gendung"
+	"github.com/sanctuary/djavul/d1/engine"
+	"github.com/sanctuary/djavul/d1/gendung"
 	"github.com/sanctuary/formats/level/min"
 	"github.com/sanctuary/formats/level/til"
 )

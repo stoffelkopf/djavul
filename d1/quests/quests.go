@@ -8,9 +8,9 @@ import (
 	"reflect"
 	"unsafe"
 
-	"github.com/sanctuary/djavul/engine"
-	"github.com/sanctuary/djavul/gendung"
-	"github.com/sanctuary/djavul/multi"
+	"github.com/sanctuary/djavul/d1/engine"
+	"github.com/sanctuary/djavul/d1/gendung"
+	"github.com/sanctuary/djavul/d1/multi"
 )
 
 // isActive reports whether the given quest is active.
