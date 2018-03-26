@@ -23,7 +23,7 @@ For an overview of the key idea behind this project, refer to the [design docume
 
 ## Installation
 
-For installation and run instructions, refer to the documentation of the respective operating system:
+For installation and run instructions, refer to the respective documentation:
 
 * [Linux installation](INSTALL_linux.md)
 * [Windows installation](INSTALL_windows.md)
