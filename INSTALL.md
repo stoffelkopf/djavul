@@ -119,3 +119,9 @@ djavul.exe -ip localhost
 # Optional: Multiplayer over UDP
 
 To enable Local Area Network over UDP, refer to the thread [The death of IPX protocol [IPX + UDP Fix]](http://www.lurkerlounge.com/forums/thread-353.html) at Lurker Lounge. In essence, download the `UDP_Diablo&Hellfire.zip` archive, extract it, and replace `battle.snp` with `sndi.nx`. Make sure the rename `sndi.nx` to `sndi.snp` for `storm.dll` to be able to locate it. For reference, the SHA1 hash sum of `sndi.nx` is `f08c935b60fb6b844dcc4690b1abbc8a7a4e1eda`.
+
+# Note
+
+These installation instructions have been verified to work on Windows 7.
+
+If you have a native installation of Windows XP, Windows 8 or Windows 10, please let us know if the instructions are working for you as well. Otherwise, please report an issue on the bug tracker.
