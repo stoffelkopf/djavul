@@ -17,10 +17,16 @@ To achieve this aim, the following objectives have been identified.
 5. Implement a set of tools around these modules which through interaction provide the functionality of the original Diablo 1 game engine.
 6. Validate that - given a deterministic seed - the re-implementation achieve pixel perfection, by mirroring the mouse and keyboard input and comparing the graphic and audio output against the original Diablo 1 game.
 
+## Design
+
+For an overview of the key idea behind this project, refer to the [design documentation](DESIGN.md).
+
 ## Installation
 
-* [Linux installation and run instructions](https://github.com/sanctuary/djavul/blob/master/INSTALL_linux.md).
-* [Windows installation and run instructions](https://github.com/sanctuary/djavul/blob/master/INSTALL_windows.md).
+For installation and run instructions, refer to the documentation of the respective operating system:
+
+* [Linux installation](INSTALL_linux.md)
+* [Windows installation](INSTALL_windows.md)
 
 ## Progress
 
