@@ -1,8 +1,15 @@
 # Djavul
 
+
 The Djavul project is divided into a frontend and a backend component, where the frontend is responsible for rendering, audio playback, window creation and event handling, and the backend is responsible for handling the core logic of the game engine.
 
 The frontend and backend components communicate using IPC (either through network sockets or named pipes). Currently, the frontend listens for incoming connections and the backend connects to the frontend. In the future, the direction of communication may be reversed to support multiplayer games and observer mode.
+
+## Key Idea
+
+Reuse the original `diablo.exe` executable as a game engine, and carve out all parts not strictly related to core logic; let this modified executable be called `djavul.exe` and referred to as the Djavul backend (also known as *the game engine*).
+
+Connect the Djavul backend to a lightweight platform independent frontend, which has the responsibility of rendering sprites, playing sounds, and relaying game actions based on user input (e.g. received through mouse and keyboard) back to the game engine. The `djavul-frontend` binary is *one* implementation of the frontend, there may exist several independent implementations, e.g. one for Playstation, one for GameBoy, one for Android and iOS, and one for Linux, Windows and macOS. It is also conceivable to imagine a frontend which cannot relay game actions to the engine, but is a passive receiver of information from the game engine. Such a frontend would basically implement *observer mode* functionality.
 
 ## Frontend
 
