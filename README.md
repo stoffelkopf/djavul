@@ -120,9 +120,3 @@ wine djavul.exe -ip 192.168.1.100
 
 * Dungeon generation of Cathedral.
     - [cmd/l1](cmd/l1)
-
-## Public domain
-
-The source code and any original content of this repository is hereby released into the [public domain].
-
-[public domain]: https://creativecommons.org/publicdomain/zero/1.0/
