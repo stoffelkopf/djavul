@@ -69,7 +69,8 @@ Start the Djavul backend.
 
 ```bash
 # Execute from within the game directory.
-# Specify the IP-address of the system running the Djavul frontend.
+# Specify the IP-address of the system running the Djavul frontend
+# (default is localhost).
 wine djavul.exe -ip 192.168.1.100
 ```
 

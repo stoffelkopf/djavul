@@ -54,7 +54,7 @@ func Start() {
 
 	// frontend IP-address.
 	var frontendIP string
-	flag.StringVar(&frontendIP, "ip", "192.168.1.3", "frontend IP-address")
+	flag.StringVar(&frontendIP, "ip", "localhost", "frontend IP-address")
 	flag.Parse()
 
 	//engine.UseGUI = false
