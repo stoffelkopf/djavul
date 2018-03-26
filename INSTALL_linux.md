@@ -1,4 +1,4 @@
-## Installation
+# Installation on Linux
 
 1. Install [Go](https://golang.org/doc/install).
 2. Install [mingw-w64-gcc](https://aur.archlinux.org/packages/mingw-w64-gcc/) for cross-compilation to 32-bit Windows.
@@ -37,7 +37,7 @@ go get github.com/sanctuary/mpq
 mpq -dir diabdat -m diabdat.mpq
 ```
 
-## Run
+# Run
 
 Start the Djavul frontend.
 
