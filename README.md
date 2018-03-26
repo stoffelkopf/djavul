@@ -51,7 +51,7 @@ Place the `djavul-frontend.exe` binary, the `djavul.dll` library and the `djavul
 Copy `diabdat.mpq` to the game directory and extract its contents to a `diabdat` subdirectory of the game directory.
 
 ```bash
-# Extract DIABDAT.MPQ archive.
+# Extract the diabdat.mpq archive.
 go get github.com/sanctuary/mpq
 mpq -dir diabdat -m diabdat.mpq
 ```
