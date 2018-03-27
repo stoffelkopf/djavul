@@ -63,8 +63,8 @@ func front() error {
 		unstable proto.IPC
 	)
 	if npipe {
-		stable = proto.NewStableNamedPipe(".")
-		unstable = proto.NewUnstableNamedPipe(".")
+		stable = proto.NewStableNamedPipe("localhost")
+		unstable = proto.NewUnstableNamedPipe("localhost")
 	} else {
 		stable = proto.NewStableTCP("localhost")
 		unstable = proto.NewUnstableTCP("localhost")

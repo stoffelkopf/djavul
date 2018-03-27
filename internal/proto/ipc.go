@@ -23,17 +23,17 @@ const (
 
 // NamedPipe is a named pipe IPC handler.
 type NamedPipe struct {
-	addr string
+	ip   string
+	pipe string
 }
 
 // NewNamedPipe returns a new named pipe IPC handler based on the IP of the
 // remote host and pipe name.
 func NewNamedPipe(ip, pipe string) *NamedPipe {
-	if ip == "localhost" {
-		ip = "."
+	return &NamedPipe{
+		ip:   ip,
+		pipe: pipe,
 	}
-	addr := fmt.Sprintf(`\\%s\pipe\%s`, ip, pipe)
-	return &NamedPipe{addr: addr}
 }
 
 // NewStableNamedPipe returns a new stable named pipe IPC handler based on the
@@ -46,11 +46,6 @@ func NewStableNamedPipe(ip string) *NamedPipe {
 // the IP of the remote host.
 func NewUnstableNamedPipe(ip string) *NamedPipe {
 	return NewNamedPipe(ip, unstablePipe)
-}
-
-// Addr returns the address of the named pipe.
-func (i *NamedPipe) Addr() string {
-	return i.addr
 }
 
 // Stable and unstable ports.
