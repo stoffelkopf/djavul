@@ -7,11 +7,10 @@ import (
 	"image"
 	"io"
 	"log"
+	"net"
 	"os"
 	"path/filepath"
 	"time"
-
-	npipe "net" //"github.com/natefinch/npipe"
 
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/wav"
@@ -22,14 +21,20 @@ import (
 )
 
 // loop initiates the event loop of the front-end.
-func loop(win *pixelgl.Window) {
+func loop(win *pixelgl.Window, stable, unstable proto.IPC) {
+	// Listen for incoming connections.
+	stableConns := make(chan net.Conn)
+	go listen(stable, stableConns)
+	unstableConns := make(chan net.Conn)
+	go listen(unstable, unstableConns)
+
 	// Relay window events.
 	winEvents := make(chan WindowEvent)
 	go relayWindowEvents(win, winEvents)
 	// Relay events from and actions to the Diablo 1 game engine.
 	gameEvents := make(chan proto.EngineEvent)
 	gameActions := make(chan proto.EngineAction)
-	go relayEngineEvents(win, gameEvents, gameActions)
+	go relayEngineEvents(win, stableConns, unstableConns, gameEvents, gameActions)
 	for {
 		select {
 		// Handle window events.
@@ -52,6 +57,26 @@ func loop(win *pixelgl.Window) {
 			time.Sleep(time.Second / 100)
 			win.UpdateInput()
 		}
+	}
+}
+
+// listen listens for incoming connections on the given IPC channel, and sends
+// accepted connections to the conns channel.
+func listen(ipc proto.IPC, conns chan net.Conn) {
+	fmt.Printf("Listening on %q.\n", ipc.Addr())
+	l, err := ipc.Listen()
+	if err != nil {
+		log.Fatalf("%+v", errors.WithStack(err))
+	}
+	defer l.Close()
+	for {
+		conn, err := l.Accept()
+		if err != nil {
+			log.Fatalf("%+v", errors.WithStack(err))
+		}
+		defer conn.Close()
+		fmt.Printf("Accepted connection from %q.\n", conn.RemoteAddr())
+		conns <- conn
 	}
 }
 
@@ -128,33 +153,42 @@ func (ButtonReleasedEvent) isWindowEvent() {}
 // === [ Engine events ] =======================================================
 
 // relayEngineEvents relays events to and from the Diablo 1 game engine.
-func relayEngineEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
+func relayEngineEvents(win *pixelgl.Window, stableConns, unstableConns chan net.Conn, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
+	var (
+		//stableEncs   = make(chan *gob.Encoder)
+		stableDecs   = make(chan *gob.Decoder)
+		unstableEncs = make(chan *gob.Encoder)
+		unstableDecs = make(chan *gob.Decoder)
+	)
+	go func() {
+		for {
+			select {
+			case stableConn := <-stableConns:
+				//stableEnc := gob.NewEncoder(stableConn)
+				stableDec := gob.NewDecoder(stableConn)
+				//stableEncs <- stableEnc
+				stableDecs <- stableDec
+			case unstableConn := <-unstableConns:
+				unstableEnc := gob.NewEncoder(unstableConn)
+				unstableDec := gob.NewDecoder(unstableConn)
+				unstableEncs <- unstableEnc
+				unstableDecs <- unstableDec
+			}
+		}
+	}()
 	// Relay events on unstable connection to the Diablo 1 game engine.
-	go relayEngineUnstableEvents(win, gameEvents, gameActions)
-	go relayEngineUnstableActions(win, gameActions)
+	go relayEngineUnstableActions(win, unstableEncs, gameActions)
+	go relayEngineUnstableEvents(win, unstableDecs, gameEvents, gameActions)
 	// Relay events on stable connection to the Diablo 1 game engine.
-	//go relayEngineStableActions(win, gameActions)
-	relayEngineStableEvents(win, gameEvents, gameActions)
+	//go relayEngineStableActions(win, stableEncs, gameActions)
+	relayEngineStableEvents(win, stableDecs, gameEvents, gameActions)
 }
 
 // relayEngineStableActions relays actions on stable connection to the Diablo 1
 // game engine.
-func relayEngineStableActions(win *pixelgl.Window, gameActions chan proto.EngineAction) {
-	// Open pipe for writing.
-	fmt.Printf("Listening on %q.\n", proto.TCPWritePipe)
-	l, err := npipe.Listen("tcp", proto.TCPWritePipe)
-	if err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
-	defer l.Close()
+func relayEngineStableActions(win *pixelgl.Window, stableEncs chan *gob.Encoder, gameActions chan proto.EngineAction) {
 	for {
-		tpcW, err := l.Accept()
-		if err != nil {
-			log.Fatalf("%+v", errors.WithStack(err))
-		}
-		defer tpcW.Close()
-		fmt.Printf("Writing to %q.\n", proto.TCPWritePipe)
-		enc := gob.NewEncoder(tpcW)
+		enc := <-stableEncs
 		_ = enc
 		for {
 			action := <-gameActions
@@ -168,21 +202,9 @@ func relayEngineStableActions(win *pixelgl.Window, gameActions chan proto.Engine
 
 // relayEngineUnstableActions relays actions on unstable connection to the
 // Diablo 1 game engine.
-func relayEngineUnstableActions(win *pixelgl.Window, gameActions chan proto.EngineAction) {
-	// Open pipe for writing.
-	fmt.Printf("Listening on %q.\n", proto.UDPWritePipe)
-	l, err := npipe.Listen("tcp", proto.UDPWritePipe)
-	if err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
+func relayEngineUnstableActions(win *pixelgl.Window, unstableEncs chan *gob.Encoder, gameActions chan proto.EngineAction) {
 	for {
-		udpW, err := l.Accept()
-		if err != nil {
-			log.Fatalf("%+v", errors.WithStack(err))
-		}
-		defer udpW.Close()
-		fmt.Printf("Writing to %q.\n", proto.UDPWritePipe)
-		enc := gob.NewEncoder(udpW)
+		enc := <-unstableEncs
 		for {
 			action := <-gameActions
 			pkt := proto.NewAction(action)
@@ -195,29 +217,16 @@ func relayEngineUnstableActions(win *pixelgl.Window, gameActions chan proto.Engi
 
 // relayEngineStableEvents relays events on stable connection to the Diablo 1
 // game engine.
-func relayEngineStableEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
-	// Open pipe for reading.
-	fmt.Printf("Listening on %q.\n", proto.TCPReadPipe)
-	l, err := npipe.Listen("tcp", proto.TCPReadPipe)
-	if err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
-	defer l.Close()
+func relayEngineStableEvents(win *pixelgl.Window, stableDecs chan *gob.Decoder, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
+loop:
 	for {
-		tcpR, err := l.Accept()
-		if err != nil {
-			log.Fatalf("%+v", errors.WithStack(err))
-		}
-		defer tcpR.Close()
-		fmt.Printf("Reading from %q.\n", proto.TCPReadPipe)
-		dec := gob.NewDecoder(tcpR)
+		dec := <-stableDecs
 		for {
-			var cmd proto.CommandTCP
+			var cmd proto.CommandStable
 			if err := dec.Decode(&cmd); err != nil {
 				if errors.Cause(err) == io.EOF {
 					//fmt.Println("disconnected")
-					dec = gob.NewDecoder(tcpR)
-					continue
+					continue loop
 				}
 				log.Fatalf("%+v", errors.WithStack(err))
 			}
@@ -236,33 +245,21 @@ func relayEngineStableEvents(win *pixelgl.Window, gameEvents chan proto.EngineEv
 
 // relayEngineUnstableEvents relays events on unstable connection to the Diablo
 // 1 game engine.
-func relayEngineUnstableEvents(win *pixelgl.Window, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
+func relayEngineUnstableEvents(win *pixelgl.Window, unstableDecs chan *gob.Decoder, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
 	// Open pipe for reading.
-	fmt.Printf("Listening on %q.\n", proto.UDPReadPipe)
-	l, err := npipe.Listen("tcp", proto.UDPReadPipe)
-	if err != nil {
-		log.Fatalf("%+v", errors.WithStack(err))
-	}
-	defer l.Close()
+loop:
 	for {
-		udpR, err := l.Accept()
-		if err != nil {
-			log.Fatalf("%+v", errors.WithStack(err))
-		}
-		defer udpR.Close()
-		fmt.Printf("Reading from %q.\n", proto.UDPReadPipe)
-		dec := gob.NewDecoder(udpR)
+		dec := <-unstableDecs
 		frames := 0
 		var start time.Time
 		for {
-			var pkg proto.PacketUDP
+			var pkg proto.PacketUnstable
 			if err := dec.Decode(&pkg); err != nil {
 				if errors.Cause(err) == io.EOF {
 					//fmt.Println("disconnected")
-					dec = gob.NewDecoder(udpR)
-					continue
+					continue loop
 				}
-				log.Printf("unable to decode UDP packet; %+v", errors.WithStack(err))
+				log.Printf("unable to decode unstable packet; %+v", errors.WithStack(err))
 				continue
 			}
 			//fmt.Println("recv cmd:", pkg.Cmd)
@@ -311,7 +308,7 @@ func ExecDrawImages(win *pixelgl.Window, data []byte) {
 }
 
 func ExecDrawImage(win *pixelgl.Window, cmd proto.DrawImage) {
-	fmt.Println("recv pkg:", cmd)
+	//fmt.Println("recv pkg:", cmd)
 	sprite := getSprite(cmd.Path, cmd.FrameNum)
 	const screenHeight = 480
 	dp := cmd.Dp

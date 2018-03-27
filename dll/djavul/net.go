@@ -10,47 +10,31 @@ import (
 	"io"
 	"log"
 
-	npipe "net" //"github.com/natefinch/npipe"
-
 	"github.com/pkg/errors"
 	"github.com/sanctuary/djavul/internal/proto"
 )
 
 // initFrontConn initializes the connection to the front-end.
-func initFrontConn(frontendIP string) error {
-	// Initialize TCP connection.
-	fmt.Printf("Connecting to %q.\n", frontendIP+proto.TCPReadPipe)
-	tcpR, err := npipe.Dial("tcp", frontendIP+proto.TCPReadPipe)
+func initFrontConn(stable, unstable proto.IPC) error {
+	// Initialize stable connection.
+	fmt.Printf("Connecting to %q.\n", stable.Addr())
+	stableConn, err := stable.Dial()
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Printf("Writing to %q.\n", frontendIP+proto.TCPReadPipe)
-	proto.EncTCP = gob.NewEncoder(tcpR)
+	fmt.Printf("Connected to %q.\n", stableConn.RemoteAddr())
+	proto.EncStable = gob.NewEncoder(stableConn)
+	//proto.DecStable = gob.NewDecoder(stableConn)
 
-	//fmt.Printf("Connecting to %q.\n", frontendIP+proto.TCPWritePipe)
-	//tcpW, err := npipe.Dial("tcp", frontendIP+proto.TCPWritePipe)
-	//if err != nil {
-	//	return errors.WithStack(err)
-	//}
-	//fmt.Printf("Reading from %q.\n", frontendIP+proto.TCPWritePipe)
-	//proto.DecTCP = gob.NewDecoder(tcpW)
-
-	// Initialize UDP connection.
-	fmt.Printf("Connecting to %q.\n", frontendIP+proto.UDPReadPipe)
-	udpR, err := npipe.Dial("tcp", frontendIP+proto.UDPReadPipe)
+	// Initialize unstable connection.
+	fmt.Printf("Connecting to %q.\n", unstable.Addr())
+	unstableConn, err := unstable.Dial()
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Printf("Writing to %q.\n", frontendIP+proto.UDPReadPipe)
-	proto.EncUDP = gob.NewEncoder(udpR)
-
-	fmt.Printf("Connecting to %q.\n", frontendIP+proto.UDPWritePipe)
-	udpW, err := npipe.Dial("tcp", frontendIP+proto.UDPWritePipe)
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	fmt.Printf("Reading from %q.\n", frontendIP+proto.UDPWritePipe)
-	proto.DecUDP = gob.NewDecoder(udpW)
+	fmt.Printf("Connected to %q.\n", unstableConn.RemoteAddr())
+	proto.EncUnstable = gob.NewEncoder(unstableConn)
+	proto.DecUnstable = gob.NewDecoder(unstableConn)
 
 	go recvActions()
 	return nil
@@ -60,8 +44,8 @@ func initFrontConn(frontendIP string) error {
 func recvActions() {
 	proto.Actions = make(chan proto.EngineAction)
 	for {
-		var pkt proto.PacketUDP
-		if err := proto.DecUDP.Decode(&pkt); err != nil {
+		var pkt proto.PacketUnstable
+		if err := proto.DecUnstable.Decode(&pkt); err != nil {
 			if errors.Cause(err) == io.EOF {
 				fmt.Println("disconnected")
 				break

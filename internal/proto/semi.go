@@ -6,7 +6,7 @@ package proto
 // as no new command has been issued (such as mouse click). Resend and track
 // packet delivery only until a new command has replaced an ond one.
 //
-// Semi-reliable packet loss is nto good: resend until new command is issued.
+// Semi-reliable packet loss is not good: resend until new command is issued.
 
 // TODO: figure out what type of network communication fits this senario.
 // Probably light weight wrapper around UDP.

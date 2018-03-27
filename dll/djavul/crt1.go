@@ -27,6 +27,7 @@ import (
 	"github.com/sanctuary/djavul/d1/diablo"
 	"github.com/sanctuary/djavul/d1/engine"
 	"github.com/sanctuary/djavul/d1/sound"
+	"github.com/sanctuary/djavul/internal/proto"
 )
 
 //export Start
@@ -52,10 +53,27 @@ func Start() {
 	//flag.Int64Var(&end, "end", 256, "last seed")
 	//flag.Parse()
 
-	// frontend IP-address.
-	var frontendIP string
-	flag.StringVar(&frontendIP, "ip", "localhost", "frontend IP-address")
+	var (
+		// frontend IP-address.
+		ip string
+		// npipe specifies whether to use named pipes for IPC.
+		npipe bool
+	)
+	flag.StringVar(&ip, "ip", "localhost", "frontend IP-address")
+	flag.BoolVar(&npipe, "npipe", false, "use named pipes for IPC")
 	flag.Parse()
+
+	var (
+		stable   proto.IPC
+		unstable proto.IPC
+	)
+	if npipe {
+		stable = proto.NewStableNamedPipe(ip)
+		unstable = proto.NewUnstableNamedPipe(ip)
+	} else {
+		stable = proto.NewStableTCP(ip)
+		unstable = proto.NewUnstableTCP(ip)
+	}
 
 	//engine.UseGUI = false
 	//sound.UseSound = false
@@ -66,7 +84,7 @@ func Start() {
 
 	engine.UseGUI = true
 	sound.UseSound = false
-	if err := initFrontConn(frontendIP); err != nil {
+	if err := initFrontConn(stable, unstable); err != nil {
 		log.Fatalf("%+v", err)
 	}
 	winGUI()

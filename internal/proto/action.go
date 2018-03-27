@@ -43,8 +43,8 @@ func (ButtonPressedAction) isEngineAction()  {}
 func (ButtonReleasedAction) isEngineAction() {}
 
 // NewAction encodes the given action into a network packet.
-func NewAction(action EngineAction) *PacketUDP {
-	pkt := &PacketUDP{}
+func NewAction(action EngineAction) *PacketUnstable {
+	pkt := &PacketUnstable{}
 	switch action := action.(type) {
 	case ButtonPressedAction:
 		pkt.Cmd = CmdButtonPressedAction

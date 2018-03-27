@@ -2,6 +2,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 	"github.com/mewkiz/pkg/term"
 	"github.com/pkg/errors"
+	"github.com/sanctuary/djavul/internal/proto"
 )
 
 var (
@@ -33,6 +35,14 @@ func run() {
 
 // front initiates a graphical front-end to the Diablo 1 game engine.
 func front() error {
+	// Parse command line arguments.
+	var (
+		// npipe specifies whether to use named pipes for IPC.
+		npipe bool
+	)
+	flag.BoolVar(&npipe, "npipe", false, "use named pipes for IPC")
+	flag.Parse()
+
 	// Create window.
 	icons := loadIcon()
 	cfg := pixelgl.WindowConfig{
@@ -46,8 +56,23 @@ func front() error {
 	if err != nil {
 		return errors.WithStack(err)
 	}
+
+	// Create handler for stable and unstable IPC connections.
+	var (
+		stable   proto.IPC
+		unstable proto.IPC
+	)
+	if npipe {
+		stable = proto.NewStableNamedPipe(".")
+		unstable = proto.NewUnstableNamedPipe(".")
+	} else {
+		stable = proto.NewStableTCP("localhost")
+		unstable = proto.NewUnstableTCP("localhost")
+	}
+
 	// Initiate the event loop.
-	loop(win)
+	loop(win, stable, unstable)
+
 	return nil
 }
 

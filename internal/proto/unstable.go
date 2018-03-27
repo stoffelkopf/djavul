@@ -5,7 +5,6 @@ package proto
 import (
 	"bytes"
 	"encoding/gob"
-	"fmt"
 	"image"
 
 	"github.com/pkg/errors"
@@ -17,64 +16,50 @@ import (
 // logic of the game engine (such as the rendering of frames, playback of
 // sounds).
 //
-// UDP packet loss is insignificant: drop.
+// Unstable packet loss is insignificant: drop.
 //
 // Spoofing doesn't matter.
 
-// UDP pipes.
-const (
-	UDPReadPipe  = ":1666" // `\\.\pipe\udp_r`
-	UDPWritePipe = ":1667" // `\\.\pipe\udp_w`
-)
-
-// PacketUDP represents a UDP packet.
-type PacketUDP struct {
-	Cmd  CommandUDP
+// PacketUnstable represents an unstable packet.
+type PacketUnstable struct {
+	Cmd  CommandUnstable
 	Data []byte
 }
 
 var (
-	// EncUDP holds a Gob encoder for the UDP connection to the front-end.
-	EncUDP *gob.Encoder
-	// DecUDP holds a Gob decoder for the UDP connection to the front-end.
-	DecUDP *gob.Decoder
+	// EncUnstable holds a Gob encoder for the unstable connection to the
+	// frontend.
+	EncUnstable *gob.Encoder
+	// DecUnstable holds a Gob decoder for the unstable connection to the
+	// frontend.
+	DecUnstable *gob.Decoder
 )
 
-// CommandUDP specifies a UDP command to send to front-end.
-type CommandUDP uint8
+//go:generate stringer -type CommandUnstable
 
-// UDP commands.
+// CommandUnstable specifies a unstable command to send to frontend.
+type CommandUnstable uint8
+
+// Unstable commands.
 const (
 	// Engine events.
 
 	// CmdDrawImage specifies an image to draw.
-	CmdDrawImage CommandUDP = iota + 1
+	CmdDrawImage CommandUnstable = iota + 1
 	// CmdUpdateScreen specifies that the screen should be updated.
 	CmdUpdateScreen
 	// CmdPlaySound specifies a sound to play.
 	CmdPlaySound
 
-	// Front-end actions.
+	// Frontend actions.
 
 	// CmdButtonPressedAction specifies a mouse button or keyboard key pressed on
-	// the front-end.
+	// the frontend.
 	CmdButtonPressedAction
 	// CmdButtonPressedAction specifies a mouse button or keyboard key released
-	// on the front-end.
+	// on the frontend.
 	CmdButtonReleasedAction
 )
-
-// String returns the string representation of the UDP command.
-func (cmd CommandUDP) String() string {
-	m := map[CommandUDP]string{
-		CmdDrawImage:    "CmdDrawImage",
-		CmdUpdateScreen: "CmdUpdateScreen",
-	}
-	if s, ok := m[cmd]; ok {
-		return s
-	}
-	return fmt.Sprintf("unknown CommandTCP(%d)", uint(cmd))
-}
 
 // DrawImage specifies an image to draw at a given coordinate.
 type DrawImage struct {
@@ -87,7 +72,7 @@ type DrawImage struct {
 // drawImages is a buffer of images to draw at each frame update.
 var drawImages []DrawImage
 
-// SendDrawImage send a draw image command to the front-end.
+// SendDrawImage send a draw image command to the frontend.
 func SendDrawImage(path string, x, y int, frameNum int) error {
 	data := DrawImage{
 		Path:     path,
@@ -98,8 +83,8 @@ func SendDrawImage(path string, x, y int, frameNum int) error {
 	return nil
 }
 
-// SendDrawSubimage send a draw image command to the front-end, for the
-// specified subimage.
+// SendDrawSubimage send a draw image command to the frontend, for the specified
+// subimage.
 func SendDrawSubimage(path string, x, y int, sr image.Rectangle, frameNum int) error {
 	data := DrawImage{
 		Path:     path,
@@ -111,7 +96,7 @@ func SendDrawSubimage(path string, x, y int, sr image.Rectangle, frameNum int) e
 	return nil
 }
 
-// SendUpdateScreen send an update screen command to the front-end.
+// SendUpdateScreen send an update screen command to the frontend.
 func SendUpdateScreen() error {
 	buf := &bytes.Buffer{}
 	enc := gob.NewEncoder(buf)
@@ -119,11 +104,11 @@ func SendUpdateScreen() error {
 		return errors.WithStack(err)
 	}
 	drawImages = drawImages[:0]
-	pkg := PacketUDP{
+	pkg := PacketUnstable{
 		Cmd:  CmdUpdateScreen,
 		Data: buf.Bytes(),
 	}
-	if err := EncUDP.Encode(&pkg); err != nil {
+	if err := EncUnstable.Encode(&pkg); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil
@@ -136,7 +121,7 @@ type PlaySound struct {
 	Pan         int
 }
 
-// SendPlaySound send a play sound command to the front-end.
+// SendPlaySound send a play sound command to the frontend.
 func SendPlaySound(path string, volumeDelta, pan int) error {
 	buf := &bytes.Buffer{}
 	enc := gob.NewEncoder(buf)
@@ -148,11 +133,11 @@ func SendPlaySound(path string, volumeDelta, pan int) error {
 	if err := enc.Encode(&data); err != nil {
 		return errors.WithStack(err)
 	}
-	pkg := PacketUDP{
+	pkg := PacketUnstable{
 		Cmd:  CmdPlaySound,
 		Data: buf.Bytes(),
 	}
-	if err := EncUDP.Encode(&pkg); err != nil {
+	if err := EncUnstable.Encode(&pkg); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil
