@@ -17,22 +17,22 @@ import (
 // initFrontConn initializes the connection to the front-end.
 func initFrontConn(stable, unstable proto.IPC) error {
 	// Initialize stable connection.
-	fmt.Printf("Connecting to %q.\n", stable.Addr())
+	fmt.Printf("Connecting to `%s`.\n", stable.Addr())
 	stableConn, err := stable.Dial()
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Printf("Connected to %q.\n", stableConn.RemoteAddr())
+	fmt.Printf("Connected to `%s`.\n", stableConn.RemoteAddr())
 	proto.EncStable = gob.NewEncoder(stableConn)
 	//proto.DecStable = gob.NewDecoder(stableConn)
 
 	// Initialize unstable connection.
-	fmt.Printf("Connecting to %q.\n", unstable.Addr())
+	fmt.Printf("Connecting to `%s`.\n", unstable.Addr())
 	unstableConn, err := unstable.Dial()
 	if err != nil {
 		return errors.WithStack(err)
 	}
-	fmt.Printf("Connected to %q.\n", unstableConn.RemoteAddr())
+	fmt.Printf("Connected to `%s`.\n", unstableConn.RemoteAddr())
 	proto.EncUnstable = gob.NewEncoder(unstableConn)
 	proto.DecUnstable = gob.NewDecoder(unstableConn)
 

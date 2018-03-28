@@ -62,7 +62,7 @@ func loop(win *pixelgl.Window, stable, unstable proto.IPC) {
 // listen listens for incoming connections on the given IPC channel, and sends
 // accepted connections to the conns channel.
 func listen(ipc proto.IPC, conns chan net.Conn) {
-	fmt.Printf("Listening on %q.\n", ipc.Addr())
+	fmt.Printf("Listening on `%s`.\n", ipc.Addr())
 	l, err := ipc.Listen()
 	if err != nil {
 		log.Fatalf("%+v", errors.WithStack(err))
@@ -74,7 +74,7 @@ func listen(ipc proto.IPC, conns chan net.Conn) {
 			log.Fatalf("%+v", errors.WithStack(err))
 		}
 		defer conn.Close()
-		fmt.Printf("Accepted connection from %q.\n", conn.RemoteAddr())
+		fmt.Printf("Accepted connection from `%s`.\n", conn.RemoteAddr())
 		conns <- conn
 	}
 }
@@ -177,25 +177,18 @@ func relayEngineEvents(win *pixelgl.Window, stableConns, unstableConns chan net.
 	}()
 	// Relay events on unstable connection to the Diablo 1 game engine.
 	go relayEngineUnstableActions(win, unstableEncs, gameActions)
-	go relayEngineUnstableEvents(win, unstableDecs, gameEvents)
+	go relayEngineUnstableEvents(win, unstableDecs)
 	// Relay events on stable connection to the Diablo 1 game engine.
-	go relayEngineStableActions(win, stableEncs, gameActions)
+	go relayEngineStableActions(win, stableEncs)
 	relayEngineStableEvents(win, stableDecs, gameEvents)
 }
 
 // relayEngineStableActions relays actions on stable connection to the Diablo 1
 // game engine.
-func relayEngineStableActions(win *pixelgl.Window, stableEncs chan *gob.Encoder, gameActions chan proto.EngineAction) {
+func relayEngineStableActions(win *pixelgl.Window, stableEncs chan *gob.Encoder) {
 	for {
 		enc := <-stableEncs
 		_ = enc
-		for {
-			action := <-gameActions
-			switch action := action.(type) {
-			default:
-				panic(fmt.Errorf("support for action %T not yet implemented", action))
-			}
-		}
 	}
 }
 
@@ -270,7 +263,7 @@ loop:
 
 // relayEngineUnstableEvents relays events on unstable connection to the Diablo
 // 1 game engine.
-func relayEngineUnstableEvents(win *pixelgl.Window, unstableDecs chan *gob.Decoder, gameEvents chan proto.EngineEvent) {
+func relayEngineUnstableEvents(win *pixelgl.Window, unstableDecs chan *gob.Decoder) {
 	// Open pipe for reading.
 loop:
 	for {
