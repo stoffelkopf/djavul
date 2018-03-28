@@ -56,14 +56,17 @@ const (
 
 // TCP is a TCP connection IPC handler.
 type TCP struct {
-	addr string
+	ip   string
+	port int
 }
 
 // NewTCP returns a new TCP connection handler based on the IP of the remote
 // host and port number.
 func NewTCP(ip string, port int) *TCP {
-	addr := fmt.Sprintf("%s:%d", ip, port)
-	return &TCP{addr: addr}
+	return &TCP{
+		ip:   ip,
+		port: port,
+	}
 }
 
 // NewStableTCP returns a new stable TCP connection IPC handler based on the IP
@@ -80,17 +83,21 @@ func NewUnstableTCP(ip string) *TCP {
 
 // Dial connects to the remote host over a TCP connection.
 func (i *TCP) Dial() (net.Conn, error) {
-	return net.Dial("tcp", i.addr)
+	return net.Dial("tcp", i.Addr())
 }
 
 // Listen listens for incoming connections on a TCP connection.
 func (i *TCP) Listen() (net.Listener, error) {
-	return net.Listen("tcp", i.addr)
+	addr := i.Addr()
+	if i.ip == "localhost" {
+		addr = fmt.Sprintf(":%d", i.port)
+	}
+	return net.Listen("tcp", addr)
 }
 
 // Addr returns the address of the TCP connection.
 func (i *TCP) Addr() string {
-	return i.addr
+	return fmt.Sprintf("%s:%d", i.ip, i.port)
 }
 
 // TODO: Add UDP?
