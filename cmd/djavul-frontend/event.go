@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/gob"
 	"fmt"
 	"image"
@@ -155,7 +154,7 @@ func (ButtonReleasedEvent) isWindowEvent() {}
 // relayEngineEvents relays events to and from the Diablo 1 game engine.
 func relayEngineEvents(win *pixelgl.Window, stableConns, unstableConns chan net.Conn, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
 	var (
-		//stableEncs   = make(chan *gob.Encoder)
+		stableEncs   = make(chan *gob.Encoder)
 		stableDecs   = make(chan *gob.Decoder)
 		unstableEncs = make(chan *gob.Encoder)
 		unstableDecs = make(chan *gob.Decoder)
@@ -164,9 +163,9 @@ func relayEngineEvents(win *pixelgl.Window, stableConns, unstableConns chan net.
 		for {
 			select {
 			case stableConn := <-stableConns:
-				//stableEnc := gob.NewEncoder(stableConn)
+				stableEnc := gob.NewEncoder(stableConn)
 				stableDec := gob.NewDecoder(stableConn)
-				//stableEncs <- stableEnc
+				stableEncs <- stableEnc
 				stableDecs <- stableDec
 			case unstableConn := <-unstableConns:
 				unstableEnc := gob.NewEncoder(unstableConn)
@@ -178,10 +177,10 @@ func relayEngineEvents(win *pixelgl.Window, stableConns, unstableConns chan net.
 	}()
 	// Relay events on unstable connection to the Diablo 1 game engine.
 	go relayEngineUnstableActions(win, unstableEncs, gameActions)
-	go relayEngineUnstableEvents(win, unstableDecs, gameEvents, gameActions)
+	go relayEngineUnstableEvents(win, unstableDecs, gameEvents)
 	// Relay events on stable connection to the Diablo 1 game engine.
-	//go relayEngineStableActions(win, stableEncs, gameActions)
-	relayEngineStableEvents(win, stableDecs, gameEvents, gameActions)
+	go relayEngineStableActions(win, stableEncs, gameActions)
+	relayEngineStableEvents(win, stableDecs, gameEvents)
 }
 
 // relayEngineStableActions relays actions on stable connection to the Diablo 1
@@ -217,10 +216,12 @@ func relayEngineUnstableActions(win *pixelgl.Window, unstableEncs chan *gob.Enco
 
 // relayEngineStableEvents relays events on stable connection to the Diablo 1
 // game engine.
-func relayEngineStableEvents(win *pixelgl.Window, stableDecs chan *gob.Decoder, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
+func relayEngineStableEvents(win *pixelgl.Window, stableDecs chan *gob.Decoder, gameEvents chan proto.EngineEvent) {
 loop:
 	for {
 		dec := <-stableDecs
+		frames := 0
+		var start time.Time
 		for {
 			var cmd proto.CommandStable
 			if err := dec.Decode(&cmd); err != nil {
@@ -232,12 +233,36 @@ loop:
 			}
 			switch cmd {
 			case proto.CmdLoadFile:
-				var data proto.LoadFile
-				if err := dec.Decode(&data); err != nil {
+				data := &proto.LoadFile{}
+				if err := dec.Decode(data); err != nil {
 					log.Fatalf("%+v", errors.WithStack(err))
 				}
 				//fmt.Println("recv pkg:", data)
-				ExecLoadFile(&data)
+				ExecLoadFile(data)
+			case proto.CmdUpdateScreen:
+				data := &proto.UpdateScreen{}
+				if err := dec.Decode(data); err != nil {
+					log.Fatalf("%+v", errors.WithStack(err))
+				}
+				//fmt.Println("recv pkg:", data)
+				ExecUpdateScreen(win, data)
+				if start == (time.Time{}) {
+					start = time.Now()
+				} else {
+					frames++
+					fps := float64(frames) / (float64(time.Since(start)) / float64(time.Second))
+					win.SetTitle(fmt.Sprintf("FPS: %.02f", fps))
+				}
+				win.Update()
+			case proto.CmdPlaySound:
+				data := &proto.PlaySound{}
+				if err := dec.Decode(data); err != nil {
+					log.Fatalf("%+v", errors.WithStack(err))
+				}
+				//fmt.Println("recv pkg:", data)
+				ExecPlaySound(data)
+			default:
+				panic(fmt.Errorf("support for stable command %v not yet implemented", cmd))
 			}
 		}
 	}
@@ -245,13 +270,11 @@ loop:
 
 // relayEngineUnstableEvents relays events on unstable connection to the Diablo
 // 1 game engine.
-func relayEngineUnstableEvents(win *pixelgl.Window, unstableDecs chan *gob.Decoder, gameEvents chan proto.EngineEvent, gameActions chan proto.EngineAction) {
+func relayEngineUnstableEvents(win *pixelgl.Window, unstableDecs chan *gob.Decoder, gameEvents chan proto.EngineEvent) {
 	// Open pipe for reading.
 loop:
 	for {
 		dec := <-unstableDecs
-		frames := 0
-		var start time.Time
 		for {
 			var pkg proto.PacketUnstable
 			if err := dec.Decode(&pkg); err != nil {
@@ -264,21 +287,8 @@ loop:
 			}
 			//fmt.Println("recv cmd:", pkg.Cmd)
 			switch pkg.Cmd {
-			case proto.CmdUpdateScreen:
-				//fmt.Println("recv cmd: UpdateScreen")
-				//win.Clear(colornames.Black)
-				ExecDrawImages(win, pkg.Data)
-				if start == (time.Time{}) {
-					start = time.Now()
-				} else {
-					frames++
-					fps := float64(frames) / (float64(time.Since(start)) / float64(time.Second))
-					win.SetTitle(fmt.Sprintf("FPS: %.02f", fps))
-				}
-				win.Update()
-			case proto.CmdPlaySound:
-				//fmt.Println("recv cmd: PlaySound")
-				ExecPlaySound(pkg.Data)
+			default:
+				panic(fmt.Errorf("support for unstable command %v not yet implemented", pkg.Cmd))
 			}
 		}
 	}
@@ -295,19 +305,13 @@ func ExecLoadFile(cmd *proto.LoadFile) {
 	}
 }
 
-func ExecDrawImages(win *pixelgl.Window, data []byte) {
-	var cmds []proto.DrawImage
-	dec := gob.NewDecoder(bytes.NewReader(data))
-	if err := dec.Decode(&cmds); err != nil {
-		log.Printf("unable to parse body of DrawImages; %v", errors.WithStack(err))
-		return
-	}
-	for _, cmd := range cmds {
-		ExecDrawImage(win, cmd)
+func ExecUpdateScreen(win *pixelgl.Window, cmd *proto.UpdateScreen) {
+	for i := range cmd.Imgs {
+		ExecDrawImage(win, &cmd.Imgs[i])
 	}
 }
 
-func ExecDrawImage(win *pixelgl.Window, cmd proto.DrawImage) {
+func ExecDrawImage(win *pixelgl.Window, cmd *proto.DrawImage) {
 	//fmt.Println("recv pkg:", cmd)
 	sprite := getSprite(cmd.Path, cmd.FrameNum)
 	const screenHeight = 480
@@ -325,13 +329,7 @@ func ExecDrawImage(win *pixelgl.Window, cmd proto.DrawImage) {
 	sprite.Draw(win, pixel.IM.Moved(bounds.Center().Add(pixelVec(dp))))
 }
 
-func ExecPlaySound(data []byte) {
-	var cmd proto.PlaySound
-	dec := gob.NewDecoder(bytes.NewReader(data))
-	if err := dec.Decode(&cmd); err != nil {
-		log.Printf("unable to parse body of PlaySound; %v", errors.WithStack(err))
-		return
-	}
+func ExecPlaySound(cmd *proto.PlaySound) {
 	dbg.Println("play sound:", cmd.Path)
 	playSound(cmd.Path)
 }

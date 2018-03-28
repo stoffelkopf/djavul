@@ -473,6 +473,8 @@ func MemFree(ptr unsafe.Pointer) {
 	C.engine_mem_free(ptr)
 }
 
+var total int32
+
 // MemLoadFile returns the contents of the given file.
 //
 // PSX ref: 0x80074E9C
@@ -482,28 +484,29 @@ func MemFree(ptr unsafe.Pointer) {
 func MemLoadFile(path unsafe.Pointer, size *int32) unsafe.Pointer {
 	var addr unsafe.Pointer
 	var n int32
-	if useGo {
-		addr = memLoadFile(path, &n)
-	} else {
-		buf := C.engine_mem_load_file((*C.char)(path), (*C.int32_t)(unsafe.Pointer(&n)))
-		addr = unsafe.Pointer(buf)
-	}
+	// TODO: Determine if Go call to memLoadFile ever needed in Djavul backend.
+	//if useGo {
+	//	addr = memLoadFile(path, &n)
+	//} else {
+	buf := C.engine_mem_load_file((*C.char)(path), (*C.int32_t)(unsafe.Pointer(&n)))
+	addr = unsafe.Pointer(buf)
+	//}
 	if size != nil {
 		*size = n
 	}
+	total += n
 	if UseGUI {
 		file := goPath(path)
 		if err := proto.SendLoadFile(file); err != nil {
 			log.Fatalf("%+v", err)
 		}
 		files[addr] = file
-
 		// TODO: Repace with binary search.
-		start := uintptr(addr)
-		end := start + uintptr(n)
-		for i := start; i < end; i++ {
-			files[unsafe.Pointer(i)] = file
-		}
+		//start := uintptr(addr)
+		//end := start + uintptr(n)
+		//for i := start; i < end; i++ {
+		//	files[unsafe.Pointer(i)] = file
+		//}
 	}
 	return addr
 }
