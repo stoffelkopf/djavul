@@ -55,7 +55,7 @@ For installation and run instructions, refer to the respective documentation:
 
 ### 2017-12-21
 
-* Forward mouse and keyboard input from Djavul frontend to Diablo 1 game engine.
+* Forward mouse and keyboard input from Djavul frontend to Diablo 1 game engine (also referred to as the Djavul backend).
 
 ![Screenshot from 2017-12-21](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2017-12-21.png)
 
