@@ -30,6 +30,12 @@ For installation and run instructions, refer to the respective documentation:
 
 ## Progress
 
+### 2018-03-30
+
+* Running the Djavul frontend (`djavul-frontend.exe`) on a Windows 7 host system (left) and the Djavul backend (`djavul.exe`) on the same system using a modified version of [DiabloPatch](http://diablopat.ch/) (right).
+
+![Screenshot from 2018-03-30](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2018-03-30.png)
+
 ### 2018-03-25
 
 * Running the Djavul frontend (`djavul-frontend`) on a Linux host system (left) and the Djavul backend (`djavul.exe`) on a Windows XP VirtualBox guest (right).
