@@ -116,6 +116,43 @@ cd $GAMEDIR
 djavul.exe -ip localhost
 ```
 
+# Optional: Running Djavul through DiabloPatch
+
+More than 20 years have passed since Diablo 1 was released. As such the operating systems have changed a bit, and several compatibility issues have started to manifest.
+
+[DiabloPatch](http://diablopat.ch/) is a patch for Diablo 1 which makes the game compatible with modern versions of Windows. Furthermore DiabloPatch makes it possible to run Diablo 1 in windowed mode, a very useful feature for debugging. This also allows us to run the Diablo game side by side with Djavul and compare their output.
+
+A modified version of DiabloPatch has been prepared to work with `djavul.exe` in place of `diablo.exe` (it mainly updates the name of the executable, and disables the hash sum check).
+
+## DjavulPatchLoader.patch
+
+The patch file [DjavulPatchLoader.patch](https://github.com/sanctuary/djavul-patch/raw/master/DjavulPatchLoader.patch) has been produced by the [bindiff](https://github.com/mewkiz/cmd/tree/master/bindiff) tool based on the binary difference between `DiabloPatchLoader.exe` (v2.0.1) and `DjavulPatchLoader.exe`.
+
+### Installation
+
+To recreate `DjavulPatchLoader.exe` from `DiabloPatchLoader.exe` (v2.0.1), use the [binpatch](https://github.com/mewkiz/cmd/tree/master/binpatch) tool as described below.
+
+```bash
+# Install binpatch.
+go get github.com/mewkiz/cmd/binpatch
+# Apply DiabloPatchLoader.patch to DiabloPatchLoader.exe to produce
+# DjavulPatchLoader.exe.
+binpatch -o DjavulPatchLoader.exe DiabloPatchLoader.exe < DiabloPatchLoader.patch
+```
+
+### Validation
+
+| File name                     | SHA1 hash sum                              | File size    |
+|-------------------------------|--------------------------------------------|--------------|
+| `DiabloPatch.dll`             | `7b923776e7e024378e7e681a2a6669116aec8d70` | 112128 bytes |
+| `DiabloPatchLoader.exe`       | `1ba67dbaa4fabb317988eee5e99042a9d01ebbc8` | 41472 bytes  |
+| `DiabloPatchLoader.exe.patch` | `957898fee12de4cf69c9eef0b97dd7fb34a558da` | 181 bytes    |
+| `DjavulPatchLoader.exe`       | `1f5c43aea3ab8683e246420b07ba4346657d4a79` | 41472 bytes  |
+
+## Running
+
+To use DiabloPatch with Djavul, first start the Djavul frontend (`djavul-frontend.exe`). Then execute `DjavulPatchLoader.exe` to launch the Djavul backend (`djavul.exe`).
+
 # Optional: Multiplayer over UDP
 
 To enable Local Area Network over UDP, refer to the thread [The death of IPX protocol [IPX + UDP Fix]](http://www.lurkerlounge.com/forums/thread-353.html) at Lurker Lounge. In essence, download the `UDP_Diablo&Hellfire.zip` archive, extract it, and replace `battle.snp` with `sndi.nx`. Make sure the rename `sndi.nx` to `sndi.snp` for `storm.dll` to be able to locate it. For reference, the SHA1 hash sum of `sndi.nx` is `f08c935b60fb6b844dcc4690b1abbc8a7a4e1eda`.
