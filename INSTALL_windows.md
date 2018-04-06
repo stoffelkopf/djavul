@@ -116,11 +116,23 @@ cd $GAMEDIR
 djavul.exe -ip localhost
 ```
 
-# Optional: Running Djavul through DiabloPatch
+# Optional: Running Djavul in windowed mode
 
 More than 20 years have passed since Diablo 1 was released. As such the operating systems have changed a bit, and several compatibility issues have started to manifest.
 
-[DiabloPatch](http://diablopat.ch/) is a patch for Diablo 1 which makes the game compatible with modern versions of Windows. Furthermore DiabloPatch makes it possible to run Diablo 1 in windowed mode, a very useful feature for debugging. This also allows us to run the Diablo game side by side with Djavul and compare their output.
+Two primary methods exist for fixing these compatibility issues on Windows, and they both allow us to run Diablo 1 in windowed mode. Being able to run Diablo 1 in windowed mode is a very useful feature for debugging; especially as it allows us to run the Diablo game side by side with Djavul and compare their output.
+
+## Method 1: Strange Bytes Diablo 1 patch
+
+[Strange Bytes Diablo 1 patch](http://strangebytes.com/index.php/projects/1-diablo-1-windows-7-vista-patch) is a patch of `ddraw.dll` which makes the game compatible with modern versions of Windows. Furthermore the patched `ddraw.dll` makes it possible to run Diablo 1 in windowed mode.
+
+To use Strange Bytes Diablo 1 patch, simply download and extract the ZIP archive, and place the `ddraw.dll` shared library in the same directory as the `djavul.exe` executable. Once this is done, start the Djavul frontend (`djavul-frontend.exe`) and then execute the Djavul backend (`djavul.exe`).
+
+**Note:** no compatibility properties should be enabled for `djavul.exe`, as this approach relies on modern DirectX functionality (DirectX 9).
+
+## Method 2: Running Djavul through DiabloPatch
+
+[DiabloPatch](http://diablopat.ch/) is a patch for Diablo 1 which makes the game compatible with modern versions of Windows. Furthermore DiabloPatch makes it possible to run Diablo 1 in windowed mode.
 
 A [modified version of DiabloPatch](https://github.com/sanctuary/djavul-patch/blob/master/DjavulPatchLoader.md) has been prepared to work with `djavul.exe` in place of `diablo.exe` (it mainly updates the name of the executable, and disables the hash sum check).
 
