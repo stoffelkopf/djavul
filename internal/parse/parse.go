@@ -12,7 +12,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Data reads the data at the specified address.
+// Data reads the data at the specified offset.
 func Data(offset int64, data interface{}) error {
 	r := bytes.NewReader(buf)
 	if _, err := r.Seek(offset, io.SeekStart); err != nil {
@@ -22,6 +22,18 @@ func Data(offset int64, data interface{}) error {
 		return errors.WithStack(err)
 	}
 	return nil
+}
+
+// DataFromAddr reads the data at the specified address.
+func DataFromAddr(addr uint32, data interface{}) error {
+	return Data(Offset(addr), data)
+}
+
+// MustDataFromAddr reads the data at the specified address. It panics on error.
+func MustDataFromAddr(addr uint32, data interface{}) {
+	if err := DataFromAddr(addr, data); err != nil {
+		panic(err)
+	}
 }
 
 // Offset returns the file offset of the given address in diablo.exe.
