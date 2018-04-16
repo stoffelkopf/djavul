@@ -1,9 +1,12 @@
 //+build djavul
 
+// Global variable wrappers for scrollrt.cpp
+
 package scrollrt
 
 import "unsafe"
 
+// Global variables.
 var (
 	// --- [ .data section ] ----------------------------------------------------
 
