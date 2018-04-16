@@ -29,10 +29,10 @@ var (
 	//
 	//    65 66 67 68 69 70 71 72
 	//
-	// ref: 0x47AE60
-	//
 	// References:
 	//    * https://raw.githubusercontent.com/sanctuary/graphics/master/inventory.png
+	//
+	// ref: 0x47AE60
 	ScreenPos *[73]types.Point
 )
 
@@ -40,7 +40,7 @@ var (
 
 // Read-write global variables.
 var (
-	// StartSlot2x2 specifies the starting inventory slot for placement of 2x2
+	// StartSlot2x2 specifies the starting inventory slots for placement of 2x2
 	// items.
 	//
 	// ref: 0x48E9A8
@@ -50,4 +50,23 @@ var (
 // --- [ .bss section ] --------------------------------------------------------
 
 // Uninitialized global variables.
-var ()
+var (
+	// IsOpen specifies whether the inventory is open.
+	//
+	// PSX ref: 0x8011C32C
+	// PSX def: unsigned char invflag
+	//
+	// ref: 0x634CB8
+	IsOpen *types.Bool32
+
+	// Graphics points to the contents of the inventory graphics CEL file (e.g.
+	// "data/inv/inv.cel", "data/inv/inv_rog.cel" or "data/inv/inv_sor.cel").
+	//
+	// ref: 0x634CBC
+	Graphics **uint8
+
+	// UpdateBelt specifies whether the belt should be re-rendered.
+	//
+	// ref: 0x634CC0
+	UpdateBelt *types.Bool32
+)
