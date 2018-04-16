@@ -39,7 +39,13 @@ var (
 // --- [ .data section ] -------------------------------------------------------
 
 // Read-write global variables.
-var ()
+var (
+	// StartSlot2x2 specifies the starting inventory slot for placement of 2x2
+	// items.
+	//
+	// ref: 0x48E9A8
+	StartSlot2x2 *[10]int32
+)
 
 // --- [ .bss section ] --------------------------------------------------------
 

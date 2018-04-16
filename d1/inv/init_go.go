@@ -11,4 +11,5 @@ import (
 func init() {
 	// Allocate global variables in Go.
 	ScreenPos = new([73]types.Point)
+	StartSlot2x2 = new([10]int32)
 }
