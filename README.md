@@ -1,5 +1,8 @@
 # djavul
 
+[![Join the chat at https://gitter.im/sanctuary/notes](https://badges.gitter.im/sanctuary/notes.svg)](https://gitter.im/sanctuary/notes)
+[![GoDoc](https://godoc.org/github.com/sanctuary/djavul?status.svg)](https://godoc.org/github.com/sanctuary/djavul)
+
 Preservation project for an all time classic, Diablo 1.
 
 **Note**, djavul requires an original copy of `diablo.exe` and `diabdat.mpq`. None of the Diablo 1 game assets are provided by this project.
