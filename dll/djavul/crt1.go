@@ -30,6 +30,11 @@ import (
 	"github.com/sanctuary/djavul/internal/proto"
 )
 
+// useFrontend specifies whether the Djavul frontend is enabled. When enabled,
+// djavul.exe connect to djavul-frontend through IPC (either TCP or named
+// pipes), and sends rendering and audio playback events to the frontend.
+const useFrontend = false
+
 //export Start
 func Start() {
 	// Store standard output in djavul.log. For trouble-shooting on Windows.
@@ -53,28 +58,6 @@ func Start() {
 	//flag.Int64Var(&end, "end", 256, "last seed")
 	//flag.Parse()
 
-	var (
-		// frontend IP-address.
-		ip string
-		// npipe specifies whether to use named pipes for IPC.
-		npipe bool
-	)
-	flag.StringVar(&ip, "ip", "localhost", "frontend IP-address")
-	flag.BoolVar(&npipe, "npipe", false, "use named pipes for IPC")
-	flag.Parse()
-
-	var (
-		stable   proto.IPC
-		unstable proto.IPC
-	)
-	if npipe {
-		stable = proto.NewStableNamedPipe(ip)
-		unstable = proto.NewUnstableNamedPipe(ip)
-	} else {
-		stable = proto.NewStableTCP(ip)
-		unstable = proto.NewUnstableTCP(ip)
-	}
-
 	//engine.UseGUI = false
 	//sound.UseSound = false
 	//if err := compareL1(start, end); err != nil {
@@ -82,10 +65,38 @@ func Start() {
 	//}
 	//os.Exit(0)
 
-	engine.UseGUI = true
-	sound.UseSound = false
-	if err := initFrontConn(stable, unstable); err != nil {
-		log.Fatalf("%+v", err)
+	if useFrontend {
+		// Parse command line flags.
+		var (
+			// frontend IP-address.
+			ip string
+			// npipe specifies whether to use named pipes for IPC.
+			npipe bool
+		)
+		flag.StringVar(&ip, "ip", "localhost", "frontend IP-address")
+		flag.BoolVar(&npipe, "npipe", false, "use named pipes for IPC")
+		flag.Parse()
+
+		var (
+			stable   proto.IPC
+			unstable proto.IPC
+		)
+		if npipe {
+			stable = proto.NewStableNamedPipe(ip)
+			unstable = proto.NewUnstableNamedPipe(ip)
+		} else {
+			stable = proto.NewStableTCP(ip)
+			unstable = proto.NewUnstableTCP(ip)
+		}
+
+		engine.UseGUI = true
+		sound.UseSound = false
+		if err := initFrontConn(stable, unstable); err != nil {
+			log.Fatalf("%+v", err)
+		}
+	} else {
+		engine.UseGUI = false
+		sound.UseSound = false
 	}
 	winGUI()
 
