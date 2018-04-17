@@ -12,3 +12,6 @@ type Point struct {
 	X int32
 	Y int32
 }
+
+// A Time32 represents an instant in time with millisecond precision.
+type Time32 uint32
