@@ -2,16 +2,14 @@
 
 package track
 
-import (
-	"github.com/sanctuary/djavul/internal/types"
-)
+import "github.com/sanctuary/djavul/internal/types"
 
 // --- [ .bss section ] --------------------------------------------------------
 
 // Uninitialized global variables.
 var (
-	// WalkTrackingActive specifies whether tracking of continued walk actions
-	// are tracked (i.e. when the left mouse button is held down).
+	// WalkTrackingActive specifies whether continued walk actions are tracked
+	// (i.e. when the left mouse button is held down).
 	//
 	// ref: 0x6ABAB8
 	WalkTrackingActive *types.Bool8
