@@ -33,6 +33,12 @@ For installation and run instructions, refer to the respective documentation:
 
 ## Progress
 
+### 2018-04-21
+
+* Interact with the Diablo 1 game engine from Python script.
+
+![Screenshot from 2018-04-21](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2018-04-21.png)
+
 ### 2018-03-30
 
 * Running the Djavul frontend (`djavul-frontend.exe`) on a Windows 7 host system (left) and the Djavul backend (`djavul.exe`) on the same system using a modified version of [DiabloPatch](http://diablopat.ch/) (right).
