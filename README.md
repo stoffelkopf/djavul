@@ -33,11 +33,11 @@ For installation and run instructions, refer to the respective documentation:
 
 ## Progress
 
-### 2018-04-21
+### 2018-05-12
 
 * Interact with the Diablo 1 game engine from Python script.
 
-![Screenshot from 2018-04-21](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2018-04-21.png)
+![Screenshot from 2018-05-12](https://github.com/sanctuary/graphics/blob/master/djavul/screenshot_2018-05-12.png)
 
 ### 2018-03-30
 
