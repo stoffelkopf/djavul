@@ -23,11 +23,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/AllenDang/w32"
 	"github.com/sanctuary/djavul/d1/diablo"
 	"github.com/sanctuary/djavul/d1/engine"
 	"github.com/sanctuary/djavul/d1/sound"
 	"github.com/sanctuary/djavul/internal/proto"
+	// TODO: update to github.com/AllenDang/w32 when
+	// https://github.com/AllenDang/w32/pull/81 is merged.
+	"github.com/TheTitanrain/w32"
 )
 
 // useFrontend specifies whether the Djavul frontend is enabled. When enabled,

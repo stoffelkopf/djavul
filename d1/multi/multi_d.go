@@ -7,10 +7,12 @@ import (
 	"image"
 	"time"
 
-	"github.com/AllenDang/w32"
 	"github.com/faiface/pixel/pixelgl"
 	"github.com/sanctuary/djavul/d1/diablo"
 	"github.com/sanctuary/djavul/internal/proto"
+	// TODO: update to github.com/AllenDang/w32 when
+	// https://github.com/AllenDang/w32/pull/81 is merged.
+	"github.com/TheTitanrain/w32"
 )
 
 // processNetworkPackets processes network incoming packets.

@@ -7,10 +7,12 @@ import "C"
 import (
 	"fmt"
 
-	"github.com/AllenDang/w32"
 	"github.com/sanctuary/djavul/d1/automap"
 	"github.com/sanctuary/djavul/d1/capture"
 	"github.com/sanctuary/djavul/d1/diablo"
+	// TODO: update to github.com/AllenDang/w32 when
+	// https://github.com/AllenDang/w32/pull/81 is merged.
+	"github.com/TheTitanrain/w32"
 )
 
 //export Init
