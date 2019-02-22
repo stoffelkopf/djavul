@@ -3,7 +3,7 @@
 1. Install [Go](https://golang.org/doc/install).
 2. Install [mingw-w64-gcc](https://aur.archlinux.org/packages/mingw-w64-gcc/) for cross-compilation to 32-bit Windows.
 
-Install the [Djavul frontend](https://github.com/sanctuary/djavul/tree/master/cmd/djavul) executable `djavul-frontend.exe`.
+Install the [Djavul frontend](https://github.com/sanctuary/djavul/tree/master/cmd/djavul-frontend) executable `djavul-frontend.exe`.
 
 ```bash
 go get -u github.com/sanctuary/djavul/...
