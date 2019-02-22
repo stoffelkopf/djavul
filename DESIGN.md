@@ -37,6 +37,6 @@ For technical background and historical anecdotes of how the Djavul.patch is cre
 
 The `djavul.dll` shared library is essentially a wrapper around the dedicated packages of the [d1](https://github.com/sanctuary/djavul/tree/master/d1) directory, each of which is directly associated with a source file of `diablo.exe`, using the same naming convention as the [notes](https://github.com/sanctuary/notes) repository.
 
-Other than being a wrapper for the `d1` packages, the `djavul.dll` shared library handles the ICP communiction with the Djavul frontend.
+Other than being a wrapper for the `d1` packages, the `djavul.dll` shared library handles the IPC communiction with the Djavul frontend.
 
 It may also contain a few easter eggs and development features.
