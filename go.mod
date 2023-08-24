@@ -1,4 +1,4 @@
-module github.com/sanctuary/djavul
+module github.com/stoffelkopf/djavul
 
 go 1.12
 
